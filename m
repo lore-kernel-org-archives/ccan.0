@@ -1,20 +1,17 @@
-From: Cody P Schafer <dev@codyps.com>
-Subject: [PATCH v4 4/4] mem: add memends_str() helper for symmetry
-Date: Sat,  5 Sep 2015 21:21:06 -0400
-Message-ID: <1441502466-4754-5-git-send-email-dev@codyps.com>
+From: David Gibson <david@gibson.dropbear.id.au>
+Subject: Re: [PATCH v4 0/4] mem: extend with a few additional helpers
+ similar to existing string-only functions
+Date: Mon, 7 Sep 2015 00:24:48 +1000
+Message-ID: <20150906142448.GE6537@voom.redhat.com>
 References: <1441502466-4754-1-git-send-email-dev@codyps.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: multipart/mixed; boundary="===============1357496256465982951=="
 Return-path: <ccan-bounces+gclcc-ccan=m.gmane.org@lists.ozlabs.org>
-Received: from mail-qk0-x231.google.com (mail-qk0-x231.google.com
- [IPv6:2607:f8b0:400d:c09::231])
- (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
+ (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id A75011A1E5C
- for <ccan@lists.ozlabs.org>; Sun,  6 Sep 2015 11:21:15 +1000 (AEST)
-Received: by qkfq186 with SMTP id q186so22428355qkf.1
- for <ccan@lists.ozlabs.org>; Sat, 05 Sep 2015 18:21:13 -0700 (PDT)
+ by lists.ozlabs.org (Postfix) with ESMTPS id 5012B1A1E4B
+ for <ccan@lists.ozlabs.org>; Mon,  7 Sep 2015 00:34:11 +1000 (AEST)
 In-Reply-To: <1441502466-4754-1-git-send-email-dev@codyps.com>
 List-Unsubscribe: <https://lists.ozlabs.org/options/ccan>,
  <mailto:ccan-request@lists.ozlabs.org?subject=unsubscribe>
@@ -25,39 +22,85 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/ccan>,
  <mailto:ccan-request@lists.ozlabs.org?subject=subscribe>
 Errors-To: ccan-bounces+gclcc-ccan=m.gmane.org@lists.ozlabs.org
 Sender: "ccan" <ccan-bounces+gclcc-ccan=m.gmane.org@lists.ozlabs.org>
-To: ccan@lists.ozlabs.org
-Cc: Cody P Schafer <dev@codyps.com>
+To: Cody P Schafer <dev@codyps.com>
+Cc: ccan@lists.ozlabs.org
 List-Id: ccan@lists.ozlabs.org
 
-U2lnbmVkLW9mZi1ieTogQ29keSBQIFNjaGFmZXIgPGRldkBjb2R5cHMuY29tPgotLS0KIGNjYW4v
-bWVtL21lbS5oICAgICAgfCAxNyArKysrKysrKysrKysrKysrKwogY2Nhbi9tZW0vdGVzdC9hcGku
-YyB8ICA2ICsrKysrLQogMiBmaWxlcyBjaGFuZ2VkLCAyMiBpbnNlcnRpb25zKCspLCAxIGRlbGV0
-aW9uKC0pCgpkaWZmIC0tZ2l0IGEvY2Nhbi9tZW0vbWVtLmggYi9jY2FuL21lbS9tZW0uaAppbmRl
-eCA4ZDZiYmE5Li4xYWZlNTA4IDEwMDY0NAotLS0gYS9jY2FuL21lbS9tZW0uaAorKysgYi9jY2Fu
-L21lbS9tZW0uaApAQCAtMTgzLDQgKzE4MywyMSBAQCBzdGF0aWMgaW5saW5lIGJvb2wgbWVtZW5k
-cyhjb25zdCB2b2lkICpzLCBzaXplX3Qgc19sZW4sIGNvbnN0IHZvaWQgKnN1ZmZpeCwgc2l6ZQog
-CQkJCQkJc3VmZml4LCBzdWZmaXhfbGVuKSA9PSAwKTsKIH0KIAorLyoqCisgKiBtZW1lbmRzX3N0
-ciAtIERvZXMgdGhpcyBieXRlIGFycmF5IGVuZCB3aXRoIGEgc3RyaW5nIHN1ZmZpeD8KKyAqIEBh
-OiBieXRlIGFycmF5CisgKiBAYWw6IGxlbmd0aCBpbiBieXRlcworICogQHM6IHN0cmluZyBzdWZm
-aXgKKyAqCisgKiBFeGFtcGxlOgorICoJaWYgKG1lbWVuZHNfc3RyKHNvbWVieXRlcywgYnl0ZXNf
-bGVuLCAiSXQiKSkgeworICoJCXByaW50Zigic29tZWJ5dGVzIGVuZHMgd2l0aCB3aXRoICdJdCdc
-biIpOworICoJfQorICovCitQVVJFX0ZVTkNUSU9OCitzdGF0aWMgaW5saW5lIGJvb2wgbWVtZW5k
-c19zdHIoY29uc3Qgdm9pZCAqYSwgc2l6ZV90IGFsLCBjb25zdCBjaGFyICpzKQoreworCXJldHVy
-biBtZW1lbmRzKGEsIGFsLCBzLCBzdHJsZW4ocykpOworfQorCiAjZW5kaWYgLyogQ0NBTl9NRU1f
-SCAqLwpkaWZmIC0tZ2l0IGEvY2Nhbi9tZW0vdGVzdC9hcGkuYyBiL2NjYW4vbWVtL3Rlc3QvYXBp
-LmMKaW5kZXggODliNmFjYi4uOWVjMjI2ZCAxMDA2NDQKLS0tIGEvY2Nhbi9tZW0vdGVzdC9hcGku
-YworKysgYi9jY2FuL21lbS90ZXN0L2FwaS5jCkBAIC0xMiw3ICsxMiw3IEBAIGludCBtYWluKHZv
-aWQpCiAJY2hhciBzY2FuMltdID0gIlwwXDBcMGIiOwogCiAJLyogVGhpcyBpcyBob3cgbWFueSB0
-ZXN0cyB5b3UgcGxhbiB0byBydW4gKi8KLQlwbGFuX3Rlc3RzKDQyKTsKKwlwbGFuX3Rlc3RzKDQ2
-KTsKIAogCW9rMShtZW1tZW0oaGF5c3RhY2sxLCBzaXplb2YoaGF5c3RhY2sxKSwgbmVlZGxlMSwg
-MikgPT0gaGF5c3RhY2sxKTsKIAlvazEobWVtbWVtKGhheXN0YWNrMSwgc2l6ZW9mKGhheXN0YWNr
-MSksIG5lZWRsZTEsIDMpID09IE5VTEwpOwpAQCAtNzEsNiArNzEsMTAgQEAgaW50IG1haW4odm9p
-ZCkKIAlvazEoIW1lbWVuZHMoUygiYVwwYmNkZWYiKSwgUygiYVwwYiIpKSk7CiAJb2sxKG1lbWVu
-ZHMoUygiYVwwYmNkZWYiKSwgUygiZWYiKSkpOwogCisJb2sxKG1lbWVuZHNfc3RyKFMoImFiY2Rl
-ZiIpLCAiYWJjZGVmIikpOworCW9rMSghbWVtZW5kc19zdHIoUygiYWJjZGVcMGYiKSwgImRcMGYi
-KSk7CisJb2sxKCFtZW1lbmRzX3N0cihTKCJhXDBiY2RlZiIpLCAiYSIpKTsKKwlvazEobWVtZW5k
-c19zdHIoUygiYVwwYmNkZWYiKSwgImVmIikpOwogCiAJLyogVGhpcyBleGl0cyBkZXBlbmRpbmcg
-b24gd2hldGhlciBhbGwgdGVzdHMgcGFzc2VkICovCiAJcmV0dXJuIGV4aXRfc3RhdHVzKCk7Ci0t
-IAoyLjUuMQoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18K
-Y2NhbiBtYWlsaW5nIGxpc3QKY2NhbkBsaXN0cy5vemxhYnMub3JnCmh0dHBzOi8vbGlzdHMub3ps
-YWJzLm9yZy9saXN0aW5mby9jY2FuCg==
+
+--===============1357496256465982951==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="9Dz7ZkHOyZKsJidB"
+Content-Disposition: inline
+
+
+--9Dz7ZkHOyZKsJidB
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Sat, Sep 05, 2015 at 09:21:02PM -0400, Cody P Schafer wrote:
+> since v3:
+>=20
+>  - fix memeq() return value
+>  - add memends_str() helper
+>=20
+> since v2:
+>=20
+>  - switch all the macros to static inline to avoid multiple evaluations o=
+f args
+>  - add patch adding PURE_FUNCTION attributes
+>=20
+> since v1:
+>=20
+>  - drop a patch that David pulled in
+>  - add extra macro parens
+>  - add blank lines after defintions
+>  - covert memcchr's while loop to a for.
+>  - change examples for mempbrkm and mempbrk to use '\0' in places
+>  - fix spelling
+>  - use memeq() even where we know the mem lengths are equal in memstarts()
+>  - add a reviewed-by to the 2nd patch, no other changes to that patch.
+
+Looks good, I've applied this to the repository.
+
+
+--=20
+David Gibson			| I'll have my music baroque, and my code
+david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
+				| _way_ _around_!
+http://www.ozlabs.org/~dgibson
+
+--9Dz7ZkHOyZKsJidB
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJV7EywAAoJEGw4ysog2bOSW08QAK8JSgePRMUtyen1tOMCvytt
+QZHZK2h1RcKLX01LlHNJJDmpAMa0duWArgLkpvEq92PdBrpAOM3n1gkPkAl57BsA
+0rAgVilrhKNeQxW4nyWugUL2y9ZeMr+LNCqE6j5IUeYqPHLVfYkbKq2PLyQsh0b3
+pocoqiA5eaWCdXdRm3GHtKo6+/M/k48mhNNCk8TUN2YD+6CgBR1IiQAmCTWzPVXM
+PWh/KYI/Ai9lNM2Kb+/Bqsy3Mcl7L+zTnUMx0jRJUCObT1EfW1KEn13odVJNmpoe
+nELsZvXR+ISptB8mUrTi6ItoI5ECgJnBvC1cZuk6pgRLVdLHTadJ5KDjbWntOOIZ
+0UzhRljTi3LxDFp1rdyUTJ8cYazCYZLZgVnAA/ZbsVq/9U37qGj8OruiBrJ26oXC
+Myd0f4VfNBLmgipscYy6YYt9YCi/ESHjL/r968asQZZ0nAA7N6MKyulUgZd4D2hY
+n0q3N4L7UdpcO1m4T33pe5Rvvf+Fy64i3tQ8UO0QBxN6yzh0Y/23RQ3Daqu6vmYn
+o+jNZ0I2FAlv2onmVVlLwpxkYFzM/LiST7aGO6QJVFRXPi8EO7gKnJzllmGAlx+V
+8P5STF3+63KNxpY2/l9xH6+bFi53zFT5ddEBcgD1GPCcz1qxRJpDIFLYKsvVe1ZG
+KJqrZH+9ILRhlMgcWDt/
+=V+Lc
+-----END PGP SIGNATURE-----
+
+--9Dz7ZkHOyZKsJidB--
+
+--===============1357496256465982951==
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: inline
+
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KY2NhbiBtYWls
+aW5nIGxpc3QKY2NhbkBsaXN0cy5vemxhYnMub3JnCmh0dHBzOi8vbGlzdHMub3psYWJzLm9yZy9s
+aXN0aW5mby9jY2FuCg==
+
+--===============1357496256465982951==--
