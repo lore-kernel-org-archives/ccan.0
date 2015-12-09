@@ -1,16 +1,24 @@
-From: Rusty Russell <rusty@rustcorp.com.au>
-Subject: CCAN update for 2015-11
-Date: Thu, 03 Dec 2015 14:27:23 +1030
-Message-ID: <8737vk6v6k.fsf@rustcorp.com.au>
+From: Joel Stanley <joel@jms.id.au>
+Subject: [PATCH 1/3] Makefile-web: Download prettify from git
+Date: Wed,  9 Dec 2015 11:47:50 +1030
+Message-ID: <1449623872-12857-1-git-send-email-joel@jms.id.au>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: base64
 Return-path: <ccan-bounces+gclcc-ccan=m.gmane.org@lists.ozlabs.org>
-Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
- (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+Received: from mail-pa0-x22c.google.com (mail-pa0-x22c.google.com
+ [IPv6:2607:f8b0:400e:c03::22c])
+ (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id C98F71A078B
- for <ccan@lists.ozlabs.org>; Thu,  3 Dec 2015 14:57:41 +1100 (AEDT)
+ by lists.ozlabs.org (Postfix) with ESMTPS id 9B52D1A05C8
+ for <ccan@lists.ozlabs.org>; Wed,  9 Dec 2015 12:18:06 +1100 (AEDT)
+Received: by pacdm15 with SMTP id dm15so20673731pac.3
+ for <ccan@lists.ozlabs.org>; Tue, 08 Dec 2015 17:18:04 -0800 (PST)
+Received: from icarus.au.ibm.com ([203.0.153.9])
+ by smtp.gmail.com with ESMTPSA id 62sm7249460pfl.90.2015.12.08.17.18.02
+ for <ccan@lists.ozlabs.org>
+ (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+ Tue, 08 Dec 2015 17:18:03 -0800 (PST)
 List-Unsubscribe: <https://lists.ozlabs.org/options/ccan>,
  <mailto:ccan-request@lists.ozlabs.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/ccan/>
@@ -20,25 +28,21 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/ccan>,
  <mailto:ccan-request@lists.ozlabs.org?subject=subscribe>
 Errors-To: ccan-bounces+gclcc-ccan=m.gmane.org@lists.ozlabs.org
 Sender: "ccan" <ccan-bounces+gclcc-ccan=m.gmane.org@lists.ozlabs.org>
-To: ccan <ccan@lists.ozlabs.org>
+To: ccan@lists.ozlabs.org
 List-Id: ccan@lists.ozlabs.org
 
-SGkhCgogICAgICAgIEEgcXVpZXQgbW9udGgsIGJ1dCBJIGZvdW5kIG15c2VsZiBuZWVkaW5nIGFu
-IGZkLXJldHVybmluZyBmb3BlbgpjYWxsLCBzbyB3cm90ZSBwaXBlY21kLiAgTXVjaCBtb3JlIGFj
-dGl2aXR5IG92ZXIgZ3JhcGggdHJhdmVyc2FsIGZyb20KRGF2aWQgR2lic29uLgoKTW9kdWxlIG9m
-IHRoZSBNb250aDogY2FzdCAoTEdQTDIuMSspCj09PT09PT09PT09PT09PT09PT09PT09PT09PT09
-PT09PT09PQoKVGhpcyBpcyBhIHNpbXBsZSBtb2R1bGUgd2hpY2ggcHJvdmlkZXMgbWFjcm9zIHRv
-IG1ha2UgY2FzdGluZyBzYWZlciBhbmQKbW9yZSBleHBsaWNpdC4gIEluIHBhcnRpY3VsYXIsICJj
-YXN0X2NvbnN0KGNoYXIgKiwgZm9vKSIgZ2l2ZXMgYSB3YXJuaW5nCmlmIGZvbyBpc24ndCBhICJj
-b25zdCBjaGFyICoiLiAgU2ltaWxhcmx5LCBjYXN0X3NpZ25lZCgpIHdpbGwgb25seSBjaGFuZ2UK
-c2lnbmVkbmVzcywgYW5kIGNhc3Rfc3RhdGljKCkgd2lsbCBvbmx5IGRvIGNhc3RzIHdoaWNoIHdv
-dWxkIGhhdmUgYmVlbgppbXBsaWNpdCBpbiBDLgoKTmV3IG1vZHVsZXM6Cj09PT09PT09PT09PQoJ
-cGlwZWNtZDogZm9yayBhIGNvbW1hbmQgd2l0aCBleHBsaWNpdCBmZHMgYXR0YWNoZWQuCgpVcGRh
-dGVzICYgYnVnZml4ZXM6Cj09PT09PT09PT09PT09PT09PT09PT09PQoJYWdhOiBtYW55IG1pbm9y
-IGZpeGVzLCBkb2N1bWVudGF0aW9uIHVwZGF0ZXMgKERhdmlkIEdpYnNvbikKICAgICAgICBhZ2Es
-IGFnYXI6IERpamtzdHJhJ3MgYWxnb3JpdGhtIChEYXZpZCBHaWJzb24pCiAgICAgICAgbmV0OiB1
-c2UgY2xvc2Vfbm9lcnIoKQogICAgICAgIG5vZXJyOiBhZGQgZnJlZV9ub2VycigpCiAgICAgICAg
-c3RyZ3JwOiBhZGQgY29zaW5lIHNpbWlsYXJpdHkgZmlsdGVyIChBbmRyZXcgSmVmZmVyeSkKCkNo
-ZWVycywKUnVzdHkuCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fCmNjYW4gbWFpbGluZyBsaXN0CmNjYW5AbGlzdHMub3psYWJzLm9yZwpodHRwczovL2xpc3Rz
-Lm96bGFicy5vcmcvbGlzdGluZm8vY2Nhbgo=
+VGhlIFNWTiBtaXJyb3IgZGlzYXBwZWFyZWQgc29tZSB0aW1lIGFnby4gSXQgbm93IGxpdmVzIG9u
+IEdpdGh1Yi4KClNpZ25lZC1vZmYtYnk6IEpvZWwgU3RhbmxleSA8am9lbEBqbXMuaWQuYXU+Ci0t
+LQogTWFrZWZpbGUtd2ViIHwgMiArLQogMSBmaWxlIGNoYW5nZWQsIDEgaW5zZXJ0aW9uKCspLCAx
+IGRlbGV0aW9uKC0pCgpkaWZmIC0tZ2l0IGEvTWFrZWZpbGUtd2ViIGIvTWFrZWZpbGUtd2ViCmlu
+ZGV4IGE4NGI5NTkwMjAzNC4uM2I5ZjExMTI0ODI0IDEwMDY0NAotLS0gYS9NYWtlZmlsZS13ZWIK
+KysrIGIvTWFrZWZpbGUtd2ViCkBAIC0yOSw3ICsyOSw3IEBAICQoV0VCX1NVQkRJUlMpOiAkKFdF
+QkRJUikKIAlta2RpciAtcCAkQAogCiAkKFBSRVRUSUZZKToKLQlzdm4gY2hlY2tvdXQgaHR0cDov
+L2dvb2dsZS1jb2RlLXByZXR0aWZ5Lmdvb2dsZWNvZGUuY29tL3N2bi90cnVuay8gJChXRUJESVIp
+L3ByZXR0aWZ5CisJZ2l0IGNsb25lIC0tZGVwdGg9MSBodHRwczovL2dpdGh1Yi5jb20vZ29vZ2xl
+L2NvZGUtcHJldHRpZnkuZ2l0ICQoV0VCRElSKS9wcmV0dGlmeQogCiAkKFdFQkRJUikvanVua2Nv
+ZGUvJS50YXIuYnoyOiBqdW5rY29kZS8lICQoV0VCRElSKS9qdW5rY29kZQogCWdpdCBscy1maWxl
+cyAteiAkPCB8IHhhcmdzIC0wIC14IHRhciBjdmZqICRAIAotLSAKMi42LjIKCl9fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmNjYW4gbWFpbGluZyBsaXN0CmNj
+YW5AbGlzdHMub3psYWJzLm9yZwpodHRwczovL2xpc3RzLm96bGFicy5vcmcvbGlzdGluZm8vY2Nh
+bgo=
