@@ -1,18 +1,20 @@
 From: Rusty Russell <rusty@rustcorp.com.au>
 Subject: Re: [PATCH] rszshm: New module
-Date: Wed, 20 Jan 2016 10:20:35 +1030
-Message-ID: <87ziw1xh6c.fsf@rustcorp.com.au>
+Date: Thu, 21 Jan 2016 15:21:59 +1030
+Message-ID: <87mvrzy1ow.fsf@rustcorp.com.au>
 References: <20160119060402.GA31418@ip-172-31-61-248.ec2.internal>
+ <87ziw1xh6c.fsf@rustcorp.com.au>
+ <CACNkOJM3ZLRAvQ5aO9bwfeAxAoWQNFqLh38EOzFF_qagq1bLvQ@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: base64
 Return-path: <ccan-bounces+gclcc-ccan=m.gmane.org@lists.ozlabs.org>
-Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
+Received: from ozlabs.org (ozlabs.org [103.22.144.67])
  (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 7050E1A17EB
- for <ccan@lists.ozlabs.org>; Wed, 20 Jan 2016 13:31:50 +1100 (AEDT)
-In-Reply-To: <20160119060402.GA31418@ip-172-31-61-248.ec2.internal>
+ by lists.ozlabs.org (Postfix) with ESMTPS id 003E41A0018
+ for <ccan@lists.ozlabs.org>; Thu, 21 Jan 2016 16:11:10 +1100 (AEDT)
+In-Reply-To: <CACNkOJM3ZLRAvQ5aO9bwfeAxAoWQNFqLh38EOzFF_qagq1bLvQ@mail.gmail.com>
 List-Unsubscribe: <https://lists.ozlabs.org/options/ccan>,
  <mailto:ccan-request@lists.ozlabs.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/ccan/>
@@ -22,36 +24,16 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/ccan>,
  <mailto:ccan-request@lists.ozlabs.org?subject=subscribe>
 Errors-To: ccan-bounces+gclcc-ccan=m.gmane.org@lists.ozlabs.org
 Sender: "ccan" <ccan-bounces+gclcc-ccan=m.gmane.org@lists.ozlabs.org>
-To: Dan Good <dan@dancancode.com>, ccan@lists.ozlabs.org
+To: Dan Good <dan@gooddan.com>
+Cc: ccan@lists.ozlabs.org
 List-Id: ccan@lists.ozlabs.org
 
-RGFuIEdvb2QgPGRhbkBkYW5jYW5jb2RlLmNvbT4gd3JpdGVzOgo+IHJzenNobSAtIHJlc2l6YWJs
-ZSBwb2ludGVyLXNhZmUgc2hhcmVkIG1lbW9yeQo+Cj4gU2lnbmVkLW9mZi1ieTogRGFuIEdvb2Qg
-PGRhbkBkYW5jYW5jb2RlLmNvbT4KCk5pY2UhICBUaGlzIGlzIHZlcnkgc2ltaWxhciB0byB3aGF0
-IGFudGl0aHJlYWQgZG9lcywgYnV0IHB1bGxlZCBvdXQKaW50byBhIG1vZHVsZSBvZiBpdHMgb3du
-LgoKPiBPbiBMaW51eCBib3hlcyBpdCBjYW4gYmUgc2VlbiB0aGF0IHRoZSB1c2VkIGFkZHJlc3Nl
-cyBjbHVtcAo+ICsgKiBhdCBlaXRoZXIgZW5kIG9mIHRoZSBhZGRyZXNzIHJhbmdlLiAgcnN6c2ht
-IHRyaWVzIHRvIG1tYXAgaW4gdGhlIG1pZGRsZQo+ICsgKiBvZiB0aGUgYWRkcmVzcyByYW5nZSwg
-YW5kIGNoZWNrcyBpZiB0aGUgcmVxdWVzdGVkIGFkZHJlc3MgbWF0Y2hlcyB0aGUKPiArICogcmV0
-dXJuZWQgYWRkcmVzcy4gIElmIG5vdCwgYWRkaXRpb25hbCBhZGRyZXNzZXMgYXJlIHRyaWVkLiAg
-T25jZSBtYXBwZWQsCj4gKyAqIHRoZSBhZGRyZXNzIGlzIHJlY29yZGVkIHRvIGEgaGVhZGVyIGlu
-IHRoZSBmaWxlLiAgQW5vdGhlciBwcm9jZXNzIHJlYWRzIHRoZQo+ICsgKiBoZWFkZXIgYW5kIHJl
-cXVlc3RzIHRoZSBzYXZlZCBhZGRyZXNzIGZyb20gbW1hcC4gIElmIHRoZSByZXR1cm5lZCBhZGRy
-ZXNzCj4gKyAqIG1hdGNoZXMsIHdvcmsgcHJvY2VlZHMuICBXaGlsZSB0aGUgZGVmYXVsdHMgcHJv
-dmlkZSBhIHByb3BpdGlvdXMgc2VhcmNoLAo+ICsgKiBhbGwgdGhlIHNlYXJjaCBwYXJhbWV0ZXJz
-IG1heSBiZSBzcGVjaWZpZWQuCgpJbiBhbnRpdGhyZWFkLCBJIHVzZWQgdGhlIGZvbGxvd2luZyBo
-ZXVyaXN0aWM6CgovKiBXZSBhZGQgMTZNQiB0byBzaXplLiAgVGhpcyBjb21wZW5zYXRlcyBmb3Ig
-YWRkcmVzcyByYW5kb21pemF0aW9uLiAqLwojZGVmaW5lIFBBRERJTkcgKDE2ICogMTAyNCAqIDEw
-MjQpCgoJcC0+cG9vbCA9IG1tYXAoTlVMTCwgc2l6ZStQQURESU5HLCBQUk9UX1JFQUR8UFJPVF9X
-UklURSwgTUFQX1NIQVJFRCwgZmQsCgkJICAgICAgIDApOwoJaWYgKHAtPnBvb2wgPT0gTUFQX0ZB
-SUxFRCkKCQlnb3RvIGZhaWxfZnJlZTsKCgkvKiBUaGVuIHdlIHJlbWFwIGludG8gdGhlIG1pZGRs
-ZSBvZiBpdC4gKi8KCW11bm1hcChwLT5wb29sLCBzaXplK1BBRERJTkcpOwoJcC0+cG9vbCA9IG1t
-YXAoKGNoYXIgKilwLT5wb29sICsgUEFERElORy8yLCBzaXplLCBQUk9UX1JFQUR8UFJPVF9XUklU
-RSwKCQkgICAgICAgTUFQX1NIQVJFRCwgZmQsIDApOwoJaWYgKHAtPnBvb2wgPT0gTUFQX0ZBSUxF
-RCkKCQlnb3RvIGZhaWxfZnJlZTsKClRoZSAxNk1CIHByb2JhYmx5IG5lZWRzIHRvIGJlIG11Y2gg
-bGFyZ2VyIGZvciA2NC1iaXQgbWFjaGluZXMsIHRob3VnaAooYW5kIEkgZGlkbid0IHN1cHBvcnQg
-cmVzaXplIG5vciByZW5lZ290aWF0aW9uLCBhcyB0aGF0J3MgYW4gaXNzdWUgaWYKeW91IHdhbnQg
-dG8gYmUgYWJsZSB0byBjcmVhdGUgbmV3IGFudGl0aHJlYWRzIGR5bmFtaWNhbGx5Li4uKQoKQ2hl
-ZXJzLApSdXN0eS4KX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X18KY2NhbiBtYWlsaW5nIGxpc3QKY2NhbkBsaXN0cy5vemxhYnMub3JnCmh0dHBzOi8vbGlzdHMu
-b3psYWJzLm9yZy9saXN0aW5mby9jY2FuCg==
+RGFuIEdvb2QgPGRhbkBnb29kZGFuLmNvbT4gd3JpdGVzOgo+IFRoYW5rcy4gIEkgcmVhbGx5IGxp
+a2UgdGhlIGFudGl0aHJlYWQgbW9kdWxlLiAgSSB0aGluayBpdCBvZmZlcnMgYQo+IGNvbXBlbGxp
+bmcgYXBwcm9hY2ggdG8gY29uY3VycmVuY3kuICBUaGVyZSBhcmUgc29tZSBuaWNlIHNpbWlsYXJp
+dGllcwo+IHRvIGNoYW5uZWxzIGluIHRoZSBnbyBsYW5ndWFnZS4KCkkgaGFkbid0IHRob3VnaHQg
+b2YgaXQgaW4gZ28gdGVybXMuICBJbnRlcmVzdGluZy4KCllvdXIgbW9kdWxlIGlzIHVwbG9hZGVk
+LCBhbmQgY29tbWl0IHJpZ2h0cyBoYXZlIGJlZW4gdXBkYXRlZC4KCkNoZWVycyEKUnVzdHkuCl9f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmNjYW4gbWFpbGlu
+ZyBsaXN0CmNjYW5AbGlzdHMub3psYWJzLm9yZwpodHRwczovL2xpc3RzLm96bGFicy5vcmcvbGlz
+dGluZm8vY2Nhbgo=
