@@ -1,18 +1,17 @@
 From: Stuart Longland <stuartl@longlandclan.id.au>
 Subject: Re: [PATCH] btree: Add custom allocator interface.
-Date: Mon, 8 Feb 2016 14:24:33 +1000
-Message-ID: <56B81881.70204@longlandclan.id.au>
+Date: Mon, 8 Feb 2016 14:26:29 +1000
+Message-ID: <56B818F5.7070204@longlandclan.id.au>
 References: <1454803839-632-1-git-send-email-stuartl@longlandclan.id.au>
- <87wpqgm3mb.fsf@rustcorp.com.au> <56B7FF57.1010704@longlandclan.id.au>
- <87egcnhnrn.fsf@rustcorp.com.au>
+ <20160208021734.GE3702@voom>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============2126390442165337506=="
+Content-Type: multipart/mixed; boundary="===============4776918545395742585=="
 Return-path: <ccan-bounces+gclcc-ccan=m.gmane.org@lists.ozlabs.org>
-Received: from atomos.longlandclan.id.au (atomos.longlandclan.id.au
- [IPv6:2001:44b8:21ac:7000::1])
- by lists.ozlabs.org (Postfix) with ESMTP id 1D0FF1A0018
- for <ccan@lists.ozlabs.org>; Mon,  8 Feb 2016 15:25:34 +1100 (AEDT)
-In-Reply-To: <87egcnhnrn.fsf@rustcorp.com.au>
+Received: from atomos.longlandclan.id.au (eth2015.qld.adsl.internode.on.net
+ [150.101.176.226])
+ by lists.ozlabs.org (Postfix) with ESMTP id 4B5B91A0018
+ for <ccan@lists.ozlabs.org>; Mon,  8 Feb 2016 15:27:24 +1100 (AEDT)
+In-Reply-To: <20160208021734.GE3702@voom>
 List-Unsubscribe: <https://lists.ozlabs.org/options/ccan>,
  <mailto:ccan-request@lists.ozlabs.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/ccan/>
@@ -22,44 +21,41 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/ccan>,
  <mailto:ccan-request@lists.ozlabs.org?subject=subscribe>
 Errors-To: ccan-bounces+gclcc-ccan=m.gmane.org@lists.ozlabs.org
 Sender: "ccan" <ccan-bounces+gclcc-ccan=m.gmane.org@lists.ozlabs.org>
-To: Rusty Russell <rusty@rustcorp.com.au>, ccan@lists.ozlabs.org
+To: David Gibson <david@gibson.dropbear.id.au>
+Cc: ccan@lists.ozlabs.org, Stuart Longland <me@vk4msl.id.au>
 List-Id: ccan@lists.ozlabs.org
 
 This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---===============2126390442165337506==
+--===============4776918545395742585==
 Content-Type: multipart/signed; micalg=pgp-sha256;
  protocol="application/pgp-signature";
- boundary="XTaSfbKmudqA5kGoPI18aiabIOoVkVV9f"
+ boundary="Far1UDtXf17E878G8pgUwKchAcBeGp9rM"
 
 This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---XTaSfbKmudqA5kGoPI18aiabIOoVkVV9f
+--Far1UDtXf17E878G8pgUwKchAcBeGp9rM
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 
-On 08/02/16 13:41, Rusty Russell wrote:
->> > Indeed, actually I'm half considering whether we make it a separate
->> > module that `btree` (and others) can pull into their code.  There ar=
-e
->> > lots of cases where `tal` or `talloc` is desirable over the standard=
- C
->> > malloc/free.
-> Yes, I've been all over the place on this.  Opt has opt_set_alloc(),
-> (a global), rbuf takes an explicit realloc function, io just assumes
-> tal, tal/grab_file is actually a tal submodule (the old one is
-> deprecated, will be removed RSN).
+On 08/02/16 12:17, David Gibson wrote:
+>> +static void* default_malloc(const struct btree_allocator* alloc, size=
+_t size);
+> Existing style in this function suggests "void *foo" rather than
+> "void* foo".
+
+Ahh, call it habit, I'm used to having the "pointer" bit with the type
+(as to me; "pointer to void" is a distinct type from "void").  Caught
+myself doing it elsewhere but missed it here, I'll fix it.
+
+> [snip]
+>> > +/* Default allocator implementation */
+>> > +const struct btree_allocator BTREE_DEFAULT_ALLOCATOR =3D {
+> Use of all-caps for a non-macro is a bit unexpected.
 >=20
-> There's a balance of "big enough that needing tal is not an issue",
-> "standalone enough that I want to avoid a dependency" and "API
-> simplicity".
 
-Yes this is true.  One thing I want to avoid though is having to say the
-same things 10 different ways, as that occupies (small amounts) of space
-too.
+Good point.  I guess I wanted to visually differentiate a constant from
+other member types.
 
-That's why I'm considering actually breaking this out into its own
-module.  The thought is it should follow the standard
-malloc/realloc/free conventions.  It's one less pointer to keep track of
-in most places.
+Regards,
 --=20
 Stuart Longland (aka Redhatter, VK4MSL)
 
@@ -67,7 +63,7 @@ I haven't lost my mind...
   ...it's backed up on a tape somewhere.
 
 
---XTaSfbKmudqA5kGoPI18aiabIOoVkVV9f
+--Far1UDtXf17E878G8pgUwKchAcBeGp9rM
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: OpenPGP digital signature
 Content-Disposition: attachment; filename="signature.asc"
@@ -75,24 +71,24 @@ Content-Disposition: attachment; filename="signature.asc"
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2
 
-iQIcBAEBCAAGBQJWuBiBAAoJEE36GRQQveO3ivMP/1vAfbTWxi0tB++MkidvJXyU
-dAKq+RJyqFyX2GcZbcbR0GFBzrCaVws7ytJlwiIr4O0O1Cn2l0BnqhXatEiRTbYU
-CmhPIocSXhmICbgtENfqXuiXaJC4VWdsWZ0MrrBFaYvR0z8aXp2D5HduF/bHGS+U
-FtkT5LA0Ru2rAik2jIrt5CVr/iPDd67RFwLVIYW82EPQoxipILXb0U4XScdY9tOA
-nNHmr62rFtaO2mWzAFfDIVpsJiNhQBDzcWjEYn/dmNn4Ec/eyDswpzB422C3c59z
-MmolmaKA29+XM9c5Kap+hXLmEWmVaZTvEby/xhlLvOHVD+BtSs1G/C9qnY4u6Jrb
-oUyHlTS5Mt5RUVvaIBgkb0xMZ8G+odVcL2uusHmkLW3XAl53OzQXIJlyuy1UWfWo
-zpm08Yf8fxe2v27riQdKcwkWT2ZJk/Xfl9LJ+56bboRmblxar7hYjJRN5BWVz/cR
-w4t4T8qDTlRX0srW3Z6Kl1+EEmrO+eS/2+buPpjFPIr6oakNnmLinCZMa6PrWnXu
-Ahbr65fp8SeoQ6XgZOkjjbKoYM3azxzCUG+uTnF0iCE9URlB1RWEg1uMWlaAUEal
-ItIRljSvaEDWMytjV3Qpiw8KQdM60cda42TEHGz1asdQSMkBN4fA7yoYDUndH5it
-P/IrnO5q51r2dyhlyGH6
-=g9m9
+iQIcBAEBCAAGBQJWuBj1AAoJEE36GRQQveO3gi4QAKhc2vgGf+9djn8im5VHwv1Q
+xcg4AYUS3xISJe80fIeiOGPWpKs/NbQTk42oOwK5kxvPsrkC2+m5paQxi8BhVdcS
+HO7ee9IrSRURqH3p6/x/qvf56riYIRTIu5ylh62y9CXpWB9iyX2UA+HIfSfbe1v1
+6CVA2EYzOlbxcgsHnvcHKhku+fXxsDeoUVKKz2BXrAt3p61a4lkGQZirWtikxohk
+ujbnItKzeEBQr6REkJkg3rjmc/VjyR26Ev0Ld2EUe+n/DnRnWjqhWwp8dAh+Jccw
+BKS8rNWGK32J1c0KL5cu8redE+qQLuUCqhuChzyn92Od+hISip/gbCJWitSfN7Db
+ve3/JI/hCuyq1uysnBJiN2CCVNVdhH+JxxOTVMu7GpalPn9HvnQSGwQLZsEW+rDP
+9kegnPZWkiTVN0FN9FEmROvdeyfMrqsdSAZBtb639y4hAGzgKnmdKt/NuooFrGyT
+qiLxKA+SjfHGXugyf+VKXZVTQ0qZKJ/2Y09ueNBG/kBXS59zzvDgkYSex6FK1Jgz
+xMST+hzyF9KosKmFWm6bHcdvlGLZBrx0bYqQUpdWpYSAYWkmHGIqacCGnQx5sdtg
+AZJArIeKc607l/bjlVWDcWPHqqun5wlrUrGjztVihbEraujlicKH/zlp8srmz+Su
+KTr7GRTzQl/6TRZHb8C/
+=NXfL
 -----END PGP SIGNATURE-----
 
---XTaSfbKmudqA5kGoPI18aiabIOoVkVV9f--
+--Far1UDtXf17E878G8pgUwKchAcBeGp9rM--
 
---===============2126390442165337506==
+--===============4776918545395742585==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: base64
@@ -102,4 +98,4 @@ X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KY2NhbiBtYWls
 aW5nIGxpc3QKY2NhbkBsaXN0cy5vemxhYnMub3JnCmh0dHBzOi8vbGlzdHMub3psYWJzLm9yZy9s
 aXN0aW5mby9jY2FuCg==
 
---===============2126390442165337506==--
+--===============4776918545395742585==--
