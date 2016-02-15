@@ -1,19 +1,18 @@
 From: David Gibson <david@gibson.dropbear.id.au>
-Subject: Re: [PATCH] altstack: stack alignment and accounting tweaks
-Date: Mon, 15 Feb 2016 21:54:44 +1100
-Message-ID: <20160215105444.GX2732@voom.fritz.box>
-References: <20160201024316.GA3210@ip-172-31-61-248.ec2.internal>
- <20160203061648.GR15080@voom.fritz.box>
- <CACNkOJOjgaHTBaPGjK+xbzL+WCpgbzOiy8WGDvAgz2vUpXca_g@mail.gmail.com>
+Subject: [PATCH 3/3] generator: Allow generators to take arguments
+Date: Mon, 15 Feb 2016 23:13:24 +1100
+Message-ID: <1455538404-1823-4-git-send-email-david@gibson.dropbear.id.au>
+References: <1455538404-1823-1-git-send-email-david@gibson.dropbear.id.au>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============2524190866618987326=="
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <ccan-bounces+gclcc-ccan=m.gmane.org@lists.ozlabs.org>
 Received: from ozlabs.org (ozlabs.org [103.22.144.67])
  (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 8CEDB1A0336
- for <ccan@lists.ozlabs.org>; Mon, 15 Feb 2016 21:53:44 +1100 (AEDT)
-In-Reply-To: <CACNkOJOjgaHTBaPGjK+xbzL+WCpgbzOiy8WGDvAgz2vUpXca_g@mail.gmail.com>
+ by lists.ozlabs.org (Postfix) with ESMTPS id 9C9621A033D
+ for <ccan@lists.ozlabs.org>; Mon, 15 Feb 2016 23:12:22 +1100 (AEDT)
+In-Reply-To: <1455538404-1823-1-git-send-email-david@gibson.dropbear.id.au>
 List-Unsubscribe: <https://lists.ozlabs.org/options/ccan>,
  <mailto:ccan-request@lists.ozlabs.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/ccan/>
@@ -23,312 +22,145 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/ccan>,
  <mailto:ccan-request@lists.ozlabs.org?subject=subscribe>
 Errors-To: ccan-bounces+gclcc-ccan=m.gmane.org@lists.ozlabs.org
 Sender: "ccan" <ccan-bounces+gclcc-ccan=m.gmane.org@lists.ozlabs.org>
-To: Dan Good <dan@gooddan.com>
-Cc: ccan@lists.ozlabs.org
+To: ccan@lists.ozlabs.org, rusty@rustcorp.com.au
 List-Id: ccan@lists.ozlabs.org
 
-
---===============2524190866618987326==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="JjNtGRvLZqzR8wa5"
-Content-Disposition: inline
-
-
---JjNtGRvLZqzR8wa5
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Wed, Feb 03, 2016 at 11:42:11PM +0000, Dan Good wrote:
-> "messy bitser" - what does that mean?  That's bad, isn't it?
-
-It's... mildly bad.
-
-By "bitser" I mean that it contains a number of changes that aren't
-closely related to each other.  In general that makes a patch more
-difficult to review.  How important that is depends on the complexity
-of the changes and how mature the code being altered is, so it's not
-really a big deal.
-
-The fact that altstack has been breaking Travis builds for a while
-probably predisposed me to be uncharitable.
-
-> Can I help fix the builds?
-
-So, I've figured out what the problem is, patch coming shortly.
-
->=20
-> On Wed, Feb 3, 2016 at 4:28 PM David Gibson <david@gibson.dropbear.id.au>
-> wrote:
->=20
-> > On Mon, Feb 01, 2016 at 02:43:16AM +0000, Dan Good wrote:
-> > >
-> > > * add altstack_remn, returns amount of stack remaining
-> > > * increase mapping by 1 page to handle abutment case
-> > > * capture rsp earlier
-> > > * align stack to 16 bytes
-> > >
-> > > Signed-off-by: Dan Good <dan@dancancode.com>
-> >
-> > Bit of a messy bitser, but doesn't look it will make anything
-> > worse. so go ahead and push.
-> >
-> > Unfortunately, altstack is breaking travis builds at the moment (see,
-> > e.g. https://travis-ci.org/dgibson/ccan/jobs/106661592) - but not
-> > local builds for me which is making it difficult to debug.
-> >
-> > Some investigation showed that the test prog was getting a SIGBUS, but
-> > I didn't get further than that.
-> >
-> > altstack also breaks "make all" on any non-x86_64 platform (including
-> > 32-bit x86) which is pretty horrid.  For that I think we need to
-> > adjust the makefiles to look at rusty's new "ported" stuff from _info.
-> >
-> >
-> > > ---
-> > >  ccan/altstack/altstack.c | 17 ++++++++++++++---
-> > >  ccan/altstack/altstack.h | 14 ++++++++++++++
-> > >  ccan/altstack/test/run.c | 20 +++++++++++++-------
-> > >  3 files changed, 41 insertions(+), 10 deletions(-)
-> > >
-> > > diff --git a/ccan/altstack/altstack.c b/ccan/altstack/altstack.c
-> > > index 6faf38f..b71c64f 100644
-> > > --- a/ccan/altstack/altstack.c
-> > > +++ b/ccan/altstack/altstack.c
-> > > @@ -8,6 +8,7 @@
-> > >  #include <signal.h>
-> > >  #include <stdio.h>
-> > >  #include <string.h>
-> > > +#include <unistd.h>
-> > >  #include <sys/mman.h>
-> > >
-> > >  static __thread char ebuf[ALTSTACK_ERR_MAXLEN];
-> > > @@ -37,6 +38,11 @@ static void segvjmp(int signum)
-> > >  }
-> > >
-> > >  static __thread void *rsp_save_[2];
-> > > +static __thread rlim_t max_;
-> > > +
-> > > +rlim_t altstack_max(void) {
-> > > +     return max_;
-> > > +}
-> > >
-> > >  static ptrdiff_t rsp_save(unsigned i) {
-> > >       assert(i < 2);
-> > > @@ -57,6 +63,7 @@ static __thread void *arg_, *out_;
-> > >
-> > >  int altstack(rlim_t max, void *(*fn)(void *), void *arg, void **out)
-> > >  {
-> > > +     long pgsz =3D sysconf(_SC_PAGESIZE);
-> > >       int ret =3D -1, undo =3D 0;
-> > >       char *m;
-> > >       struct rlimit rl_save;
-> > > @@ -69,11 +76,16 @@ int altstack(rlim_t max, void *(*fn)(void *), void
-> > *arg, void **out)
-> > >       fn_  =3D fn;
-> > >       arg_ =3D arg;
-> > >       out_ =3D 0;
-> > > +     max_ =3D max;
-> > >       ebuf[elen =3D 0] =3D '\0';
-> > >       if (out) *out =3D 0;
-> > >
-> > > +     // if the first page below the mapping is in use, we get max-pg=
-sz
-> > usable bytes
-> > > +     // add pgsz to max to guarantee at least max usable bytes
-> > > +     max +=3D pgsz;
-> > > +
-> > >       ok(getrlimit(RLIMIT_STACK, &rl_save), 1);
-> > > -     ok(setrlimit(RLIMIT_STACK, &(struct rlimit) { max,
-> > rl_save.rlim_max }), 1);
-> > > +     ok(setrlimit(RLIMIT_STACK, &(struct rlimit) { max_,
-> > rl_save.rlim_max }), 1);
-> > >       undo++;
-> > >
-> > >       ok(m =3D mmap(0, max, PROT_READ|PROT_WRITE,
-> > MAP_PRIVATE|MAP_ANONYMOUS|MAP_GROWSDOWN|MAP_NORESERVE, -1, 0), 1);
-> > > @@ -91,8 +103,7 @@ int altstack(rlim_t max, void *(*fn)(void *), void
-> > *arg, void **out)
-> > >               ok(sigaction(SIGSEGV, &sa, &sa_save), 1);
-> > >               undo++;
-> > >
-> > > -             asm volatile ("movq %%rsp, %%r10\nmov %0, %%rsp\npush
-> > %%r10" : : "g" (m + max) : "r10");
-> > > -             rsp_save(0);
-> > > +             asm volatile ("movq %%rsp, %%r10\nmov %1, %%rsp\nmov
-> > %%rsp, %0\nsub $8, %%rsp\npush %%r10" : "=3Dg" (rsp_save_[0]) : "g" (m =
-+ max)
-> > : "r10");
-> > >               out_ =3D fn_(arg_);
-> > >               asm volatile ("pop %rsp");
-> > >               ret =3D 0;
-> > > diff --git a/ccan/altstack/altstack.h b/ccan/altstack/altstack.h
-> > > index 5570e7b..4445a2a 100644
-> > > --- a/ccan/altstack/altstack.h
-> > > +++ b/ccan/altstack/altstack.h
-> > > @@ -104,6 +104,20 @@ char *altstack_geterr(void);
-> > >  ptrdiff_t altstack_used(void);
-> > >
-> > >  /**
-> > > + * altstack_max - return usable stack size
-> > > + *
-> > > + * Returns: max value from altstack() call
-> > > + */
-> > > +rlim_t altstack_max(void);
-> > > +
-> > > +/**
-> > > + * altstack_remn - return amount of stack remaining
-> > > + *
-> > > + * Returns: altstack_max() minus altstack_used()
-> > > + */
-> > > +#define altstack_remn() (altstack_max() - altstack_used())
-> > > +
-> > > +/**
-> > >   * altstack_rsp_save - set initial rsp value
-> > >   *
-> > >   * Capture the current value of rsp for future altstack_used()
-> > > diff --git a/ccan/altstack/test/run.c b/ccan/altstack/test/run.c
-> > > index adc1020..d0b8d28 100644
-> > > --- a/ccan/altstack/test/run.c
-> > > +++ b/ccan/altstack/test/run.c
-> > > @@ -4,6 +4,7 @@
-> > >  #include <setjmp.h>
-> > >  #include <signal.h>
-> > >  #include <string.h>
-> > > +#include <unistd.h>
-> > >  #include <sys/mman.h>
-> > >  #include <ccan/tap/tap.h>
-> > >  #include <ccan/altstack/altstack.h>
-> > > @@ -20,13 +21,13 @@ enum {
-> > >  };
-> > >  int fail, call1, call2;
-> > >  char *m_;
-> > > -rlim_t max_;
-> > > +rlim_t msz_;
-> > >  #define e(x) (900+(x))
-> > >  #define seterr(x) (errno =3D e(x))
-> > >  #define setcall(x) ((call1 |=3D !errno ? (x) : 0), (call2 |=3D errno=
- ||
-> > out_ ? (x) : 0))
-> > >  #define getrlimit(...)               (fail&getrlimit_        ?
-> > (seterr(getrlimit_),          -1) : (setcall(getrlimit_),
-> >  getrlimit(__VA_ARGS__)))
-> > >  #define mmap(...)            (fail&mmap_             ? (seterr(mmap_=
-),
-> >      (void *)-1) : (setcall(mmap_),          mmap(__VA_ARGS__)))
-> > > -#define munmap(a, b)         (fail&munmap_           ?
-> > (seterr(munmap_),             -1) : (setcall(munmap_),
-> > munmap(m_=3D(a), max_=3D(b))))
-> > > +#define munmap(a, b)         (fail&munmap_           ?
-> > (seterr(munmap_),             -1) : (setcall(munmap_),
-> > munmap(m_=3D(a), msz_=3D(b))))
-> > >  #define setrlimit(...)               (fail&setrlimit_        ?
-> > (seterr(setrlimit_),          -1) : (setcall(setrlimit_),
-> >  setrlimit(__VA_ARGS__)))
-> > >  #define sigaltstack(...)     (fail&sigaltstack_      ?
-> > (seterr(sigaltstack_),        -1) : (setcall(sigaltstack_),
-> >  sigaltstack(__VA_ARGS__)))
-> > >  #define sigaction(...)               (fail&sigaction_        ?
-> > (seterr(sigaction_),          -1) : (setcall(sigaction_),
-> >  sigaction(__VA_ARGS__)))
-> > > @@ -58,7 +59,9 @@ static void *wrap(void *i)
-> > >
-> > >  int main(void)
-> > >  {
-> > > -     plan_tests(16);
-> > > +     long pgsz =3D sysconf(_SC_PAGESIZE);
-> > > +
-> > > +     plan_tests(17);
-> > >
-> > >  #define chkfail(x, y, z, c1, c2) (call1 =3D 0, call2 =3D 0, errno =
-=3D 0,
-> > ok1((fail =3D x) && (y) && errno =3D=3D (z) && call1 =3D=3D (c1) && cal=
-l2 =3D=3D (c2)));
-> > >  #define   chkok(   y, z, c1, c2) (call1 =3D 0, call2 =3D 0, errno =
-=3D 0, fail
-> > =3D 0,     ok1((y) && errno =3D=3D (z) && call1 =3D=3D (c1) && call2 =
-=3D=3D (c2)));
-> > > @@ -86,7 +89,7 @@ int main(void)
-> > >       chkfail(munmap_,        altstack(8*MiB, wrap, 0, 0) =3D=3D  1,
-> > e(munmap_),
-> > >               getrlimit_|setrlimit_|mmap_|sigaltstack_|sigaction_,
-> > >               setrlimit_|sigaltstack_|sigaction_);
-> > > -     if (fail =3D 0, munmap(m_, max_) =3D=3D -1)
-> > > +     if (fail =3D 0, munmap(m_, msz_) =3D=3D -1)
-> > >               err(1, "munmap");
-> > >
-> > >       chkok(                  altstack(1*MiB, wrap, (void *) 1000000,=
- 0)
-> > =3D=3D -1, EOVERFLOW,
-> > > @@ -102,10 +105,12 @@ int main(void)
-> > >       chkfail(munmap_,        altstack(1*MiB, wrap, (void *) 1000000,=
- 0)
-> > =3D=3D -1, EOVERFLOW,
-> > >               getrlimit_|setrlimit_|mmap_|sigaltstack_|sigaction_,
-> > >               setrlimit_|sigaltstack_|sigaction_);
-> > > -     if (fail =3D 0, munmap(m_, max_) =3D=3D -1)
-> > > +     if (fail =3D 0, munmap(m_, msz_) =3D=3D -1)
-> > >               err(1, "munmap");
-> > >
-> > > -     ok1(used > 1*MiB-1*KiB && used < 1*MiB);
-> > > +     ok1(altstack_max() =3D=3D 1*MiB);
-> > > +     diag("used: %lu", used);
-> > > +     ok1(used >=3D 1*MiB && used <=3D 1*MiB + pgsz);
-> > >
-> > >       char *p;
-> > >       for(p =3D altstack_geterr(); *p; p++)
-> > > @@ -128,7 +133,8 @@ int main(void)
-> > >               getrlimit_|setrlimit_|mmap_|sigaltstack_|sigaction_,
-> > >               setrlimit_|munmap_|sigaltstack_|sigaction_);
-> > >
-> > > -     ok1(used > 8*MiB-8*KiB && used < 8*MiB);
-> > > +     diag("used: %lu", used);
-> > > +     ok1(used >=3D 8*MiB && used <=3D 8*MiB + pgsz);
-> > >
-> > >       used =3D 0;
-> > >       chkok(                  altstack(8*MiB, wrap, (void *) 100000, =
-0)
-> > =3D=3D 0, 0,
-> >
-> >
-
---=20
-David Gibson			| I'll have my music baroque, and my code
-david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
-				| _way_ _around_!
-http://www.ozlabs.org/~dgibson
-
---JjNtGRvLZqzR8wa5
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJWwa50AAoJEGw4ysog2bOSoyAQAIA2g18GCoUUiMQqSXDwfxjG
-PwUrjWqVBfFVpUpdILha+pLktMp3RIlXgugZQ4Upbfq8ure1/VvqsYOFfDC+IZ/w
-vHdOTD8rktt0THfDT+VbXQe7UnJJp/yC3nyc212Be4hy7G6o0NV+xtCuLL+irqic
-ZQUSzmqewTiMwFyhF8r1B2jXsWcoADLukLHRBoZ65HSRSUb6vUJXYXWXn0wI+6Vo
-LJMbpG7apx+s/rL+TxAmPcOg596SG5M1E02VZMcoj7e8mODyf5cZptjeUhxbHx29
-WA+fXgJi0ZrXUyzMF12YZyWuFu4Jc/qxXGCQE/rUXfte3h6h8G0YOdqtDEO5JDlP
-yv+4vNgJG+BK1P0caRuM/ncqSwgWFuB0gGgUqDuH2CwbQL2Qxs2IGKMEpqxj/+ro
-zllb4aMwJk/n5uiF4D04mHDO6PXMo4bcPME4rsSUj6PbLKxOpISF6KDJn4W8MvuE
-IKkbGrbyFTZE+yjtTs7WlOAC4r9HOy3EYFJ86tWksdNIwsxjkranIPrI9rM7f/GK
-/yyFy08qIRCiBrOHPpSWV2bd/znXiXvhomjBTFIXvGyZuIP2o14zUgPaoobHGBXf
-Lz6j8U+DArSCD/4ZSjKnRD5/clPFpL+CmZUSQj7GFEjAszSXBjyDYWmVmHbEXm2n
-svZjKjVgg+2BNHm9cSqi
-=kdTq
------END PGP SIGNATURE-----
-
---JjNtGRvLZqzR8wa5--
-
---===============2524190866618987326==
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: inline
-
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KY2NhbiBtYWls
-aW5nIGxpc3QKY2NhbkBsaXN0cy5vemxhYnMub3JnCmh0dHBzOi8vbGlzdHMub3psYWJzLm9yZy9s
-aXN0aW5mby9jY2FuCg==
-
---===============2524190866618987326==--
+VXNpbmcgc29tZSBzZXJpb3VzIG1hY3JvIG1hZ2ljLCB0aGlzIHBhdGNoIGV4dGVuZHMgZ2VuZXJh
+dG9ycyB0byBhbGxvdwp0aGVtIHRvIHRha2UgYXJiaXRyYXJ5IGFyZ3VtZW50cy4gIFRoZSBhcmd1
+bWVudHMgYXJlIG1hcnNoYWxsZWQgaW50byBhCnN0cnVjdHVyZSBwbGFjZWQgYXQgdGhlIGZhciBl
+bmQgb2YgdGhlIGdlbmVyYXRvcidzIHN0YWNrIHdoZW4gaXQgaXMKY3JlYXRlZC4gIFRoZW4sIHRo
+ZXkncmUgdW5tYXJzaGFsbGVkIGJhY2sgaW50byBDIHBhcmFtZXRlcnMgd2hlbiB3ZSBmaXJzdApj
+b250ZXh0IHN3aXRjaCBpbnRvIHRoZSBnZW5lcmF0b3IuCgpTaWduZWQtb2ZmLWJ5OiBEYXZpZCBH
+aWJzb24gPGRhdmlkQGdpYnNvbi5kcm9wYmVhci5pZC5hdT4KLS0tCiBjY2FuL2dlbmVyYXRvci9f
+aW5mbyAgICAgICAgICAgICAgIHwgIDEgKwogY2Nhbi9nZW5lcmF0b3IvZ2VuZXJhdG9yLmggICAg
+ICAgICB8IDYzICsrKysrKysrKysrKysrKysrKysrKysrKysrKysrKy0tLS0tLS0tCiBjY2FuL2dl
+bmVyYXRvci90ZXN0L2FwaS5jICAgICAgICAgIHwgMzggKysrKysrKysrKysrKysrKysrKysrKy0K
+IGNjYW4vZ2VuZXJhdG9yL3Rlc3QvZXhhbXBsZS1nZW5zLmMgfCAxOCArKysrKysrKysrKwogY2Nh
+bi9nZW5lcmF0b3IvdGVzdC9leGFtcGxlLWdlbnMuaCB8ICAyICsrCiA1IGZpbGVzIGNoYW5nZWQs
+IDEwOCBpbnNlcnRpb25zKCspLCAxNCBkZWxldGlvbnMoLSkKCmRpZmYgLS1naXQgYS9jY2FuL2dl
+bmVyYXRvci9faW5mbyBiL2NjYW4vZ2VuZXJhdG9yL19pbmZvCmluZGV4IGE2NTcwZTMuLmIwYjcz
+NDMgMTAwNjQ0Ci0tLSBhL2NjYW4vZ2VuZXJhdG9yL19pbmZvCisrKyBiL2NjYW4vZ2VuZXJhdG9y
+L19pbmZvCkBAIC01OSw2ICs1OSw3IEBAIGludCBtYWluKGludCBhcmdjLCBjaGFyICphcmd2W10p
+CiAJCXByaW50ZigiY2Nhbi9wdHJpbnRcbiIpOwogCQlwcmludGYoImNjYW4vYWxpZ25vZlxuIik7
+CiAJCXByaW50ZigiY2Nhbi9jcHBtYWdpY1xuIik7CisJCXByaW50ZigiY2Nhbi9jb21waWxlclxu
+Iik7CiAJCXJldHVybiAwOwogCX0KIApkaWZmIC0tZ2l0IGEvY2Nhbi9nZW5lcmF0b3IvZ2VuZXJh
+dG9yLmggYi9jY2FuL2dlbmVyYXRvci9nZW5lcmF0b3IuaAppbmRleCA2YjJiZDkyLi4xMjFmMTRh
+IDEwMDY0NAotLS0gYS9jY2FuL2dlbmVyYXRvci9nZW5lcmF0b3IuaAorKysgYi9jY2FuL2dlbmVy
+YXRvci9nZW5lcmF0b3IuaApAQCAtMjMsNiArMjMsNyBAQAogI2luY2x1ZGUgPGNjYW4vcHRyaW50
+L3B0cmludC5oPgogI2luY2x1ZGUgPGNjYW4vYnVpbGRfYXNzZXJ0L2J1aWxkX2Fzc2VydC5oPgog
+I2luY2x1ZGUgPGNjYW4vY3BwbWFnaWMvY3BwbWFnaWMuaD4KKyNpbmNsdWRlIDxjY2FuL2NvbXBp
+bGVyL2NvbXBpbGVyLmg+CiAKIC8qCiAgKiBJbnRlcm5hbHMgLSBpbmNsdWRlZCBqdXN0IGZvciB0
+aGUgdXNlIG9mIGlubGluZXMgYW5kIG1hY3JvcwpAQCAtNDAsNiArNDEsMTEgQEAgc3RhdGljIGlu
+bGluZSBzdHJ1Y3QgZ2VuZXJhdG9yXyAqZ2VuZXJhdG9yX3N0YXRlXyhjb25zdCB2b2lkICpyZXQp
+CiAJcmV0dXJuIChzdHJ1Y3QgZ2VuZXJhdG9yXyAqKXJldCAtIDE7CiB9CiAKK3N0YXRpYyBpbmxp
+bmUgdm9pZCAqZ2VuZXJhdG9yX2FyZ3BfKGNvbnN0IHZvaWQgKnJldCkKK3sKKwlyZXR1cm4gZ2Vu
+ZXJhdG9yX3N0YXRlXyhyZXQpLT5iYXNlOworfQorCiBzdHJ1Y3QgZ2VuZXJhdG9yX2luY29tcGxl
+dGVfOwogCiAjZGVmaW5lIGdlbmVyYXRvcl9ydHlwZV8oZ2VuXykJCQlcCkBAIC03Nyw4ICs4Myw4
+IEBAIHZvaWQgZ2VuZXJhdG9yX2ZyZWVfKHZvaWQgKnJldCk7CiAgKiBFeGFtcGxlOgogICoJZ2Vu
+ZXJhdG9yX2RlY2xhcmUoY291bnRfdG9fMywgaW50KTsKICAqLwotI2RlZmluZSBnZW5lcmF0b3Jf
+ZGVjbGFyZShuYW1lXywgcnR5cGVfKQlcCi0JZ2VuZXJhdG9yX3QocnR5cGVfKSBuYW1lXyh2b2lk
+KQorI2RlZmluZSBnZW5lcmF0b3JfZGVjbGFyZShuYW1lXywgcnR5cGVfLCAuLi4pCVwKKwlnZW5l
+cmF0b3JfdChydHlwZV8pIG5hbWVfKGdlbmVyYXRvcl9wYXJtc19vdXRlcl8oX19WQV9BUkdTX18p
+KQogCiAvKioKICAqIGdlbmVyYXRvcl9kZWYgLSBkZWZpbmUgYSBnZW5lcmF0b3IgZnVuY3Rpb24K
+QEAgLTk3LDExICsxMDMsMzUgQEAgdm9pZCBnZW5lcmF0b3JfZnJlZV8odm9pZCAqcmV0KTsKICAq
+CQlnZW5lcmF0b3JfeWllbGQoMyk7CiAgKgl9CiAgKi8KLSNkZWZpbmUgZ2VuZXJhdG9yX2RlZl8o
+bmFtZV8sIHJ0eXBlXywgc3RvcmFnZV8pCQkJCVwKLQlzdGF0aWMgdm9pZCBuYW1lXyMjX2dlbmVy
+YXRvcl8ocnR5cGVfICpyZXRfKTsJCQlcCisjZGVmaW5lIGdlbmVyYXRvcl9wYXJtXyh0Xywgbl8p
+CQkJdF8gbl8KKyNkZWZpbmUgZ2VuZXJhdG9yX3Bhcm1zXyguLi4pCQkJCQkJXAorCUNQUE1BR0lD
+XzJNQVAoZ2VuZXJhdG9yX3Bhcm1fLCBfX1ZBX0FSR1NfXykKKyNkZWZpbmUgZ2VuZXJhdG9yX3Bh
+cm1zX2lubmVyXyguLi4pCQkJCQlcCisJQ1BQTUFHSUNfSUZFTFNFKENQUE1BR0lDX05PTkVNUFRZ
+KF9fVkFfQVJHU19fKSkJCQlcCisJCSgsIGdlbmVyYXRvcl9wYXJtc18oX19WQV9BUkdTX18pKSgp
+CisjZGVmaW5lIGdlbmVyYXRvcl9wYXJtc19vdXRlcl8oLi4uKQkJCQkJXAorCUNQUE1BR0lDX0lG
+RUxTRShDUFBNQUdJQ19OT05FTVBUWShfX1ZBX0FSR1NfXykpCVwKKwkJKGdlbmVyYXRvcl9wYXJt
+c18oX19WQV9BUkdTX18pKSh2b2lkKQorI2RlZmluZSBnZW5lcmF0b3JfYXJnZmllbGRfKHRfLCBu
+XykJCXRfIG5fOworI2RlZmluZSBnZW5lcmF0b3JfYXJnc3RydWN0XyguLi4pCQkJCQlcCisJc3Ry
+dWN0IHsJCQkJCQkJXAorCQlDUFBNQUdJQ19KT0lOKCwgQ1BQTUFHSUNfMk1BUChnZW5lcmF0b3Jf
+YXJnZmllbGRfLAlcCisJCQkJCSAgICAgIF9fVkFfQVJHU19fKSkJCVwKKwl9CisjZGVmaW5lIGdl
+bmVyYXRvcl9hcmdfdW5wYWNrXyh0Xywgbl8pCQlhcmdzLT5uXworI2RlZmluZSBnZW5lcmF0b3Jf
+YXJnc191bnBhY2tfKC4uLikJCVwKKwlDUFBNQUdJQ19JRkVMU0UoQ1BQTUFHSUNfTk9ORU1QVFko
+X19WQV9BUkdTX18pKQkJCVwKKwkJKCwgQ1BQTUFHSUNfMk1BUChnZW5lcmF0b3JfYXJnX3VucGFj
+a18sIF9fVkFfQVJHU19fKSkoKQorI2RlZmluZSBnZW5lcmF0b3JfYXJnX3BhY2tfKHRfLCBuXykJ
+CWFyZ3MtPm5fID0gbl8KKyNkZWZpbmUgZ2VuZXJhdG9yX2FyZ3NfcGFja18oLi4uKQkJCQkJXAor
+CUNQUE1BR0lDX0pPSU4oOywgQ1BQTUFHSUNfMk1BUChnZW5lcmF0b3JfYXJnX3BhY2tfLCBfX1ZB
+X0FSR1NfXykpCisjZGVmaW5lIGdlbmVyYXRvcl9kZWZfKG5hbWVfLCBydHlwZV8sIHN0b3JhZ2Vf
+LCAuLi4pCQkJXAorCXN0YXRpYyB2b2lkIG5hbWVfIyNfZ2VuZXJhdG9yXyhydHlwZV8gKnJldF8J
+CQlcCisJCQkJICAgICAgIGdlbmVyYXRvcl9wYXJtc19pbm5lcl8oX19WQV9BUkdTX18pKTsgXAog
+CXN0YXRpYyB2b2lkIG5hbWVfIyNfZ2VuZXJhdG9yX18oZ2VuZXJhdG9yX3dyYXBwZXJfYXJnc18o
+KSkJXAogCXsJCQkJCQkJCVwKIAkJc3RydWN0IGdlbmVyYXRvcl8gKmdlbjsJCQkJCVwKKwkJVU5O
+RUVERUQgZ2VuZXJhdG9yX2FyZ3N0cnVjdF8oX19WQV9BUkdTX18pICphcmdzOwlcCiAJCUNQUE1B
+R0lDX0lGRUxTRShIQVZFX1BPSU5URVJfU0FGRV9NQUtFQ09OVEVYVCkJCVwKIAkJCSgpCQkJCQkJ
+XAogCQkJKHB0cmRpZmZfdCBoaWxvID0gKChwdHJkaWZmX3QpaGkgPDwgKDgqc2l6ZW9mKGludCkp
+KSBcCkBAIC0xMTAsMTkgKzE0MCwyNiBAQCB2b2lkIGdlbmVyYXRvcl9mcmVlXyh2b2lkICpyZXQp
+OwogCQkJQlVJTERfQVNTRVJUKHNpemVvZihzdHJ1Y3QgZ2VuZXJhdG9yXyAqKQlcCiAJCQkJICAg
+ICA8PSAyKnNpemVvZihpbnQpKTspCQlcCiAJCWdlbiA9IGdlbmVyYXRvcl9zdGF0ZV8ocmV0KTsJ
+CQkJXAotCQluYW1lXyMjX2dlbmVyYXRvcl8ocmV0KTsJCQkJXAorCQlhcmdzID0gZ2VuZXJhdG9y
+X2FyZ3BfKHJldCk7CQkJCVwKKwkJbmFtZV8jI19nZW5lcmF0b3JfKHJldCBnZW5lcmF0b3JfYXJn
+c191bnBhY2tfKF9fVkFfQVJHU19fKSk7IFwKIAkJZ2VuLT5jb21wbGV0ZSA9IHRydWU7CQkJCQlc
+CiAJCXNldGNvbnRleHQoJmdlbi0+Y2FsbGVyKTsJCQkJXAogCQlhc3NlcnQoMCk7CQkJCQkJXAog
+CX0JCQkJCQkJCVwKLQlzdG9yYWdlXyBnZW5lcmF0b3JfdChydHlwZV8pIG5hbWVfKHZvaWQpCQkJ
+XAorCXN0b3JhZ2VfIGdlbmVyYXRvcl90KHJ0eXBlXykJCQkJCVwKKwluYW1lXyhnZW5lcmF0b3Jf
+cGFybXNfb3V0ZXJfKF9fVkFfQVJHU19fKSkJCQlcCiAJewkJCQkJCQkJXAotCQlyZXR1cm4gZ2Vu
+ZXJhdG9yX25ld18obmFtZV8jI19nZW5lcmF0b3JfXywJCVwKLQkJCQkgICAgICBzaXplb2YocnR5
+cGVfKSk7CQkJXAorCQlnZW5lcmF0b3JfdChydHlwZV8pIGdlbiA9IGdlbmVyYXRvcl9uZXdfKG5h
+bWVfIyNfZ2VuZXJhdG9yX18sIFwKKwkJCQkJCQkgc2l6ZW9mKHJ0eXBlXykpOyBcCisJCVVOTkVF
+REVEIGdlbmVyYXRvcl9hcmdzdHJ1Y3RfKF9fVkFfQVJHU19fKSAqYXJncyA9CVwKKwkJCWdlbmVy
+YXRvcl9hcmdwXyhnZW4pOwkJCQlcCisJCWdlbmVyYXRvcl9hcmdzX3BhY2tfKF9fVkFfQVJHU19f
+KTsJCQlcCisJCXJldHVybiBnZW47CQkJCQkJXAogCX0JCQkJCQkJCVwKLQlzdGF0aWMgdm9pZCBu
+YW1lXyMjX2dlbmVyYXRvcl8ocnR5cGVfICpyZXRfKQotI2RlZmluZSBnZW5lcmF0b3JfZGVmKG5h
+bWVfLCBydHlwZV8pCQlcCi0JZ2VuZXJhdG9yX2RlZl8obmFtZV8sIHJ0eXBlXywgKQorCXN0YXRp
+YyB2b2lkIG5hbWVfIyNfZ2VuZXJhdG9yXyhydHlwZV8gKnJldF8JCQlcCisJCQkJICAgICAgIGdl
+bmVyYXRvcl9wYXJtc19pbm5lcl8oX19WQV9BUkdTX18pKQorI2RlZmluZSBnZW5lcmF0b3JfZGVm
+KG5hbWVfLCBydHlwZV8sIC4uLikJXAorCWdlbmVyYXRvcl9kZWZfKG5hbWVfLCBydHlwZV8sICwg
+X19WQV9BUkdTX18pCiAKIC8qKgogICogZ2VuZXJhdG9yX2RlZl9zdGF0aWMgLSBkZWZpbmUgYSBw
+cml2YXRlIC8gbG9jYWwgZ2VuZXJhdG9yIGZ1bmN0aW9uCkBAIC0xMzIsOCArMTY5LDggQEAgdm9p
+ZCBnZW5lcmF0b3JfZnJlZV8odm9pZCAqcmV0KTsKICAqIEFzIGdlbmVyYXRvcl9kZWYsIGJ1dCB0
+aGUgcmVzdWx0aW5nIGdlbmVyYXRvciBmdW5jdGlvbiB3aWxsIGJlCiAgKiBsb2NhbCB0byB0aGlz
+IG1vZHVsZS4KICAqLwotI2RlZmluZSBnZW5lcmF0b3JfZGVmX3N0YXRpYyhuYW1lXywgcnR5cGVf
+KQlcCi0JZ2VuZXJhdG9yX2RlZl8obmFtZV8sIHJ0eXBlXywgc3RhdGljKQorI2RlZmluZSBnZW5l
+cmF0b3JfZGVmX3N0YXRpYyhuYW1lXywgcnR5cGVfLCAuLi4pCVwKKwlnZW5lcmF0b3JfZGVmXyhu
+YW1lXywgcnR5cGVfLCBzdGF0aWMsIF9fVkFfQVJHU19fKQogCiAvKioKICAqIGdlbmVyYXRvcl95
+aWVsZCAtIHlpZWxkIChyZXR1cm4pIGEgdmFsdWUgZnJvbSBhIGdlbmVyYXRvcgpkaWZmIC0tZ2l0
+IGEvY2Nhbi9nZW5lcmF0b3IvdGVzdC9hcGkuYyBiL2NjYW4vZ2VuZXJhdG9yL3Rlc3QvYXBpLmMK
+aW5kZXggYTU3NzBmZC4uNTZlOThjYyAxMDA2NDQKLS0tIGEvY2Nhbi9nZW5lcmF0b3IvdGVzdC9h
+cGkuYworKysgYi9jY2FuL2dlbmVyYXRvci90ZXN0L2FwaS5jCkBAIC0zMiw2ICszMiw0MCBAQCBz
+dGF0aWMgdm9pZCB0ZXN0MSh2b2lkKQogCWdlbmVyYXRvcl9mcmVlKHN0YXRlMSk7CiB9CiAKK3N0
+YXRpYyB2b2lkIHRlc3QyKHZvaWQpCit7CisJZ2VuZXJhdG9yX3QoaW50KSBzdGF0ZTIgPSBnZW4y
+KDEwMCk7CisJaW50ICpyZXQ7CisKKwlvazEoKHJldCA9IGdlbmVyYXRvcl9uZXh0KHN0YXRlMikp
+ICE9IE5VTEwpOworCW9rMSgqcmV0ID09IDEwMSk7CisJb2sxKChyZXQgPSBnZW5lcmF0b3JfbmV4
+dChzdGF0ZTIpKSAhPSBOVUxMKTsKKwlvazEoKnJldCA9PSAxMDMpOworCW9rMSgocmV0ID0gZ2Vu
+ZXJhdG9yX25leHQoc3RhdGUyKSkgIT0gTlVMTCk7CisJb2sxKCpyZXQgPT0gMTE3KTsKKwlvazEo
+KHJldCA9IGdlbmVyYXRvcl9uZXh0KHN0YXRlMikpID09IE5VTEwpOworCisJZ2VuZXJhdG9yX2Zy
+ZWUoc3RhdGUyKTsKK30KKworc3RhdGljIHZvaWQgdGVzdDModm9pZCkKK3sKKwlpbnQgaTsKKwor
+CWZvciAoaSA9IDA7IGkgPCA0OyBpKyspIHsKKwkJZ2VuZXJhdG9yX3QoY29uc3QgY2hhciAqKSBz
+dGF0ZTMgPSBnZW4zKCJ0ZXN0IiwgaSk7CisJCWNvbnN0IGNoYXIgKnM7CisJCWludCBqOworCisJ
+CWZvciAoaiA9IDA7IGogPCBpOyBqKyspIHsKKwkJCW9rMShnZW5lcmF0b3JfbmV4dF92YWwocywg
+c3RhdGUzKSk7CisJCQlvazEoc3RyZXEocywgInRlc3QiKSk7CisJCX0KKwkJb2sxKCFnZW5lcmF0
+b3JfbmV4dF92YWwocywgc3RhdGUzKSk7CisJCWdlbmVyYXRvcl9mcmVlKHN0YXRlMyk7CisJfQor
+fQorCiBzdGF0aWMgdm9pZCB0ZXN0eCh2b2lkKQogewogCWdlbmVyYXRvcl90KGNvbnN0IGNoYXIg
+Kikgc3RhdGV4ID0gZ2VueCgpOwpAQCAtNTIsOSArODYsMTEgQEAgc3RhdGljIHZvaWQgdGVzdHgo
+dm9pZCkKIGludCBtYWluKHZvaWQpCiB7CiAJLyogVGhpcyBpcyBob3cgbWFueSB0ZXN0cyB5b3Ug
+cGxhbiB0byBydW4gKi8KLQlwbGFuX3Rlc3RzKDggKyA5KTsKKwlwbGFuX3Rlc3RzKDggKyA3ICsg
+MTYgKyA5KTsKIAogCXRlc3QxKCk7CisJdGVzdDIoKTsKKwl0ZXN0MygpOwogCXRlc3R4KCk7CiAK
+IAkvKiBUaGlzIGV4aXRzIGRlcGVuZGluZyBvbiB3aGV0aGVyIGFsbCB0ZXN0cyBwYXNzZWQgKi8K
+ZGlmZiAtLWdpdCBhL2NjYW4vZ2VuZXJhdG9yL3Rlc3QvZXhhbXBsZS1nZW5zLmMgYi9jY2FuL2dl
+bmVyYXRvci90ZXN0L2V4YW1wbGUtZ2Vucy5jCmluZGV4IGM1NTQwMTEuLmVjMzE1N2QgMTAwNjQ0
+Ci0tLSBhL2NjYW4vZ2VuZXJhdG9yL3Rlc3QvZXhhbXBsZS1nZW5zLmMKKysrIGIvY2Nhbi9nZW5l
+cmF0b3IvdGVzdC9leGFtcGxlLWdlbnMuYwpAQCAtMSwzICsxLDUgQEAKKyNpbmNsdWRlIDxzdGRp
+by5oPgorCiAjaW5jbHVkZSA8Y2Nhbi9nZW5lcmF0b3IvZ2VuZXJhdG9yLmg+CiAKICNpbmNsdWRl
+ICJleGFtcGxlLWdlbnMuaCIKQEAgLTgsMyArMTAsMTkgQEAgZ2VuZXJhdG9yX2RlZihnZW4xLCBp
+bnQpCiAJZ2VuZXJhdG9yX3lpZWxkKDMpOwogCWdlbmVyYXRvcl95aWVsZCgxNyk7CiB9CisKK2dl
+bmVyYXRvcl9kZWYoZ2VuMiwgaW50LCBpbnQsIGJhc2UpCit7CisJZ2VuZXJhdG9yX3lpZWxkKGJh
+c2UgKyAxKTsKKwlnZW5lcmF0b3JfeWllbGQoYmFzZSArIDMpOworCWdlbmVyYXRvcl95aWVsZChi
+YXNlICsgMTcpOworfQorCitnZW5lcmF0b3JfZGVmKGdlbjMsIGNvbnN0IGNoYXIgKiwgY29uc3Qg
+Y2hhciAqLCBzdHIsIGludCwgY291bnQpCit7CisJaW50IGk7CisKKwlmb3IgKGkgPSAwOyBpIDwg
+Y291bnQ7IGkrKykKKwkJZ2VuZXJhdG9yX3lpZWxkKHN0cik7Cit9CisKZGlmZiAtLWdpdCBhL2Nj
+YW4vZ2VuZXJhdG9yL3Rlc3QvZXhhbXBsZS1nZW5zLmggYi9jY2FuL2dlbmVyYXRvci90ZXN0L2V4
+YW1wbGUtZ2Vucy5oCmluZGV4IGNmNGNlM2IuLjJiOTA3NmYgMTAwNjQ0Ci0tLSBhL2NjYW4vZ2Vu
+ZXJhdG9yL3Rlc3QvZXhhbXBsZS1nZW5zLmgKKysrIGIvY2Nhbi9nZW5lcmF0b3IvdGVzdC9leGFt
+cGxlLWdlbnMuaApAQCAtNCw1ICs0LDcgQEAKICNpbmNsdWRlIDxjY2FuL2dlbmVyYXRvci9nZW5l
+cmF0b3IuaD4KIAogZ2VuZXJhdG9yX2RlY2xhcmUoZ2VuMSwgaW50KTsKK2dlbmVyYXRvcl9kZWNs
+YXJlKGdlbjIsIGludCwgaW50LCBiYXNlKTsKK2dlbmVyYXRvcl9kZWNsYXJlKGdlbjMsIGNvbnN0
+IGNoYXIgKiwgY29uc3QgY2hhciAqLCBzdHIsIGludCwgY291bnQpOwogCiAjZW5kaWYgLyogX0VY
+QU1QTEVfR0VOU19IICovCi0tIAoyLjUuMAoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX18KY2NhbiBtYWlsaW5nIGxpc3QKY2NhbkBsaXN0cy5vemxhYnMub3Jn
+Cmh0dHBzOi8vbGlzdHMub3psYWJzLm9yZy9saXN0aW5mby9jY2FuCg==
