@@ -1,7 +1,8 @@
 From: Andrew Jeffery <andrew@aj.id.au>
-Subject: [PATCH 2/3] Makefile-web: Introduce variable for PHP binary
-Date: Fri, 25 Mar 2016 23:42:13 +1030
-Message-ID: <1458911534-8822-3-git-send-email-andrew@aj.id.au>
+Subject: [PATCH 3/3] staticmoduleinfo: Replace deprecated split()
+	with explode()
+Date: Fri, 25 Mar 2016 23:42:14 +1030
+Message-ID: <1458911534-8822-4-git-send-email-andrew@aj.id.au>
 References: <1458911534-8822-1-git-send-email-andrew@aj.id.au>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -10,22 +11,22 @@ Return-path: <ccan-bounces+gclcc-ccan=m.gmane.org@lists.ozlabs.org>
 Received: from hapkido.dreamhost.com (hapkido.dreamhost.com [66.33.216.122])
  (using TLSv1 with cipher ADH-AES256-SHA (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 3qWkHL6hxWzDq72
- for <ccan@lists.ozlabs.org>; Sat, 26 Mar 2016 00:12:30 +1100 (AEDT)
+ by lists.ozlabs.org (Postfix) with ESMTPS id 3qWkHM6BBSzDq5k
+ for <ccan@lists.ozlabs.org>; Sat, 26 Mar 2016 00:12:31 +1100 (AEDT)
 Received: from homiemail-a22.g.dreamhost.com (sub3.mail.dreamhost.com
  [69.163.253.7])
- by hapkido.dreamhost.com (Postfix) with ESMTP id 7A87CC9225
- for <ccan@lists.ozlabs.org>; Fri, 25 Mar 2016 06:12:28 -0700 (PDT)
+ by hapkido.dreamhost.com (Postfix) with ESMTP id 6BBEEC9215
+ for <ccan@lists.ozlabs.org>; Fri, 25 Mar 2016 06:12:30 -0700 (PDT)
 Received: from homiemail-a22.g.dreamhost.com (localhost [127.0.0.1])
- by homiemail-a22.g.dreamhost.com (Postfix) with ESMTP id 18BC5114067
- for <ccan@lists.ozlabs.org>; Fri, 25 Mar 2016 06:12:27 -0700 (PDT)
+ by homiemail-a22.g.dreamhost.com (Postfix) with ESMTP id 6B0F9114068
+ for <ccan@lists.ozlabs.org>; Fri, 25 Mar 2016 06:12:28 -0700 (PDT)
 Received: from lasair.aj.id.au (ppp203-122-213-247.static.internode.on.net
  [203.122.213.247])
  (using TLSv1 with cipher AES128-SHA (128/128 bits))
  (No client certificate requested)
  (Authenticated sender: andrew@aj.id.au)
- by homiemail-a22.g.dreamhost.com (Postfix) with ESMTPSA id 5E20611406A
- for <ccan@lists.ozlabs.org>; Fri, 25 Mar 2016 06:12:26 -0700 (PDT)
+ by homiemail-a22.g.dreamhost.com (Postfix) with ESMTPSA id 9727911406F
+ for <ccan@lists.ozlabs.org>; Fri, 25 Mar 2016 06:12:27 -0700 (PDT)
 In-Reply-To: <1458911534-8822-1-git-send-email-andrew@aj.id.au>
 List-Unsubscribe: <https://lists.ozlabs.org/options/ccan>,
  <mailto:ccan-request@lists.ozlabs.org?subject=unsubscribe>
@@ -39,52 +40,22 @@ Sender: "ccan" <ccan-bounces+gclcc-ccan=m.gmane.org@lists.ozlabs.org>
 To: ccan@lists.ozlabs.org
 List-Id: ccan@lists.ozlabs.org
 
-SSBkb24ndCBoYXZlIFBIUDUgaW5zdGFsbGVkIG9uIG15IHN5c3RlbSBidXQgSSBkbyBoYXZlIFBI
-UDcuIEFsbG93CnNlbGVjdGlvbiBvZiB0aGUgUEhQIGJpbmFyeSB0aHJvdWdoIGEgdmFyaWFibGUu
-CgpTaWduZWQtb2ZmLWJ5OiBBbmRyZXcgSmVmZmVyeSA8YW5kcmV3QGFqLmlkLmF1PgotLS0KIE1h
-a2VmaWxlLXdlYiB8IDE0ICsrKysrKysrKy0tLS0tCiAxIGZpbGUgY2hhbmdlZCwgOSBpbnNlcnRp
-b25zKCspLCA1IGRlbGV0aW9ucygtKQoKZGlmZiAtLWdpdCBhL01ha2VmaWxlLXdlYiBiL01ha2Vm
-aWxlLXdlYgppbmRleCBhN2Y5Mjk3Li5mYzhkODE4IDEwMDY0NAotLS0gYS9NYWtlZmlsZS13ZWIK
-KysrIGIvTWFrZWZpbGUtd2ViCkBAIC0xLDYgKzEsMTAgQEAKICMgVGhpcyBjYW4gYmUgb3ZlcnJp
-ZGRlbiBvbiBjbWRsaW5lIHRvIGdlbmVyYXRlIHBhZ2VzIGVsc2V3aGVyZS4KIFdFQkRJUj0vc3J2
-L3d3dy9jY29kZWFyY2hpdmUubmV0CiAKKyMgU2ltaWxhcmx5LCBvdmVycmlkZSBvbiB0aGUgY29t
-bWFuZGxpbmUgdG8gdXNlIGFuIGFsdGVybmF0ZSBQSFAgaW50ZXJwcmV0ZXIKKyMgKGUuZy4gcGhw
-NykKK1BIUD1waHA1CisKIEFMTF9QQUdFUz0kKHBhdHN1YnN0ICUsICQoV0VCRElSKS9pbmZvLyUu
-aHRtbCwgJChNT0RTKSkKIERJUkVDVF9UQVJCQUxMUz0kKHBhdHN1YnN0ICUsICQoV0VCRElSKS90
-YXJiYWxscy8lLnRhci5iejIsICQoTU9EUykpCiBERVBFTkRfVEFSQkFMTFM9JChwYXRzdWJzdCAl
-LCAkKFdFQkRJUikvdGFyYmFsbHMvd2l0aC1kZXBzLyUudGFyLmJ6MiwgJChNT0RTKSkKQEAgLTM2
-LDcgKzQwLDcgQEAgJChXRUJESVIpL2p1bmtjb2RlLyUudGFyLmJ6MjoganVua2NvZGUvJSAkKFdF
-QkRJUikvanVua2NvZGUKIAogJChXRUJESVIpL2p1bmtjb2RlLyUuaHRtbDogJChXRUJESVIpL2p1
-bmtjb2RlLyUudGFyLmJ6MgogCWNkICQoV0VCRElSKSAmJiB0YXIgeGZqIGp1bmtjb2RlLyQqLnRh
-ci5iejIKLQlVUkxQUkVGSVg9Li4vIHBocDUgd2ViL3N0YXRpY2p1bmtjb2RlLnBocCBqdW5rY29k
-ZS8kKiAkKiA+ICRACisJVVJMUFJFRklYPS4uLyAkKFBIUCkgd2ViL3N0YXRpY2p1bmtjb2RlLnBo
-cCBqdW5rY29kZS8kKiAkKiA+ICRACiAKICMgV2Ugd2FudCB0YXJiYWxsIHRvIGNvbnRhaW4gY2Nh
-bi87IHdlIHB1dCBqdW5rY29kZSBpbiwgYnV0IGRvbid0IGRlcGVuZCBvbiBpdC4KICQoV0VCRElS
-KS9jY2FuLnRhci5iejI6IGNvbmZpZy5oIE1ha2VmaWxlIE1ha2VmaWxlLWNjYW4gJChzaGVsbCBn
-aXQgbHMtZmlsZXMgY2NhbiB0b29scyBsaWNlbnNlcykKQEAgLTQ1LDE3ICs0OSwxNyBAQCAkKFdF
-QkRJUikvY2Nhbi50YXIuYnoyOiBjb25maWcuaCBNYWtlZmlsZSBNYWtlZmlsZS1jY2FuICQoc2hl
-bGwgZ2l0IGxzLWZpbGVzIGNjYQogJChBTExfUEFHRVMpOiB0b29scy9kb2NfZXh0cmFjdCB3ZWIv
-c3RhdGljbW9kdWxlaW5mby5waHAKIAogJChXRUJESVIpL2xpc3QuaHRtbDogd2ViL3N0YXRpY2Fs
-bC5waHAgdG9vbHMvZG9jX2V4dHJhY3QgJChESVJFQ1RfVEFSQkFMTFMpICQoREVQRU5EX1RBUkJB
-TExTKSAkKFdFQkRJUikvY2Nhbi50YXIuYnoyICQoSlVOS0JBTExTKQotCXBocDUgd2ViL3N0YXRp
-Y2FsbC5waHAgY2Nhbi8ganVua2NvZGUvICQoV0VCRElSKSAkKE1PRFMpID4gJEAKKwkkKFBIUCkg
-d2ViL3N0YXRpY2FsbC5waHAgY2Nhbi8ganVua2NvZGUvICQoV0VCRElSKSAkKE1PRFMpID4gJEAK
-IAogJChXRUJESVIpL3VwbG9hZC5odG1sOiB3ZWIvc3RhdGljdXBsb2FkLnBocAotCXBocDUgd2Vi
-L3N0YXRpY3VwbG9hZC5waHAgPiAkQAorCSQoUEhQKSB3ZWIvc3RhdGljdXBsb2FkLnBocCA+ICRA
-CiAKICMgY3BwIGluc2VydHMgZ3JhdHVpdG91cyBsaW5lYnJlYWtzIGF0IHN0YXJ0IG9mIGZpbGUs
-IG1ha2VzIGZvciBwaHAgcHJvYmxlbXMuCiAkKFdFQkRJUikvdXBsb2FkZXIucGhwOiB3ZWIvdXBs
-b2FkZXIucGhwLmNwcAogCWNwcCAtdyAtQyAtUCAkPCB8IGdyZXAgLiA+ICRACiAKICQoV0VCRElS
-KS9pbmRleC5odG1sOiB3ZWIvc3RhdGljaW5kZXgucGhwCi0JcGhwNSB3ZWIvc3RhdGljaW5kZXgu
-cGhwID4gJEAKKwkkKFBIUCkgd2ViL3N0YXRpY2luZGV4LnBocCA+ICRACiAKICQoV0VCRElSKS9l
-eGFtcGxlLWNvbmZpZy5oOiBjb25maWcuaAogCWNwICQ8ICRACkBAIC03NCw3ICs3OCw3IEBAICQo
-V0VCRElSKS9jY2FuLmNzczogd2ViL2NjYW4uY3NzCiAKICQoV0VCRElSKS9pbmZvLyUuaHRtbDog
-JChXRUJESVIpL3RhcmJhbGxzLyUudGFyLmJ6MiAkKFdFQkRJUikvdGFyYmFsbHMvd2l0aC1kZXBz
-LyUudGFyLmJ6MgogCUBta2RpciAtcCBgZGlybmFtZSAkQGAKLQlVUkxQUkVGSVg9Li4vYGVjaG8g
-JCogfCB0ciAtZGMgJy8nIHwgc2VkIHMnLC8sLi4vLGcnYCBwaHA1IHdlYi9zdGF0aWNtb2R1bGVp
-bmZvLnBocCBgcHdkYC9jY2FuLyQqICQqID4gJEAKKwlVUkxQUkVGSVg9Li4vYGVjaG8gJCogfCB0
-ciAtZGMgJy8nIHwgc2VkIHMnLC8sLi4vLGcnYCAkKFBIUCkgd2ViL3N0YXRpY21vZHVsZWluZm8u
-cGhwIGBwd2RgL2NjYW4vJCogJCogPiAkQAogCiAkKFdFQkRJUikvdGFyYmFsbHMvJS50YXIuYnoy
-OiBjY2FuLyUvX2luZm8gY2xlYW4tdHJlZQogCUBta2RpciAtcCBgZGlybmFtZSAkQGAKLS0gCjIu
-Ny4zCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpjY2Fu
-IG1haWxpbmcgbGlzdApjY2FuQGxpc3RzLm96bGFicy5vcmcKaHR0cHM6Ly9saXN0cy5vemxhYnMu
-b3JnL2xpc3RpbmZvL2NjYW4K
+c3BsaXQoKSB3YXMgZGVwcmVjYXRlZCBpbiBQSFA1IGFuZCB3YXMgcmVtb3ZlZCBpbiBQSFA3WzFd
+LiBBbgphbHRlcm5hdGl2ZSBmdW5jdGlvbiBpcyBleHBsb2RlKCksIHdoaWNoIHdhcyBpbnRyb2R1
+Y2VkIGluIFBIUDRbMV0uClNvIGdpdmVuIHdlIHByZXZpb3VzbHkgaGFkIGEgaGFyZCBkZXBlbmRl
+bmN5IG9uIHRoZSBwaHA1IGJpbmFyeSwgc3dpdGNoCnRvIGV4cGxvZGUoKS4KClsxXSBodHRwczov
+L3NlY3VyZS5waHAubmV0L21hbnVhbC9lbi9mdW5jdGlvbi5zcGxpdC5waHAKWzJdIGh0dHBzOi8v
+c2VjdXJlLnBocC5uZXQvbWFudWFsL2VuL2Z1bmN0aW9uLmV4cGxvZGUucGhwCgpTaWduZWQtb2Zm
+LWJ5OiBBbmRyZXcgSmVmZmVyeSA8YW5kcmV3QGFqLmlkLmF1PgotLS0KIHdlYi9zdGF0aWNtb2R1
+bGVpbmZvLnBocCB8IDIgKy0KIDEgZmlsZSBjaGFuZ2VkLCAxIGluc2VydGlvbigrKSwgMSBkZWxl
+dGlvbigtKQoKZGlmZiAtLWdpdCBhL3dlYi9zdGF0aWNtb2R1bGVpbmZvLnBocCBiL3dlYi9zdGF0
+aWNtb2R1bGVpbmZvLnBocAppbmRleCA3ZjM4OGMyLi5hYzRhYzY4IDEwMDY0NAotLS0gYS93ZWIv
+c3RhdGljbW9kdWxlaW5mby5waHAKKysrIGIvd2ViL3N0YXRpY21vZHVsZWluZm8ucGhwCkBAIC02
+Myw3ICs2Myw3IEBAIGlmICgkZXh0ZGVwZW5kcykgewogPGgzPkV4dGVybmFsIGRlcGVuZGVuY2ll
+czo8L2gzPgogPHVsIGNsYXNzPSdleHRlcm5hbC1kZXBlbmRlbmNpZXMnPgogPD9waHAKLQlmb3Jl
+YWNoIChzcGxpdCgiXG4iLCAkZXh0ZGVwZW5kcykgYXMgJGRlcCkgeworCWZvcmVhY2ggKGV4cGxv
+ZGUoIlxuIiwgJGV4dGRlcGVuZHMpIGFzICRkZXApIHsKIAkJJGZpZWxkcz1wcmVnX3NwbGl0KCIv
+XHMrLyIsICRkZXApOwogCQllY2hvICI8bGk+IiAuICRmaWVsZHNbMF0uJyAnOwogCQlpZiAoY291
+bnQoJGZpZWxkcykgPiAxKQotLSAKMi43LjMKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fCmNjYW4gbWFpbGluZyBsaXN0CmNjYW5AbGlzdHMub3psYWJzLm9y
+ZwpodHRwczovL2xpc3RzLm96bGFicy5vcmcvbGlzdGluZm8vY2Nhbgo=
