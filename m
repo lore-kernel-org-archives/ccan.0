@@ -1,7 +1,8 @@
 From: David Gibson <david@gibson.dropbear.id.au>
-Subject: [PATCH 0/4] Cleanups to ccan build
-Date: Sat, 30 Apr 2016 18:01:45 +1000
-Message-ID: <1462003309-22541-1-git-send-email-david@gibson.dropbear.id.au>
+Subject: [PATCH 1/4] Add missing files to make clean
+Date: Sat, 30 Apr 2016 18:01:46 +1000
+Message-ID: <1462003309-22541-2-git-send-email-david@gibson.dropbear.id.au>
+References: <1462003309-22541-1-git-send-email-david@gibson.dropbear.id.au>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: base64
@@ -9,8 +10,9 @@ Return-path: <ccan-bounces+gclcc-ccan=m.gmane.org@lists.ozlabs.org>
 Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
  (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 3qxjhP4rlyzDqBB
- for <ccan@lists.ozlabs.org>; Sat, 30 Apr 2016 18:01:57 +1000 (AEST)
+ by lists.ozlabs.org (Postfix) with ESMTPS id 3qxjhQ09mlzDqBD
+ for <ccan@lists.ozlabs.org>; Sat, 30 Apr 2016 18:01:58 +1000 (AEST)
+In-Reply-To: <1462003309-22541-1-git-send-email-david@gibson.dropbear.id.au>
 List-Unsubscribe: <https://lists.ozlabs.org/options/ccan>,
  <mailto:ccan-request@lists.ozlabs.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/ccan/>
@@ -24,18 +26,23 @@ To: ccan@lists.ozlabs.org
 Cc: rusty@rustcoorp.com.au
 List-Id: ccan@lists.ozlabs.org
 
-VGhpcyBzZXJpZXMgaGFzIHNldmVyYWwgYXNzb3J0ZWQgY2xlYW51cHMgdG8gdGhlIGNjYW4gTWFr
-ZWZpbGVzCgpEYXZpZCBHaWJzb24gKDQpOgogIEFkZCBtaXNzaW5nIGZpbGVzIHRvIG1ha2UgY2xl
-YW4KICBDbGVhbiB1cCB1c2Ugb2YgJ3JtJyBpbiBNYWtlZmlsZXMKICBFeGNsdWRlIHN5c3RlbSBo
-ZWFkZXJzIGZyb20gLmQgZmlsZXMKICBDb3JyZWN0bHkgaW5jbHVkZSBkZXBlbmRlbmNpZXMgZm9y
-IG5lc3RlZCBtb2R1bGVzCgogTWFrZWZpbGUgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-fCA1ICsrKy0tCiBNYWtlZmlsZS1jY2FuICAgICAgICAgICAgICAgICAgICAgICAgICB8IDQgKyst
-LQogY2Nhbi9jZHVtcC90b29scy9NYWtlZmlsZSAgICAgICAgICAgICAgfCAyICstCiBjY2FuL2Ny
-eXB0by9zaGEyNTYvYmVuY2htYXJrcy9NYWtlZmlsZSB8IDIgKy0KIGNjYW4vaW8vYmVuY2htYXJr
-cy9NYWtlZmlsZSAgICAgICAgICAgIHwgMiArLQogY2Nhbi90aW1lci9iZW5jaG1hcmtzL01ha2Vm
-aWxlICAgICAgICAgfCAyICstCiB0b29scy9NYWtlZmlsZSAgICAgICAgICAgICAgICAgICAgICAg
-ICB8IDIgKy0KIHRvb2xzL2NjYW5saW50L01ha2VmaWxlICAgICAgICAgICAgICAgIHwgMiArLQog
-OCBmaWxlcyBjaGFuZ2VkLCAxMSBpbnNlcnRpb25zKCspLCAxMCBkZWxldGlvbnMoLSkKCi0tIAoy
-LjUuNQoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KY2Nh
-biBtYWlsaW5nIGxpc3QKY2NhbkBsaXN0cy5vemxhYnMub3JnCmh0dHBzOi8vbGlzdHMub3psYWJz
-Lm9yZy9saXN0aW5mby9jY2FuCg==
+QXQgcHJlc2VudCwgIm1ha2UgY2xlYW4iIHdpbGwgbm90IHJlbW92ZSB0aGUgbW9kdWxlLU1ha2Vm
+aWxlIGZpbGVzIGZvcgpub24tdG9wLWxldmVsIG1vZHVsZXMuICBJdCBhbHNvIHdvbid0IHJlbW92
+ZSB0aGUgZ2VuZXJhdGVkIGNvbmZpZy5oLgpDb3JyZWN0IHRob3NlIGVycm9ycy4KClNpZ25lZC1v
+ZmYtYnk6IERhdmlkIEdpYnNvbiA8ZGF2aWRAZ2lic29uLmRyb3BiZWFyLmlkLmF1PgotLS0KIE1h
+a2VmaWxlIHwgNSArKystLQogMSBmaWxlIGNoYW5nZWQsIDMgaW5zZXJ0aW9ucygrKSwgMiBkZWxl
+dGlvbnMoLSkKCmRpZmYgLS1naXQgYS9NYWtlZmlsZSBiL01ha2VmaWxlCmluZGV4IGJmZDQ0ZTMu
+Ljg1NmJhYTkgMTAwNjQ0Ci0tLSBhL01ha2VmaWxlCisrKyBiL01ha2VmaWxlCkBAIC02NCw4ICs2
+NCw5IEBAIGNjYW4vJS9pbmZvOiBjY2FuLyUvX2luZm8KIAkkKENDKSAkKENDQU5fQ0ZMQUdTKSAt
+byAkQCAteCBjICQ8CiAKIGNsZWFuOiB0b29scy1jbGVhbgotCSQoUk0pIGBmaW5kICogLW5hbWUg
+JyoubydgIGBmaW5kICogLW5hbWUgJy5kZXBlbmRzJ2AgYGZpbmQgKiAtbmFtZSAnKi5hJ2AgIGBm
+aW5kICogLW5hbWUgaW5mb2AgYGZpbmQgKiAtbmFtZSAnKi5kJ2AKLQkkKFJNKSBpbnRlci1kZXBl
+bmRzIGxpYi1kZXBlbmRzIHRlc3QtZGVwZW5kcyBjY2FuLyotTWFrZWZpbGUKKwkkKFJNKSBgZmlu
+ZCAqIC1uYW1lICcqLm8nYCBgZmluZCAqIC1uYW1lICcuZGVwZW5kcydgIGBmaW5kICogLW5hbWUg
+JyouYSdgICBgZmluZCAqIC1uYW1lIGluZm9gIGBmaW5kICogLW5hbWUgJyouZCdgIGBmaW5kIGNj
+YW4gLW5hbWUgJyotTWFrZWZpbGUnYAorCSQoUk0pIGNvbmZpZy5oCisJJChSTSkgaW50ZXItZGVw
+ZW5kcyBsaWItZGVwZW5kcyB0ZXN0LWRlcGVuZHMKIAogIyBDcmVhdGVzIGEgZGVwZW5kZW5jeSBm
+cm9tIHRoZSB0ZXN0cyB0byB0aGUgb2JqZWN0IGZpbGVzIHdoaWNoIGl0IG5lZWRzLgogaW50ZXIt
+ZGVwZW5kczogJChBTExfREVQRU5EUykgTWFrZWZpbGUKLS0gCjIuNS41CgpfX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpjY2FuIG1haWxpbmcgbGlzdApjY2Fu
+QGxpc3RzLm96bGFicy5vcmcKaHR0cHM6Ly9saXN0cy5vemxhYnMub3JnL2xpc3RpbmZvL2NjYW4K
