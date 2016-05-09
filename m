@@ -1,20 +1,18 @@
 From: David Gibson <david@gibson.dropbear.id.au>
-Subject: Re: [PATCH 4/4] Correctly include dependencies for nested
- modules
-Date: Mon, 2 May 2016 13:33:42 +0400
-Message-ID: <20160502093342.GA2313@littlecatz>
-References: <1462003309-22541-1-git-send-email-david@gibson.dropbear.id.au>
- <1462003309-22541-5-git-send-email-david@gibson.dropbear.id.au>
- <87fuu25qy9.fsf@rustcorp.com.au>
+Subject: [PATCH 1/2] Automatically determine which modules have source
+Date: Mon,  9 May 2016 20:59:40 +0100
+Message-ID: <1462823981-1972-2-git-send-email-david@gibson.dropbear.id.au>
+References: <1462823981-1972-1-git-send-email-david@gibson.dropbear.id.au>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============1846439748332624959=="
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <ccan-bounces+gclcc-ccan=m.gmane.org@lists.ozlabs.org>
 Received: from ozlabs.org (ozlabs.org [103.22.144.67])
  (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 3qyzf93gKGzDqCj
- for <ccan@lists.ozlabs.org>; Mon,  2 May 2016 19:34:25 +1000 (AEST)
-In-Reply-To: <87fuu25qy9.fsf@rustcorp.com.au>
+ by lists.ozlabs.org (Postfix) with ESMTPS id 3r3YBt3Nt3zDq7j
+ for <ccan@lists.ozlabs.org>; Tue, 10 May 2016 06:00:06 +1000 (AEST)
+In-Reply-To: <1462823981-1972-1-git-send-email-david@gibson.dropbear.id.au>
 List-Unsubscribe: <https://lists.ozlabs.org/options/ccan>,
  <mailto:ccan-request@lists.ozlabs.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/ccan/>
@@ -24,71 +22,72 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/ccan>,
  <mailto:ccan-request@lists.ozlabs.org?subject=subscribe>
 Errors-To: ccan-bounces+gclcc-ccan=m.gmane.org@lists.ozlabs.org
 Sender: "ccan" <ccan-bounces+gclcc-ccan=m.gmane.org@lists.ozlabs.org>
-To: Rusty Russell <rusty@rustcorp.com.au>
-Cc: ccan@lists.ozlabs.org, rusty@rustcoorp.com.au
+To: ccan@lists.ozlabs.org
 List-Id: ccan@lists.ozlabs.org
 
-
---===============1846439748332624959==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="AqsLC8rIMeq19msA"
-Content-Disposition: inline
-
-
---AqsLC8rIMeq19msA
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Sun, May 01, 2016 at 02:12:54PM +0930, Paul 'Rusty' Russell wrote:
-> David Gibson <david@gibson.dropbear.id.au> writes:
-> > Currently we pull auto-generated dependencies into the Makefile with
-> > include ccan/*/*.d.  That will omit any .d files from nested modules,
-> > meaning things might not be correctly rebuilt there.
-> >
-> > Correct this by using the list of modules instead of a 1-level wildcard.
->=20
-> Thanks, these look great, please apply.
-
-Done.
-
---=20
-David Gibson			| I'll have my music baroque, and my code
-david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
-				| _way_ _around_!
-http://www.ozlabs.org/~dgibson
-
---AqsLC8rIMeq19msA
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJXJx72AAoJEGw4ysog2bOSsZgQALbdGp4j+VLm2OLQtSdTj24O
-widNdtYOPBBcuvNpTbx3FoertMlw7xAoGFkWB37HSkLhpJ6VMJWRA6QLu9zdYZ8t
-rAg3Rw76u8WyuWQUTKevfA+TF7hGQpsYhTBzpYAXEtvOSEXnh6eLTI56AI77YGGU
-96kUXAN4IlvbgHmGTa0LdWNv+QE4XnvIczhYhEjIvJYL+/WoFmuTEUVscwF76YJj
-HCAsU0EssfvQmcWmVHh+VQW3Zk0IAcs472+LWC34fjTB8QKzx+p57QwAHQyayaa3
-pBGHmN6n5ukj9fJ/q2PJ+O9uYXXjlJ9x+fdhRusQCUJc/LEPkeaHKPZBy1OzBijr
-59oPDrid6B5ldEoI2ET4fgk9gayZzpYCt+HhOTLl5fF8R+vdGMIi/XRyPKE0GP0b
-nSiZbZGaoQ6X1o9LzrgduE2r9+aA9W1SsYgQseikWRoXjwK5PPduvrnsxBiIkiYg
-1Y/JLKmiHemGMGIVtj4J179TQC7kmBNXiGgBgtpZ3j5oOkbk4fYFJFWOnJO/3uYk
-PywDHflO/Xr6Q7bW0SPBLzwZcnyut9MrtdfWaER0ydaSPRfalA/vRZqFB9RuYM72
-GPlV5sQbGI2h0LHhs7VG7Cgst2a/Ei6hWl552DrKVwJuFfUTQRtoGtcVWah21VvA
-KTD3yfI61rUITr8hFwaq
-=N8rL
------END PGP SIGNATURE-----
-
---AqsLC8rIMeq19msA--
-
---===============1846439748332624959==
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: inline
-
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KY2NhbiBtYWls
-aW5nIGxpc3QKY2NhbkBsaXN0cy5vemxhYnMub3JnCmh0dHBzOi8vbGlzdHMub3psYWJzLm9yZy9s
-aXN0aW5mby9jY2FuCg==
-
---===============1846439748332624959==--
+Q3VycmVudGx5LCBidWlsZCBvZiBjY2FuIGlzIGNvbnRyb2xsZWQgYnkgdHdvIE1ha2UgdmFyaWFi
+bGVzOiBNT0RTX1dJVEhfU1JDCmFuZCBNT0RTX05PX1NSQyB3aGljaCBsaXN0IG1vZHVsZXMgY29u
+dGFpbmluZyAuYyBmaWxlcywgYW5kIG1vZHVsZXMgd2l0aApvbmx5IC5oIGZpbGVzIHJlc3BlY3Rp
+dmVseS4KCldoZW4gYWRkaW5nIG5ldyBtb2R1bGVzIHRoaXMgaXMgZmlkZGx5IHRvIGdldCByaWdo
+dCwgYW5kIHRoZXJlIGFyZSBhIG51bWJlcgpvZiBtb2R1bGVzIGFscmVhZHkgbGlzdGVkIGluIHRo
+ZSB3cm9uZyB2YXJpYWJsZS4gIFRoZXJlJ3MgYWxzbyBzb21lCnJlZHVuZGFudCBsb2dpYyBpbiB0
+aGUgRElSUyB2YXJpYWJsZSB0byBhZ2FpbiBmaWx0ZXIgb3V0IG1vZHVsZXMgd2l0aG91dApzb3Vy
+Y2UuCgpUaGlzIHNpbXBsaWZpZXMgdGhpbmdzIGJ5IGhhdmluZyBhIHNpbmdsZSBtYW51YWxseSB1
+cGRhdGVkIE1PRFMgdmFyaWFibGUKbGlzdGluZyBldmVyeSBtb2R1bGUsIGFuZCBkZXRlcm1pbmlu
+ZyBNT0RTX1dJVEhfU09VUkNFIHByb2dyYW1tYXRpY2FsbHkuCgpTaWduZWQtb2ZmLWJ5OiBEYXZp
+ZCBHaWJzb24gPGRhdmlkQGdpYnNvbi5kcm9wYmVhci5pZC5hdT4KLS0tCiBNYWtlZmlsZS1jY2Fu
+IHwgNjMgKysrKysrKysrKysrKysrKysrKysrKysrKysrKy0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0KIDEgZmlsZSBjaGFuZ2VkLCAzMCBpbnNlcnRpb25zKCspLCAzMyBkZWxldGlvbnMo
+LSkKCmRpZmYgLS1naXQgYS9NYWtlZmlsZS1jY2FuIGIvTWFrZWZpbGUtY2NhbgppbmRleCAzMWFk
+MmU0Li5lNzFmM2ExIDEwMDY0NAotLS0gYS9NYWtlZmlsZS1jY2FuCisrKyBiL01ha2VmaWxlLWNj
+YW4KQEAgLTYsNjIgKzYsNDkgQEAKIENDQU5fQ0ZMQUdTPS1nMyAtZ2dkYiAtV2FsbCAtV3N0cmlj
+dC1wcm90b3R5cGVzIC1Xb2xkLXN0eWxlLWRlZmluaXRpb24gLVdtaXNzaW5nLXByb3RvdHlwZXMg
+LVdtaXNzaW5nLWRlY2xhcmF0aW9ucyAtV3BvaW50ZXItYXJpdGggLVd3cml0ZS1zdHJpbmdzIC1X
+dW5kZWYgLURDQ0FOX1NUUl9ERUJVRz0xCiBDRkxBR1MgPSAkKENDQU5fQ0ZMQUdTKSAtSS4gJChE
+RVBHRU4pCiAKLSMgTW9kdWxlcyB3aGljaCBhcmUganVzdCBhIGhlYWRlcjoKLU1PRFNfTk9fU1JD
+IDo9IGFsaWdub2YgXAotCWFyZ2NoZWNrIFwKLQlhcnJheV9zaXplIFwKLQlhc2VhcmNoIFwKLQli
+aXRtYXAgXAotCWJ1aWxkX2Fzc2VydCBcCi0JY2FzdCBcCi0JY2hlY2tfdHlwZSBcCi0JY29tcGls
+ZXIgXAotCWNvbnRhaW5lcl9vZiBcCi0JY3BwbWFnaWMgXAotCWRhcnJheSBcCi0JZW5kaWFuIFwK
+LQlscXVldWUgXAotCWxzdGFjayBcCi0JbWlubWF4IFwKLQlvYmpzZXQgXAotCXNob3J0X3R5cGVz
+IFwKLQlzdHJ1Y3RlcSBcCi0JdGNvbiBcCi0JdGxpc3QgXAotCXR5cGVzYWZlX2NiIFwKLQl2ZXJz
+aW9uCi0KLSMgTm8gZXh0ZXJuYWwgZGVwZW5kZW5jaWVzLCB3aXRoIEMgY29kZToKLU1PRFNfV0lU
+SF9TUkMgOj0gYV9zdGFyIFwKK01PRFMgOj0gYV9zdGFyIFwKIAlhZ2EgXAogCWFnYXIgXAorCWFs
+aWdub2YgXAogCWFsdHN0YWNrIFwKIAlhbnRpdGhyZWFkIFwKIAlhbnRpdGhyZWFkL2FsbG9jIFwK
+KwlhcmdjaGVjayBcCisJYXJyYXlfc2l6ZSBcCisJYXNlYXJjaCBcCiAJYXNvcnQgXAogCWFzcHJp
+bnRmIFwKIAlhdXRvZGF0YSBcCiAJYXZsIFwKIAliYXNlNjQgXAogCWJkZWx0YSBcCisJYml0bWFw
+IFwKIAlibG9ja19wb29sIFwKIAlicmVha3BvaW50IFwKIAlidHJlZSBcCisJYnVpbGRfYXNzZXJ0
+IFwKIAlieXRlc3RyaW5nIFwKKwljYXN0IFwKIAljY2FuX3Rva2VuaXplciBcCiAJY2R1bXAgXAog
+CWNoYXJzZXQgXAorCWNoZWNrX3R5cGUgXAogCWNpbmlwYXJzZXIgXAorCWNvbXBpbGVyIFwKKwlj
+b250YWluZXJfb2YgXAorCWNwcG1hZ2ljIFwKKwljcHVpZCBcCiAJY3JjIFwKIAljcmNzeW5jIFwK
+LQljcHVpZCBcCiAJY3J5cHRvL3JpcGVtZDE2MCBcCiAJY3J5cHRvL3NoYTI1NiBcCiAJY3J5cHRv
+L3NoYWNoYWluIFwKIAlkYWVtb25pemUgXAogCWRhZW1vbl93aXRoX25vdGlmeSBcCisJZGFycmF5
+IFwKIAlkZXF1ZSBcCiAJZGdyYXBoIFwKKwllbmRpYW4gXAogCWVyYXRvc3RoZW5lcyBcCiAJZXJy
+IFwKIAlmYWlsdGVzdCBcCkBAIC03OSwxOCArNjYsMjIgQEAgTU9EU19XSVRIX1NSQyA6PSBhX3N0
+YXIgXAogCWlzY3NpIFwKIAlqYWNvYnNvbl9rYXJlbHMgXAogCWptYXAgXAotCWpzb24gXAogCWpz
+ZXQgXAorCWpzb24gXAogCWxiYWxhbmNlIFwKIAlsaWtlbHkgXAogCWxpc3QgXAogCWxwcSBcCisJ
+bHF1ZXVlIFwKKwlsc3RhY2sgXAogCW1kNCBcCiAJbWVtIFwKKwltaW5tYXggXAogCW5ldCBcCiAJ
+bmZzIFwKIAlub2VyciBcCiAJbnRkYiBcCisJb2Jqc2V0IFwKIAlvZ2dfdG9fcGNtIFwKIAlvcHQg
+XAogCW9yZGVyIFwKQEAgLTEwNSwxNSArOTYsMTcgQEAgTU9EU19XSVRIX1NSQyA6PSBhX3N0YXIg
+XAogCXJlYWRfd3JpdGVfYWxsIFwKIAlyZmM4MjIgXAogCXJzenNobSBcCisJc2hvcnRfdHlwZXMg
+XAogCXNpcGhhc2ggXAogCXNwYXJzZV9ic2VhcmNoIFwKIAlzdHIgXAogCXN0ci9oZXggXAorCXN0
+cmdycCBcCiAJc3RyaW5nYnVpbGRlciBcCiAJc3RyaW5nbWFwIFwKLQlzdHJncnAgXAogCXN0cm1h
+cCBcCiAJc3Ryc2V0IFwKKwlzdHJ1Y3RlcSBcCiAJdGFrZSBcCiAJdGFsIFwKIAl0YWwvZ3JhYl9m
+aWxlIFwKQEAgLTEyNSwxMyArMTE4LDE4IEBAIE1PRFNfV0lUSF9TUkMgOj0gYV9zdGFyIFwKIAl0
+YWxsb2MgXAogCXRhbGx5IFwKIAl0YXAgXAorCXRjb24gXAogCXRpbWUgXAogCXRpbWVyIFwKKwl0
+bGlzdCBcCiAJdHR4bWwgXAorCXR5cGVzYWZlX2NiIFwKKwl2ZXJzaW9uIFwKIAl3d3ZpYXVkaW8g
+XAogCXhzdHJpbmcKIAotTU9EUzo9JChNT0RTX1dJVEhfU1JDKSAkKE1PRFNfTk9fU1JDKQorIyBB
+bnl0aGluZyB3aXRoIEMgZmlsZXMgbmVlZHMgYnVpbGRpbmc7IGRpciBsZWF2ZXMgLyBvbiwgc29y
+dCB1bmlxdWlmaWVzCitNT0RTX1dJVEhfU1JDID0gJChwYXRzdWJzdCBjY2FuLyUvLCAlLCAkKHNv
+cnQgJChmb3JlYWNoIG0sICQoTU9EUyksICQoZGlyICQod2lsZGNhcmQgY2Nhbi8kbS8qLmMpKSkp
+KQogCiBkZWZhdWx0OiBsaWJjY2FuLmEKIApAQCAtMTM5LDggKzEzNyw3IEBAIGRlZmF1bHQ6IGxp
+YmNjYW4uYQogREVQR0VOPS1NTUQKIC1pbmNsdWRlICQoZm9yZWFjaCBtLCAkKE1PRFMpLCBjY2Fu
+LyQobSkvKi5kKQogCi0jIEFueXRoaW5nIHdpdGggQyBmaWxlcyBuZWVkcyBidWlsZGluZzsgZGly
+IGxlYXZlcyAvIG9uLCBzb3J0IHVuaXF1aWZpZXMKLURJUlM9JChwYXRzdWJzdCAlLywgJSwgJChz
+b3J0ICQoZm9yZWFjaCBtLCAkKGZpbHRlci1vdXQgJChNT0RTX0VYQ0xVREUpLCAkKE1PRFNfV0lU
+SF9TUkMpKSwgJChkaXIgJCh3aWxkY2FyZCBjY2FuLyRtLyouYykpKSkpCitESVJTPSQocGF0c3Vi
+c3QgJSwgY2Nhbi8lLCAkKGZpbHRlci1vdXQgJChNT0RTX0VYQ0xVREUpLCAkKE1PRFNfV0lUSF9T
+UkMpKSkKIAogIyBHZW5lcmF0ZSBldmVyeW9uZSdzIHNlcGFyYXRlIE1ha2VmaWxlcy4KIC1pbmNs
+dWRlICQoZm9yZWFjaCBkaXIsICQoRElSUyksICQoZGlyKS1NYWtlZmlsZSkKLS0gCjIuNS41Cgpf
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpjY2FuIG1haWxp
+bmcgbGlzdApjY2FuQGxpc3RzLm96bGFicy5vcmcKaHR0cHM6Ly9saXN0cy5vemxhYnMub3JnL2xp
+c3RpbmZvL2NjYW4K
