@@ -1,18 +1,16 @@
 From: David Gibson <david@gibson.dropbear.id.au>
-Subject: [PATCH 2/2] Build info files
-Date: Mon,  9 May 2016 20:59:41 +0100
-Message-ID: <1462823981-1972-3-git-send-email-david@gibson.dropbear.id.au>
-References: <1462823981-1972-1-git-send-email-david@gibson.dropbear.id.au>
+Subject: [PATCH 0/2] More build cleanups
+Date: Mon,  9 May 2016 20:59:39 +0100
+Message-ID: <1462823981-1972-1-git-send-email-david@gibson.dropbear.id.au>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: base64
 Return-path: <ccan-bounces+gclcc-ccan=m.gmane.org@lists.ozlabs.org>
-Received: from ozlabs.org (ozlabs.org [103.22.144.67])
+Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
  (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 3r3YBv1R6TzDqBV
- for <ccan@lists.ozlabs.org>; Tue, 10 May 2016 06:00:07 +1000 (AEST)
-In-Reply-To: <1462823981-1972-1-git-send-email-david@gibson.dropbear.id.au>
+ by lists.ozlabs.org (Postfix) with ESMTPS id 3r3YBt1XyDzDq5m
+ for <ccan@lists.ozlabs.org>; Tue, 10 May 2016 06:00:06 +1000 (AEST)
 List-Unsubscribe: <https://lists.ozlabs.org/options/ccan>,
  <mailto:ccan-request@lists.ozlabs.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/ccan/>
@@ -25,34 +23,12 @@ Sender: "ccan" <ccan-bounces+gclcc-ccan=m.gmane.org@lists.ozlabs.org>
 To: ccan@lists.ozlabs.org
 List-Id: ccan@lists.ozlabs.org
 
-QWxsIG1vZHVsZXMgaGF2ZSBhIF9pbmZvIGZpbGUgKGEgQyBmaWxlLCBkZXNwaXRlIHRoZSBsYWNr
-IG9mIGV4dGVuc2lvbikKZ2l2aW5nIG1ldGFkYXRhIGZvciB0aGUgbW9kdWxlLiAgVGhlIE1ha2Vm
-aWxlcyBoYXZlIGEgcnVsZSB0byBidWlsZCB0aGVzZS4uCmJ1dCBpdCdzIGJyb2tlbiAobWlzc2lu
-ZyBhbiBpbmNsdWRlIGRpcmVjdGl2ZSkuCgpUaGlzIHBhdGNoIGZpeGVzIHRoZSBydWxlLCBhbmQg
-YnVpbGRzIHRoZSBpbmZvIGJpbmFyaWVzIGZvciBhbGwgbW9kdWxlcyBieQpkZWZhdWx0LiAgVGhp
-cyBpcyBhIHVzZWZ1bCBjaGVjayBhbmQgYWxzbyB1c2VmdWwgZm9yIG1hbnVhbGx5IGluc3BlY3Rp
-bmcKYSBtb2R1bGUncyBtZXRhZGF0YS4KClNpZ25lZC1vZmYtYnk6IERhdmlkIEdpYnNvbiA8ZGF2
-aWRAZ2lic29uLmRyb3BiZWFyLmlkLmF1PgotLS0KIE1ha2VmaWxlICAgICAgICB8IDggKysrKyst
-LS0KIGNjYW4vLmdpdGlnbm9yZSB8IDIgKysKIDIgZmlsZXMgY2hhbmdlZCwgNyBpbnNlcnRpb25z
-KCspLCAzIGRlbGV0aW9ucygtKQoKZGlmZiAtLWdpdCBhL01ha2VmaWxlIGIvTWFrZWZpbGUKaW5k
-ZXggMmNlMDE0NS4uMTI3Yjg3NSAxMDA2NDQKLS0tIGEvTWFrZWZpbGUKKysrIGIvTWFrZWZpbGUK
-QEAgLTE1LDcgKzE1LDcgQEAgU0NPUkVESVI9c2NvcmVzLyQoc2hlbGwgd2hvYW1pKS8kKHNoZWxs
-IHVuYW1lIC1zKS0kKHNoZWxsIHVuYW1lIC1tKS0kKENDKS0kKHNoZWwKIENDQU5MSU5UPXRvb2xz
-L2NjYW5saW50L2NjYW5saW50IC0tZGVwcy1mYWlsLWlnbm9yZQogQ0NBTkxJTlRfRkFTVD0kKEND
-QU5MSU5UKSAteCB0ZXN0c19wYXNzX3ZhbGdyaW5kIC14IHRlc3RzX2NvbXBpbGVfY292ZXJhZ2UK
-IAotZGVmYXVsdDogbGliY2Nhbi5hCitkZWZhdWx0OiBhbGxfaW5mbyBsaWJjY2FuLmEKIAogQUxM
-X0RFUEVORFM9JChwYXRzdWJzdCAlLCBjY2FuLyUvLmRlcGVuZHMsICQoTU9EUykpCiAKQEAgLTYz
-LDggKzYzLDEwIEBAIHN1bW1hcnktY2hlY2svJTogdG9vbHMvY2NhbmxpbnQvY2NhbmxpbnQgJChP
-QkpGSUxFUykKIHN1bW1hcnktZmFzdGNoZWNrLyU6IHRvb2xzL2NjYW5saW50L2NjYW5saW50ICQo
-T0JKRklMRVMpCiAJJChDQ0FOTElOVF9GQVNUKSAtcyBjY2FuLyQqCiAKLWNjYW4vJS9pbmZvOiBj
-Y2FuLyUvX2luZm8KLQkkKENDKSAkKENDQU5fQ0ZMQUdTKSAtbyAkQCAteCBjICQ8CitjY2FuLyUv
-aW5mbzogY2Nhbi8lL19pbmZvIGNvbmZpZy5oCisJJChDQykgJChDQ0FOX0NGTEFHUykgLUkuIC1v
-ICRAIC14IGMgJDwKKworYWxsX2luZm86ICQoTU9EUzolPWNjYW4vJS9pbmZvKQogCiBjbGVhbjog
-dG9vbHMtY2xlYW4KIAlybSAtZiBgZmluZCAqIC1uYW1lICcqLm8nYCBgZmluZCAqIC1uYW1lICcu
-ZGVwZW5kcydgIGBmaW5kICogLW5hbWUgJyouYSdgICBgZmluZCAqIC1uYW1lIGluZm9gIGBmaW5k
-ICogLW5hbWUgJyouZCdgIGBmaW5kIGNjYW4gLW5hbWUgJyotTWFrZWZpbGUnYApkaWZmIC0tZ2l0
-IGEvY2Nhbi8uZ2l0aWdub3JlIGIvY2Nhbi8uZ2l0aWdub3JlCmluZGV4IDcxNGU2NmEuLmU0OTdl
-NzQgMTAwNjQ0Ci0tLSBhL2NjYW4vLmdpdGlnbm9yZQorKysgYi9jY2FuLy5naXRpZ25vcmUKQEAg
-LTEgKzEsMyBAQAogKi1NYWtlZmlsZQoraW5mbworCi0tIAoyLjUuNQoKX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KY2NhbiBtYWlsaW5nIGxpc3QKY2NhbkBs
-aXN0cy5vemxhYnMub3JnCmh0dHBzOi8vbGlzdHMub3psYWJzLm9yZy9saXN0aW5mby9jY2FuCg==
+U29tZSBmdXJ0aGVyIHNtYWxsIGNsZWFudXBzIHRvIHRoZSBidWlsZCBzY3JpcHRzLgoKRGF2aWQg
+R2lic29uICgyKToKICBBdXRvbWF0aWNhbGx5IGRldGVybWluZSB3aGljaCBtb2R1bGVzIGhhdmUg
+c291cmNlCiAgQnVpbGQgaW5mbyBmaWxlcwoKIE1ha2VmaWxlICAgICAgICB8ICA4ICsrKysrLS0t
+CiBNYWtlZmlsZS1jY2FuICAgfCA2MyArKysrKysrKysrKysrKysrKysrKysrKysrKystLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0KIGNjYW4vLmdpdGlnbm9yZSB8ICAyICsrCiAzIGZpbGVz
+IGNoYW5nZWQsIDM3IGluc2VydGlvbnMoKyksIDM2IGRlbGV0aW9ucygtKQoKLS0gCjIuNS41Cgpf
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpjY2FuIG1haWxp
+bmcgbGlzdApjY2FuQGxpc3RzLm96bGFicy5vcmcKaHR0cHM6Ly9saXN0cy5vemxhYnMub3JnL2xp
+c3RpbmZvL2NjYW4K
