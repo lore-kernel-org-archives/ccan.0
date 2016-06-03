@@ -1,17 +1,22 @@
-From: David Gibson <david@gibson.dropbear.id.au>
-Subject: [PATCH 5/5] altstack: Don't log internal calls in test cases
-Date: Fri,  3 Jun 2016 18:42:03 +1000
-Message-ID: <1464943323-8225-6-git-send-email-david@gibson.dropbear.id.au>
+From: Dan Good <dan@dancancode.com>
+Subject: Re: [PATCH 0/5] altstack: cleanups
+Date: Fri, 03 Jun 2016 23:29:01 +0000
+Message-ID: <CACNkOJOMW8GjfDTxSDhgdOqAd=4qYgKjg4s_95A7Fb6RL=oGFA@mail.gmail.com>
 References: <1464943323-8225-1-git-send-email-david@gibson.dropbear.id.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: multipart/mixed; boundary="===============4056662083251140375=="
 Return-path: <ccan-bounces+gclcc-ccan=m.gmane.org@lists.ozlabs.org>
-Received: from ozlabs.org (ozlabs.org [103.22.144.67])
- (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+Received: from mout.perfora.net (mout.perfora.net [74.208.4.196])
+ (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 3rLcx95zLNzDqkX
- for <ccan@lists.ozlabs.org>; Fri,  3 Jun 2016 18:40:29 +1000 (AEST)
+ by lists.ozlabs.org (Postfix) with ESMTPS id 3rM0mc6vtMzDq7n
+ for <ccan@lists.ozlabs.org>; Sat,  4 Jun 2016 09:34:24 +1000 (AEST)
+Received: from mail-yw0-f182.google.com ([209.85.161.182]) by
+ mrelay.perfora.net (mreueus001) with ESMTPSA (Nemesis) id
+ 0MZmzA-1auCnO3n2c-00LZC4 for <ccan@lists.ozlabs.org>; Sat, 04 Jun 2016
+ 01:29:12 +0200
+Received: by mail-yw0-f182.google.com with SMTP id h19so94593185ywc.0
+ for <ccan@lists.ozlabs.org>; Fri, 03 Jun 2016 16:29:12 -0700 (PDT)
 In-Reply-To: <1464943323-8225-1-git-send-email-david@gibson.dropbear.id.au>
 List-Unsubscribe: <https://lists.ozlabs.org/options/ccan>,
  <mailto:ccan-request@lists.ozlabs.org?subject=unsubscribe>
@@ -22,120 +27,96 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/ccan>,
  <mailto:ccan-request@lists.ozlabs.org?subject=subscribe>
 Errors-To: ccan-bounces+gclcc-ccan=m.gmane.org@lists.ozlabs.org
 Sender: "ccan" <ccan-bounces+gclcc-ccan=m.gmane.org@lists.ozlabs.org>
-To: dan@dancancode.com
+To: David Gibson <david@gibson.dropbear.id.au>
 Cc: ccan@lists.ozlabs.org
 List-Id: ccan@lists.ozlabs.org
 
-YWx0c3RhY2svdGVzdC9ydW4uYyB1c2VzIHNvbWUgaGFpcnkgbWFjcm9zIHRvIGludGVyY2VwdCB0
-aGUgc3RhbmRhcmQKbGlicmFyeSBmdW5jdGlvbnMgdGhhdCBhbHRzdGFjayB1c2VzLiAgVGhpcyBo
-YXMgdHdvIHB1cnBvc2VzOiAxKSB0bwpjb25kaXRpb25hbGx5IGNhdXNlIHRob3NlIGZ1bmN0aW9u
-cyB0byBmYWlsLCBhbmQgdGhlcmVieSB0ZXN0IGFsdHN0YWNrJ3MKZXJyb3IgcGF0aHMsIGFuZCAy
-KSBsb2cgd2hpY2ggb2YgdGhlIGxpYnJhcnkgZnVuY3Rpb25zIHdhcyBjYWxsZWQgaW4gZWFjaAp0
-ZXN0Y2FzZS4KClRoZSBzZWNvbmQgZnVuY3Rpb24gaXNuJ3QgYWN0dWFsbHkgdXNlZnVsIC0gZm9y
-IHRoZSBwdXJwb3NlcyBvZiB0ZXN0aW5nIHRoZQptb2R1bGUsIHdlIHdhbnQgdG8gY2hlY2sgdGhl
-IGFjdHVhbCBiZWhhdmlvdXIsIG5vdCB3aGF0IGNhbGxzIGl0IG1hZGUgaW4Kd2hhdCBvcmRlciB0
-byBhY2NvbXBsaXNoIGl0LiAgRXhwbGljaXRseSBjaGVja2luZyB0aGUgY2FsbHMgbWFrZXMgaXQg
-bXVjaApoYXJkZXIgdG8gY2hhbmdlIGFsdHN0YWNrJ3MgaW1wbGVtZW50YXRpb24gd2l0aG91dCBi
-cmVha2luZyB0aGUgdGVzdHMuCgpTaWduZWQtb2ZmLWJ5OiBEYXZpZCBHaWJzb24gPGRhdmlkQGdp
-YnNvbi5kcm9wYmVhci5pZC5hdT4KLS0tCiBjY2FuL2FsdHN0YWNrL3Rlc3QvcnVuLmMgfCA3MyAr
-KysrKysrKysrKysrKy0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0KIDEgZmlsZSBj
-aGFuZ2VkLCAyMSBpbnNlcnRpb25zKCspLCA1MiBkZWxldGlvbnMoLSkKCmRpZmYgLS1naXQgYS9j
-Y2FuL2FsdHN0YWNrL3Rlc3QvcnVuLmMgYi9jY2FuL2FsdHN0YWNrL3Rlc3QvcnVuLmMKaW5kZXgg
-ZTEwOWNjYi4uMDkxZDFmNSAxMDA2NDQKLS0tIGEvY2Nhbi9hbHRzdGFjay90ZXN0L3J1bi5jCisr
-KyBiL2NjYW4vYWx0c3RhY2svdGVzdC9ydW4uYwpAQCAtMjAsMTggKzIwLDE3IEBAIGVudW0gewog
-CXNpZ2FjdGlvbl8JPSAxPDw0LAogCW11bm1hcF8JCT0gMTw8NSwKIH07Ci1pbnQgZmFpbCwgY2Fs
-bDEsIGNhbGwyOworaW50IGZhaWw7CiBjaGFyICptXzsKIHJsaW1fdCBtc3pfOwogI2RlZmluZSBl
-KHgpICg5MDArKHgpKQogI2RlZmluZSBzZXRlcnIoeCkgKGVycm5vID0gZSh4KSkKLSNkZWZpbmUg
-c2V0Y2FsbCh4KSAoKGNhbGwxIHw9ICFlcnJubyA/ICh4KSA6IDApLCAoY2FsbDIgfD0gZXJybm8g
-fHwgc3RhdGUub3V0ID8gKHgpIDogMCkpCi0jZGVmaW5lIGdldHJsaW1pdCguLi4pCQkoZmFpbCZn
-ZXRybGltaXRfCT8gKHNldGVycihnZXRybGltaXRfKSwJCS0xKSA6IChzZXRjYWxsKGdldHJsaW1p
-dF8pLAlnZXRybGltaXQoX19WQV9BUkdTX18pKSkKLSNkZWZpbmUgbW1hcCguLi4pCQkoZmFpbCZt
-bWFwXwkJPyAoc2V0ZXJyKG1tYXBfKSwJKHZvaWQgKiktMSkgOiAoc2V0Y2FsbChtbWFwXyksCQlt
-bWFwKF9fVkFfQVJHU19fKSkpCi0jZGVmaW5lIG11bm1hcChhLCBiKQkJKGZhaWwmbXVubWFwXwkJ
-PyAoc2V0ZXJyKG11bm1hcF8pLAkJLTEpIDogKHNldGNhbGwobXVubWFwXyksCW11bm1hcChtXz0o
-YSksIG1zel89KGIpKSkpCi0jZGVmaW5lIHNldHJsaW1pdCguLi4pCQkoZmFpbCZzZXRybGltaXRf
-CT8gKHNldGVycihzZXRybGltaXRfKSwJCS0xKSA6IChzZXRjYWxsKHNldHJsaW1pdF8pLAlzZXRy
-bGltaXQoX19WQV9BUkdTX18pKSkKLSNkZWZpbmUgc2lnYWx0c3RhY2soLi4uKQkoZmFpbCZzaWdh
-bHRzdGFja18JPyAoc2V0ZXJyKHNpZ2FsdHN0YWNrXyksCS0xKSA6IChzZXRjYWxsKHNpZ2FsdHN0
-YWNrXyksCXNpZ2FsdHN0YWNrKF9fVkFfQVJHU19fKSkpCi0jZGVmaW5lIHNpZ2FjdGlvbiguLi4p
-CQkoZmFpbCZzaWdhY3Rpb25fCT8gKHNldGVycihzaWdhY3Rpb25fKSwJCS0xKSA6IChzZXRjYWxs
-KHNpZ2FjdGlvbl8pLAlzaWdhY3Rpb24oX19WQV9BUkdTX18pKSkKKyNkZWZpbmUgZ2V0cmxpbWl0
-KC4uLikJCShmYWlsJmdldHJsaW1pdF8JPyAoc2V0ZXJyKGdldHJsaW1pdF8pLAkJLTEpIDogZ2V0
-cmxpbWl0KF9fVkFfQVJHU19fKSkKKyNkZWZpbmUgbW1hcCguLi4pCQkoZmFpbCZtbWFwXwkJPyAo
-c2V0ZXJyKG1tYXBfKSwJKHZvaWQgKiktMSkgOiBtbWFwKF9fVkFfQVJHU19fKSkKKyNkZWZpbmUg
-bXVubWFwKGEsIGIpCQkoZmFpbCZtdW5tYXBfCQk/IChzZXRlcnIobXVubWFwXyksCQktMSkgOiBt
-dW5tYXAobV89KGEpLCBtc3pfPShiKSkpCisjZGVmaW5lIHNldHJsaW1pdCguLi4pCQkoZmFpbCZz
-ZXRybGltaXRfCT8gKHNldGVycihzZXRybGltaXRfKSwJCS0xKSA6IHNldHJsaW1pdChfX1ZBX0FS
-R1NfXykpCisjZGVmaW5lIHNpZ2FsdHN0YWNrKC4uLikJKGZhaWwmc2lnYWx0c3RhY2tfCT8gKHNl
-dGVycihzaWdhbHRzdGFja18pLAktMSkgOiBzaWdhbHRzdGFjayhfX1ZBX0FSR1NfXykpCisjZGVm
-aW5lIHNpZ2FjdGlvbiguLi4pCQkoZmFpbCZzaWdhY3Rpb25fCT8gKHNldGVycihzaWdhY3Rpb25f
-KSwJCS0xKSA6IHNpZ2FjdGlvbihfX1ZBX0FSR1NfXykpCiAKICNkZWZpbmUgS2lCICgxMDI0VUwp
-CiAjZGVmaW5lIE1pQiAoS2lCKktpQikKQEAgLTU4LDc0ICs1Nyw0OCBAQCBzdGF0aWMgdm9pZCAq
-d3JhcCh2b2lkICppKQogCXJldHVybiB3cmFwOwogfQogCi0jZGVmaW5lIGNoa2ZhaWwoeCwgeSwg
-eiwgYzEsIGMyKQkJCQkJXAorI2RlZmluZSBjaGtmYWlsKHgsIHksIHopCQkJCQkJXAogCWRvIHsJ
-CQkJCQkJCVwKLQkJY2FsbDEgPSAwOwkJCQkJCVwKLQkJY2FsbDIgPSAwOwkJCQkJCVwKIAkJZXJy
-bm8gPSAwOwkJCQkJCVwKIAkJb2sxKChmYWlsID0geCkgJiYgKHkpKTsJCQkJCVwKIAkJb2sxKGVy
-cm5vID09ICh6KSk7CQkJCQlcCi0JCW9rMShjYWxsMSA9PSAoYzEpKTsJCQkJCVwKLQkJb2sxKGNh
-bGwyID09IChjMikpOwkJCQkJXAogCX0gd2hpbGUgKDApOwogCi0jZGVmaW5lIGNoa29rKHksIHos
-IGMxLCBjMikJCQkJCQlcCisjZGVmaW5lIGNoa29rKHksIHopCQkJCQkJCVwKIAlkbyB7CQkJCQkJ
-CQlcCi0JCWNhbGwxID0gMDsJCQkJCQlcCi0JCWNhbGwyID0gMDsJCQkJCQlcCiAJCWVycm5vID0g
-MDsJCQkJCQlcCiAJCWZhaWwgPSAwOwkJCQkJCVwKIAkJb2sxKCh5KSk7CQkJCQkJXAogCQlvazEo
-ZXJybm8gPT0gKHopKTsJCQkJCVwKLQkJb2sxKGNhbGwxID09IChjMSkpOwkJCQkJXAotCQlvazEo
-Y2FsbDIgPT0gKGMyKSk7CQkJCQlcCiAJfSB3aGlsZSAoMCkKIAogaW50IG1haW4odm9pZCkKIHsK
-IAlsb25nIHBnc3ogPSBzeXNjb25mKF9TQ19QQUdFU0laRSk7CiAKLQlwbGFuX3Rlc3RzKDUwKTsK
-KwlwbGFuX3Rlc3RzKDI4KTsKIAotCWNoa2ZhaWwoZ2V0cmxpbWl0XywJYWx0c3RhY2soOCpNaUIs
-IHdyYXAsIGludDJwdHIoMCksIE5VTEwpID09IC0xLCBlKGdldHJsaW1pdF8pLAotCQkwLAotCQkw
-KTsKKwljaGtmYWlsKGdldHJsaW1pdF8sCWFsdHN0YWNrKDgqTWlCLCB3cmFwLCBpbnQycHRyKDAp
-LCBOVUxMKSA9PSAtMSwgZShnZXRybGltaXRfKSk7CiAKLQljaGtmYWlsKHNldHJsaW1pdF8sCWFs
-dHN0YWNrKDgqTWlCLCB3cmFwLCBpbnQycHRyKDApLCBOVUxMKSA9PSAtMSwgZShzZXRybGltaXRf
-KSwKLQkJZ2V0cmxpbWl0XywKLQkJMCk7CisJY2hrZmFpbChzZXRybGltaXRfLAlhbHRzdGFjayg4
-Kk1pQiwgd3JhcCwgaW50MnB0cigwKSwgTlVMTCkgPT0gLTEsIGUoc2V0cmxpbWl0XykpOwogCi0J
-Y2hrZmFpbChtbWFwXywJCWFsdHN0YWNrKDgqTWlCLCB3cmFwLCBpbnQycHRyKDApLCBOVUxMKSA9
-PSAtMSwgZShtbWFwXyksCi0JCWdldHJsaW1pdF98c2V0cmxpbWl0XywKLQkJc2V0cmxpbWl0Xyk7
-CisJY2hrZmFpbChtbWFwXywJCWFsdHN0YWNrKDgqTWlCLCB3cmFwLCBpbnQycHRyKDApLCBOVUxM
-KSA9PSAtMSwgZShtbWFwXykpOwogCi0JY2hrZmFpbChzaWdhbHRzdGFja18sCWFsdHN0YWNrKDgq
-TWlCLCB3cmFwLCBpbnQycHRyKDApLCBOVUxMKSA9PSAtMSwgZShzaWdhbHRzdGFja18pLAotCQln
-ZXRybGltaXRffHNldHJsaW1pdF98bW1hcF8sCi0JCXNldHJsaW1pdF98bXVubWFwXyk7CisJY2hr
-ZmFpbChzaWdhbHRzdGFja18sCWFsdHN0YWNrKDgqTWlCLCB3cmFwLCBpbnQycHRyKDApLCBOVUxM
-KSA9PSAtMSwgZShzaWdhbHRzdGFja18pKTsKIAotCWNoa2ZhaWwoc2lnYWN0aW9uXywJYWx0c3Rh
-Y2soOCpNaUIsIHdyYXAsIGludDJwdHIoMCksIE5VTEwpID09IC0xLCBlKHNpZ2FjdGlvbl8pLAot
-CQlnZXRybGltaXRffHNldHJsaW1pdF98bW1hcF98c2lnYWx0c3RhY2tfLAotCQlzZXRybGltaXRf
-fG11bm1hcF98c2lnYWx0c3RhY2tfKTsKKwljaGtmYWlsKHNpZ2FjdGlvbl8sCWFsdHN0YWNrKDgq
-TWlCLCB3cmFwLCBpbnQycHRyKDApLCBOVUxMKSA9PSAtMSwgZShzaWdhY3Rpb25fKSk7CiAKLQlj
-aGtmYWlsKG11bm1hcF8sCWFsdHN0YWNrKDgqTWlCLCB3cmFwLCBpbnQycHRyKDApLCBOVUxMKSA9
-PSAgMSwgZShtdW5tYXBfKSwKLQkJZ2V0cmxpbWl0X3xzZXRybGltaXRffG1tYXBffHNpZ2FsdHN0
-YWNrX3xzaWdhY3Rpb25fLAotCQlzZXRybGltaXRffHNpZ2FsdHN0YWNrX3xzaWdhY3Rpb25fKTsK
-KwljaGtmYWlsKG11bm1hcF8sCWFsdHN0YWNrKDgqTWlCLCB3cmFwLCBpbnQycHRyKDApLCBOVUxM
-KSA9PSAgMSwgZShtdW5tYXBfKSk7CiAJaWYgKGZhaWwgPSAwLCBtdW5tYXAobV8sIG1zel8pID09
-IC0xKQogCQllcnIoMSwgIm11bm1hcCIpOwogCi0JY2hrb2soCQkJYWx0c3RhY2soMSpNaUIsIHdy
-YXAsIGludDJwdHIoMTAwMDAwMCksIE5VTEwpID09IC0xLCBFT1ZFUkZMT1csCi0JCWdldHJsaW1p
-dF98c2V0cmxpbWl0X3xtbWFwX3xzaWdhbHRzdGFja198c2lnYWN0aW9uXywKLQkJc2V0cmxpbWl0
-X3xtdW5tYXBffHNpZ2FsdHN0YWNrX3xzaWdhY3Rpb25fKTsKKwljaGtvaygJCQlhbHRzdGFjaygx
-Kk1pQiwgd3JhcCwgaW50MnB0cigxMDAwMDAwKSwgTlVMTCkgPT0gLTEsIEVPVkVSRkxPVyk7CiAK
-IAkvLyBiZSBzdXJlIHNlZ3YgY2F0Y2ggaXMgcmVwZWF0YWJsZSAoU0FfTk9ERUZFUikKLQljaGtv
-aygJCQlhbHRzdGFjaygxKk1pQiwgd3JhcCwgaW50MnB0cigxMDAwMDAwKSwgTlVMTCkgPT0gLTEs
-IEVPVkVSRkxPVywKLQkJZ2V0cmxpbWl0X3xzZXRybGltaXRffG1tYXBffHNpZ2FsdHN0YWNrX3xz
-aWdhY3Rpb25fLAotCQlzZXRybGltaXRffG11bm1hcF98c2lnYWx0c3RhY2tffHNpZ2FjdGlvbl8p
-OworCWNoa29rKAkJCWFsdHN0YWNrKDEqTWlCLCB3cmFwLCBpbnQycHRyKDEwMDAwMDApLCBOVUxM
-KSA9PSAtMSwgRU9WRVJGTE9XKTsKIAogCXVzZWQgPSAxOwotCWNoa2ZhaWwobXVubWFwXywJYWx0
-c3RhY2soMSpNaUIsIHdyYXAsIGludDJwdHIoMTAwMDAwMCksIE5VTEwpID09IC0xLCBFT1ZFUkZM
-T1csCi0JCWdldHJsaW1pdF98c2V0cmxpbWl0X3xtbWFwX3xzaWdhbHRzdGFja198c2lnYWN0aW9u
-XywKLQkJc2V0cmxpbWl0X3xzaWdhbHRzdGFja198c2lnYWN0aW9uXyk7CisJY2hrZmFpbChtdW5t
-YXBfLAlhbHRzdGFjaygxKk1pQiwgd3JhcCwgaW50MnB0cigxMDAwMDAwKSwgTlVMTCkgPT0gLTEs
-IEVPVkVSRkxPVyk7CiAJaWYgKGZhaWwgPSAwLCBtdW5tYXAobV8sIG1zel8pID09IC0xKQogCQll
-cnIoMSwgIm11bm1hcCIpOwogCkBAIC0xNTAsMTcgKzEyMywxMyBAQCBpbnQgbWFpbih2b2lkKQog
-CW9rMShzdHJjbXAoYnVmLCBlc3RyICJcbiIpID09IDApOwogCiAJdXNlZCA9IDE7Ci0JY2hrb2so
-CQkJYWx0c3RhY2soOCpNaUIsIHdyYXAsIGludDJwdHIoMTAwMDAwMCksIE5VTEwpID09IC0xLCBF
-T1ZFUkZMT1csCi0JCWdldHJsaW1pdF98c2V0cmxpbWl0X3xtbWFwX3xzaWdhbHRzdGFja198c2ln
-YWN0aW9uXywKLQkJc2V0cmxpbWl0X3xtdW5tYXBffHNpZ2FsdHN0YWNrX3xzaWdhY3Rpb25fKTsK
-KwljaGtvaygJCQlhbHRzdGFjayg4Kk1pQiwgd3JhcCwgaW50MnB0cigxMDAwMDAwKSwgTlVMTCkg
-PT0gLTEsIEVPVkVSRkxPVyk7CiAKIAlkaWFnKCJ1c2VkOiAlbHUiLCB1c2VkKTsKIAlvazEodXNl
-ZCA+PSA4Kk1pQiAtIHBnc3ogJiYgdXNlZCA8PSA4Kk1pQiArIHBnc3opOwogCiAJdXNlZCA9IDA7
-Ci0JY2hrb2soCQkJYWx0c3RhY2soOCpNaUIsIHdyYXAsIGludDJwdHIoMTAwMDAwKSwgTlVMTCkg
-PT0gMCwgMCwKLQkJZ2V0cmxpbWl0X3xzZXRybGltaXRffG1tYXBffHNpZ2FsdHN0YWNrX3xzaWdh
-Y3Rpb25ffG11bm1hcF8sCi0JCXNldHJsaW1pdF98bXVubWFwX3xzaWdhbHRzdGFja198c2lnYWN0
-aW9uXyk7CisJY2hrb2soCQkJYWx0c3RhY2soOCpNaUIsIHdyYXAsIGludDJwdHIoMTAwMDAwKSwg
-TlVMTCkgPT0gMCwgMCk7CiAKIAl1c2VkID0gMTsKIAlhbHRzdGFja19yc3Bfc2F2ZSgpOwotLSAK
-Mi41LjUKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmNj
-YW4gbWFpbGluZyBsaXN0CmNjYW5AbGlzdHMub3psYWJzLm9yZwpodHRwczovL2xpc3RzLm96bGFi
-cy5vcmcvbGlzdGluZm8vY2Nhbgo=
+--===============4056662083251140375==
+Content-Type: multipart/alternative; boundary=94eb2c0a9aba0bf91305346817da
+
+--94eb2c0a9aba0bf91305346817da
+Content-Type: text/plain; charset=UTF-8
+
+David, thank you for improving the code. I'm traveling for the next week
+with only an ipad. I'd like to ask your thoughts on a topic or two, but
+typing on this is grueling. I hope to try for a longer reply later. Thanks
+again. -Dan
+
+On Fri, Jun 3, 2016 at 4:40 AM David Gibson <david@gibson.dropbear.id.au>
+wrote:
+
+> Dan,
+>
+> Here are a bunch of assorted cleanups to the altstack module.  If they
+> seem reasonable to you, please apply.
+>
+> David Gibson (5):
+>   altstack: Consolidate thread-local variables
+>   altstack: Restore alternate signal stack state
+>   altstack: Use ptrint instead of bare casts
+>   altstack: Don't use 0 pointer literals
+>   altstack: Don't log internal calls in test cases
+>
+>  ccan/altstack/_info      |  9 ++++--
+>  ccan/altstack/altstack.c | 78
+> +++++++++++++++++++++++++-----------------------
+>  ccan/altstack/altstack.h |  6 ++--
+>  ccan/altstack/test/run.c | 76
+> ++++++++++++++--------------------------------
+>  4 files changed, 74 insertions(+), 95 deletions(-)
+>
+> --
+> 2.5.5
+>
+>
+
+--94eb2c0a9aba0bf91305346817da
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+
+<div style=3D"white-space:pre-wrap">David, thank you for improving the code=
+.  I&#39;m traveling for the next week with only an ipad.  I&#39;d like to =
+ask your thoughts on a topic or two, but typing on this is grueling.  I hop=
+e to try for a longer reply later.  Thanks again.  -Dan</div><br><div class=
+=3D"gmail_quote"><div dir=3D"ltr">On Fri, Jun 3, 2016 at 4:40 AM David Gibs=
+on &lt;<a href=3D"mailto:david@gibson.dropbear.id.au">david@gibson.dropbear=
+.id.au</a>&gt; wrote:<br></div><blockquote class=3D"gmail_quote" style=3D"m=
+argin:0 0 0 .8ex;border-left:1px #ccc solid;padding-left:1ex">Dan,<br>
+<br>
+Here are a bunch of assorted cleanups to the altstack module.=C2=A0 If they=
+<br>
+seem reasonable to you, please apply.<br>
+<br>
+David Gibson (5):<br>
+=C2=A0 altstack: Consolidate thread-local variables<br>
+=C2=A0 altstack: Restore alternate signal stack state<br>
+=C2=A0 altstack: Use ptrint instead of bare casts<br>
+=C2=A0 altstack: Don&#39;t use 0 pointer literals<br>
+=C2=A0 altstack: Don&#39;t log internal calls in test cases<br>
+<br>
+=C2=A0ccan/altstack/_info=C2=A0 =C2=A0 =C2=A0 |=C2=A0 9 ++++--<br>
+=C2=A0ccan/altstack/altstack.c | 78 +++++++++++++++++++++++++--------------=
+---------<br>
+=C2=A0ccan/altstack/altstack.h |=C2=A0 6 ++--<br>
+=C2=A0ccan/altstack/test/run.c | 76 ++++++++++++++-------------------------=
+-------<br>
+=C2=A04 files changed, 74 insertions(+), 95 deletions(-)<br>
+<br>
+--<br>
+2.5.5<br>
+<br>
+</blockquote></div>
+
+--94eb2c0a9aba0bf91305346817da--
+
+--===============4056662083251140375==
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: inline
+
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KY2NhbiBtYWls
+aW5nIGxpc3QKY2NhbkBsaXN0cy5vemxhYnMub3JnCmh0dHBzOi8vbGlzdHMub3psYWJzLm9yZy9s
+aXN0aW5mby9jY2FuCg==
+
+--===============4056662083251140375==--
