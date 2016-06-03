@@ -1,19 +1,18 @@
 From: David Gibson <david@gibson.dropbear.id.au>
-Subject: Re: [PATCH 2/2] Build info files
-Date: Tue, 24 May 2016 21:13:24 +1000
-Message-ID: <20160524111324.GG17226@voom.fritz.box>
-References: <1462823981-1972-1-git-send-email-david@gibson.dropbear.id.au>
- <1462823981-1972-3-git-send-email-david@gibson.dropbear.id.au>
- <87k2ik5ahc.fsf@rustcorp.com.au>
+Subject: [PATCH 1/5] altstack: Consolidate thread-local variables
+Date: Fri,  3 Jun 2016 18:41:59 +1000
+Message-ID: <1464943323-8225-2-git-send-email-david@gibson.dropbear.id.au>
+References: <1464943323-8225-1-git-send-email-david@gibson.dropbear.id.au>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============7935868179137872691=="
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <ccan-bounces+gclcc-ccan=m.gmane.org@lists.ozlabs.org>
-Received: from ozlabs.org (ozlabs.org [103.22.144.67])
+Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
  (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 3rDYzT2hnDzDqDD
- for <ccan@lists.ozlabs.org>; Tue, 24 May 2016 22:06:29 +1000 (AEST)
-In-Reply-To: <87k2ik5ahc.fsf@rustcorp.com.au>
+ by lists.ozlabs.org (Postfix) with ESMTPS id 3rLcx82N3fzDqkR
+ for <ccan@lists.ozlabs.org>; Fri,  3 Jun 2016 18:40:28 +1000 (AEST)
+In-Reply-To: <1464943323-8225-1-git-send-email-david@gibson.dropbear.id.au>
 List-Unsubscribe: <https://lists.ozlabs.org/options/ccan>,
  <mailto:ccan-request@lists.ozlabs.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/ccan/>
@@ -23,77 +22,102 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/ccan>,
  <mailto:ccan-request@lists.ozlabs.org?subject=subscribe>
 Errors-To: ccan-bounces+gclcc-ccan=m.gmane.org@lists.ozlabs.org
 Sender: "ccan" <ccan-bounces+gclcc-ccan=m.gmane.org@lists.ozlabs.org>
-To: Rusty Russell <rusty@rustcorp.com.au>
+To: dan@dancancode.com
 Cc: ccan@lists.ozlabs.org
 List-Id: ccan@lists.ozlabs.org
 
-
---===============7935868179137872691==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="64j1qyTOoGvYcHb1"
-Content-Disposition: inline
-
-
---64j1qyTOoGvYcHb1
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Tue, May 24, 2016 at 02:16:39PM +0930, Paul 'Rusty' Russell wrote:
-> David Gibson <david@gibson.dropbear.id.au> writes:
-> > All modules have a _info file (a C file, despite the lack of extension)
-> > giving metadata for the module.  The Makefiles have a rule to build the=
-se..
-> > but it's broken (missing an include directive).
-> >
-> > This patch fixes the rule, and builds the info binaries for all modules=
- by
-> > default.  This is a useful check and also useful for manually inspecting
-> > a module's metadata.
-> >
-> > Signed-off-by: David Gibson <david@gibson.dropbear.id.au>
->=20
-> Sorry for the delay.  These are great, please apply.
-
-Done.
-
---=20
-David Gibson			| I'll have my music baroque, and my code
-david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
-				| _way_ _around_!
-http://www.ozlabs.org/~dgibson
-
---64j1qyTOoGvYcHb1
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJXRDdUAAoJEGw4ysog2bOSfkwQAIsBtqfAoNz5kzZH//gYY+vo
-ma/ksC/1ew4RtmAIZbuzKvM2a2Vooa79Hl0hFAj77TWFsrb2NfOaiOpU/XQRox77
-CItvVOHjc1WzdjDOmJMKZx4YZblrAs37rbNjxAIhxhvoHQi6iMfVf7tNWyNqnnfP
-1p7m+HsxswdYlzyX4yrY3N4Mxt6SOGJE8gI9MpmOkPAdi5JctmehvjAH5Z/fiaR/
-sl+giYzUeAED3/2uIbdIWxUenUPlxgwnOcY9WsRY2096zwXNIFkTrDrMt/GbzPEH
-2XVXoT8Rd5Rzf9hO0fA5vHSWnpTfilAL2IpdWaRDcgDs+f3FK/r9Du9xw1uYAyKR
-7tLSig1GdDV2ck0mkUxid/2G10KPPE0Y8qU8VAvQE7H9ge48FaH58JTdQutN1tzb
-NQPR0AuQZp6rXTIJMFvWSC5zVhhYMwpBiL7ZouOsOoFWc9atZ5Sg4/LdYrDWPOrH
-ZruNf2TrWjCwQmCHdb0Pw1BmLXvubjhupd9b6HzUXEJT8UZEhyTRTIjYbHV/Y0oR
-f+RFNk6agNx7Zd9NC7VZ0YYg7cCnNvi2BT/8TI3k/yhwp/CJ5oZZMcH7hsU0UuuS
-XtxQ4BRMgwnWQKZb6at/mjC7NvhuQrcnYDcCt6eq0XzvwNKkNySXgxealvy++vaG
-3c8IhBgpuI8VzjhLttLE
-=jgxm
------END PGP SIGNATURE-----
-
---64j1qyTOoGvYcHb1--
-
---===============7935868179137872691==
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: inline
-
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KY2NhbiBtYWls
-aW5nIGxpc3QKY2NhbkBsaXN0cy5vemxhYnMub3JnCmh0dHBzOi8vbGlzdHMub3psYWJzLm9yZy9s
-aXN0aW5mby9jY2FuCg==
-
---===============7935868179137872691==--
+YWx0c3RhY2sgdXNlcyBhIG51bWJlciBvZiBfX3RocmVhZCB2YXJpYWJsZXMgdG8gdHJhY2sgaW50
+ZXJuYWwgc3RhdGUuICBUaGlzCmFsbG93cyBhbHRzdGFjayB0byBiZSB0aHJlYWQtc2FmZSwgYWx0
+aG91Z2ggaXQncyBzdGlsbCBub3QgcmUtZW50cmFudC4KVGhpcyBwYXRjaCBnYXRoZXJzIGFsbCB0
+aGVzZSB2YXJpYWJsZXMgaW50byBhIHNpbmdsZSBwZXItdGhyZWFkIHN0YXRlCnN0cnVjdHVyZS4g
+IFRoaXMgbWFrZXMgaXQgZWFzeSB0byBzZWUgYXQgYSBnbGFuY2Ugd2hhdCB0aGUgd2hvbGUgb2Yg
+dGhlCnJlcXVpcmVkIHN0YXRlIGlzLCBhbmQgdGhlcmVieSBlYXNpZXIgdG8gcmVhc29uIGFib3V0
+IGNvcnJlY3RuZXNzIG9mCmNoYW5nZXMgdG8gdGhlIGltcGxlbWVudGF0aW9uLgoKU2lnbmVkLW9m
+Zi1ieTogRGF2aWQgR2lic29uIDxkYXZpZEBnaWJzb24uZHJvcGJlYXIuaWQuYXU+Ci0tLQogY2Nh
+bi9hbHRzdGFjay9hbHRzdGFjay5jIHwgNjcgKysrKysrKysrKysrKysrKysrKysrKysrKy0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tCiBjY2FuL2FsdHN0YWNrL3Rlc3QvcnVuLmMgfCAgMiArLQogMiBm
+aWxlcyBjaGFuZ2VkLCAzNiBpbnNlcnRpb25zKCspLCAzMyBkZWxldGlvbnMoLSkKCmRpZmYgLS1n
+aXQgYS9jY2FuL2FsdHN0YWNrL2FsdHN0YWNrLmMgYi9jY2FuL2FsdHN0YWNrL2FsdHN0YWNrLmMK
+aW5kZXggNjM1MTI5My4uMDgwY2Q1MCAxMDA2NDQKLS0tIGEvY2Nhbi9hbHRzdGFjay9hbHRzdGFj
+ay5jCisrKyBiL2NjYW4vYWx0c3RhY2svYWx0c3RhY2suYwpAQCAtMTEsNDMgKzExLDQ4IEBACiAj
+aW5jbHVkZSA8dW5pc3RkLmg+CiAjaW5jbHVkZSA8c3lzL21tYW4uaD4KIAotc3RhdGljIF9fdGhy
+ZWFkIGNoYXIgZWJ1ZltBTFRTVEFDS19FUlJfTUFYTEVOXTsKLXN0YXRpYyBfX3RocmVhZCB1bnNp
+Z25lZCBlbGVuOwotCi0jZGVmaW5lIGJhbmcoeCkJCQkJCQkJXAotCShlbGVuICs9IHNucHJpbnRm
+KGVidWYgKyBlbGVuLCBzaXplb2YoZWJ1ZikgLSBlbGVuLAlcCi0JCSAiJXMoYWx0c3RhY2tAJWQp
+ICVzJXMlcyIsCQkJXAotCQkgZWxlbiAgPyAiOyAiIDogIiIsIF9fTElORV9fLCAoeCksCQlcCi0J
+CSBlcnJubyA/ICI6ICIgOiAiIiwgZXJybm8gPyBzdHJlcnJvcihlcnJubykgOiAiIikpCitzdGF0
+aWMgX190aHJlYWQgc3RydWN0IGFsdHN0YWNrX3N0YXRlIHsKKwljaGFyIGVidWZbQUxUU1RBQ0tf
+RVJSX01BWExFTl07CisJdW5zaWduZWQgZWxlbjsKKwlqbXBfYnVmIGptcDsKKwl2b2lkICpyc3Bf
+c2F2ZV9bMl07CisJcmxpbV90IG1heDsKKwl2b2lkICooKmZuKSh2b2lkICopOworCXZvaWQgKmFy
+ZywgKm91dDsKK30gc3RhdGU7CisKKyNkZWZpbmUgYmFuZyh4KQkJCQkJCQkJXAorCShzdGF0ZS5l
+bGVuICs9IHNucHJpbnRmKHN0YXRlLmVidWYgKyBzdGF0ZS5lbGVuLAkJXAorCQkJCXNpemVvZihz
+dGF0ZS5lYnVmKSAtIHN0YXRlLmVsZW4sCVwKKwkJCQkiJXMoYWx0c3RhY2tAJWQpICVzJXMlcyIs
+CQlcCisJCQkJc3RhdGUuZWxlbiAgPyAiOyAiIDogIiIsIF9fTElORV9fLCAoeCksCVwKKwkJCQll
+cnJubyA/ICI6ICIgOiAiIiwJCQlcCisJCQkJZXJybm8gPyBzdHJlcnJvcihlcnJubykgOiAiIikp
+CiAKIHZvaWQgYWx0c3RhY2tfcGVycm9yKHZvaWQpCiB7Ci0JZnByaW50ZihzdGRlcnIsICIlc1xu
+IiwgZWJ1Zik7CisJZnByaW50ZihzdGRlcnIsICIlc1xuIiwgc3RhdGUuZWJ1Zik7CiB9CiAKIGNo
+YXIgKmFsdHN0YWNrX2dldGVycih2b2lkKQogewotCXJldHVybiBlYnVmOworCXJldHVybiBzdGF0
+ZS5lYnVmOwogfQogCi1zdGF0aWMgX190aHJlYWQgam1wX2J1ZiBqbXA7Ci0KIHN0YXRpYyB2b2lk
+IHNlZ3ZqbXAoaW50IHNpZ251bSkKIHsKLQlsb25nam1wKGptcCwgMSk7CisJbG9uZ2ptcChzdGF0
+ZS5qbXAsIDEpOwogfQogCi1zdGF0aWMgX190aHJlYWQgdm9pZCAqcnNwX3NhdmVfWzJdOwotc3Rh
+dGljIF9fdGhyZWFkIHJsaW1fdCBtYXhfOwogCiBybGltX3QgYWx0c3RhY2tfbWF4KHZvaWQpIHsK
+LQlyZXR1cm4gbWF4XzsKKwlyZXR1cm4gc3RhdGUubWF4OwogfQogCiBzdGF0aWMgcHRyZGlmZl90
+IHJzcF9zYXZlKHVuc2lnbmVkIGkpIHsKIAlhc3NlcnQoaSA8IDIpOwotCWFzbSB2b2xhdGlsZSAo
+Im1vdnEgJSVyc3AsICUwIiA6ICI9ZyIgKHJzcF9zYXZlX1tpXSkpOwotCXJldHVybiAoY2hhciAq
+KSByc3Bfc2F2ZV9bMF0gLSAoY2hhciAqKSByc3Bfc2F2ZV9baV07CisJYXNtIHZvbGF0aWxlICgi
+bW92cSAlJXJzcCwgJTAiIDogIj1nIiAoc3RhdGUucnNwX3NhdmVfW2ldKSk7CisJcmV0dXJuIChj
+aGFyICopIHN0YXRlLnJzcF9zYXZlX1swXSAtIChjaGFyICopIHN0YXRlLnJzcF9zYXZlX1tpXTsK
+IH0KIAogdm9pZCBhbHRzdGFja19yc3Bfc2F2ZSh2b2lkKSB7CkBAIC01OCw5ICs2Myw2IEBAIHB0
+cmRpZmZfdCBhbHRzdGFja191c2VkKHZvaWQpIHsKIAlyZXR1cm4gcnNwX3NhdmUoMSk7CiB9CiAK
+LXN0YXRpYyBfX3RocmVhZCB2b2lkICooKmZuXykodm9pZCAqKTsKLXN0YXRpYyBfX3RocmVhZCB2
+b2lkICphcmdfLCAqb3V0XzsKLQogaW50IGFsdHN0YWNrKHJsaW1fdCBtYXgsIHZvaWQgKigqZm4p
+KHZvaWQgKiksIHZvaWQgKmFyZywgdm9pZCAqKm91dCkKIHsKIAlsb25nIHBnc3ogPSBzeXNjb25m
+KF9TQ19QQUdFU0laRSk7CkBAIC03MywxMSArNzUsMTEgQEAgaW50IGFsdHN0YWNrKHJsaW1fdCBt
+YXgsIHZvaWQgKigqZm4pKHZvaWQgKiksIHZvaWQgKmFyZywgdm9pZCAqKm91dCkKIAlhc3NlcnQo
+bWF4ID4gMCAmJiBmbik7CiAJI2RlZmluZSBvayh4LCB5KSAoeyBsb25nIF9fciA9IChsb25nKSAo
+eCk7IGlmIChfX3IgPT0gLTEpIHsgYmFuZygjeCk7IGlmICh5KSBnb3RvIG91dDsgfSBfX3I7IH0p
+CiAKLQlmbl8gID0gZm47Ci0JYXJnXyA9IGFyZzsKLQlvdXRfID0gMDsKLQltYXhfID0gbWF4Owot
+CWVidWZbZWxlbiA9IDBdID0gJ1wwJzsKKwlzdGF0ZS5mbiAgPSBmbjsKKwlzdGF0ZS5hcmcgPSBh
+cmc7CisJc3RhdGUub3V0ID0gMDsKKwlzdGF0ZS5tYXggPSBtYXg7CisJc3RhdGUuZWJ1ZltzdGF0
+ZS5lbGVuID0gMF0gPSAnXDAnOwogCWlmIChvdXQpICpvdXQgPSAwOwogCiAJLy8gaWYgdGhlIGZp
+cnN0IHBhZ2UgYmVsb3cgdGhlIG1hcHBpbmcgaXMgaW4gdXNlLCB3ZSBnZXQgbWF4LXBnc3ogdXNh
+YmxlIGJ5dGVzCkBAIC04NSwxMyArODcsMTMgQEAgaW50IGFsdHN0YWNrKHJsaW1fdCBtYXgsIHZv
+aWQgKigqZm4pKHZvaWQgKiksIHZvaWQgKmFyZywgdm9pZCAqKm91dCkKIAltYXggKz0gcGdzejsK
+IAogCW9rKGdldHJsaW1pdChSTElNSVRfU1RBQ0ssICZybF9zYXZlKSwgMSk7Ci0Jb2soc2V0cmxp
+bWl0KFJMSU1JVF9TVEFDSywgJihzdHJ1Y3QgcmxpbWl0KSB7IG1heF8sIHJsX3NhdmUucmxpbV9t
+YXggfSksIDEpOworCW9rKHNldHJsaW1pdChSTElNSVRfU1RBQ0ssICYoc3RydWN0IHJsaW1pdCkg
+eyBzdGF0ZS5tYXgsIHJsX3NhdmUucmxpbV9tYXggfSksIDEpOwogCXVuZG8rKzsKIAogCW9rKG0g
+PSBtbWFwKDAsIG1heCwgUFJPVF9SRUFEfFBST1RfV1JJVEUsIE1BUF9QUklWQVRFfE1BUF9BTk9O
+WU1PVVN8TUFQX0dST1dTRE9XTnxNQVBfTk9SRVNFUlZFLCAtMSwgMCksIDEpOwogCXVuZG8rKzsK
+IAotCWlmIChzZXRqbXAoam1wKSA9PSAwKSB7CisJaWYgKHNldGptcChzdGF0ZS5qbXApID09IDAp
+IHsKIAkJdW5zaWduZWQgY2hhciBzaWdzdGtbU0lHU1RLU1pdOwogCQlzdGFja190IHNzID0geyAu
+c3Nfc3AgPSBzaWdzdGssIC5zc19zaXplID0gc2l6ZW9mKHNpZ3N0aykgfTsKIAkJc3RydWN0IHNp
+Z2FjdGlvbiBzYSA9IHsgLnNhX2hhbmRsZXIgPSBzZWd2am1wLCAuc2FfZmxhZ3MgPSBTQV9OT0RF
+RkVSfFNBX1JFU0VUSEFORHxTQV9PTlNUQUNLIH07CkBAIC0xMDgsMTIgKzExMCwxMyBAQCBpbnQg
+YWx0c3RhY2socmxpbV90IG1heCwgdm9pZCAqKCpmbikodm9pZCAqKSwgdm9pZCAqYXJnLCB2b2lk
+ICoqb3V0KQogCQkJIm1vdiAlMSwgJSVyc3Bcblx0IgogCQkJInN1YiAkOCwgJSVyc3Bcblx0Igog
+CQkJInB1c2ggJSVyMTAiCi0JCQk6ICI9ciIgKHJzcF9zYXZlX1swXSkgOiAiMCIgKG0gKyBtYXgp
+IDogInIxMCIsICJtZW1vcnkiKTsKLQkJb3V0XyA9IGZuXyhhcmdfKTsKKwkJCTogIj1yIiAoc3Rh
+dGUucnNwX3NhdmVfWzBdKQorCQkJOiAiMCIgKG0gKyBtYXgpIDogInIxMCIsICJtZW1vcnkiKTsK
+KwkJc3RhdGUub3V0ID0gc3RhdGUuZm4oc3RhdGUuYXJnKTsKIAkJYXNtIHZvbGF0aWxlICgicG9w
+ICUlcnNwIgogCQkJICAgICAgOiA6IDogIm1lbW9yeSIpOwogCQlyZXQgPSAwOwotCQlpZiAob3V0
+KSAqb3V0ID0gb3V0XzsKKwkJaWYgKG91dCkgKm91dCA9IHN0YXRlLm91dDsKIAl9CiAJZWxzZSB7
+CiAJCWVycm5vID0gMDsKQEAgLTEzNyw1ICsxNDAsNSBAQCBvdXQ6CiAKIAlpZiAoZXJybm9fc2F2
+ZSkKIAkJZXJybm8gPSBlcnJub19zYXZlOwotCXJldHVybiAhcmV0ICYmIGVsZW4gPyAxIDogcmV0
+OworCXJldHVybiAhcmV0ICYmIHN0YXRlLmVsZW4gPyAxIDogcmV0OwogfQpkaWZmIC0tZ2l0IGEv
+Y2Nhbi9hbHRzdGFjay90ZXN0L3J1bi5jIGIvY2Nhbi9hbHRzdGFjay90ZXN0L3J1bi5jCmluZGV4
+IDEyY2M0NjAuLjIzZGQyZTkgMTAwNjQ0Ci0tLSBhL2NjYW4vYWx0c3RhY2svdGVzdC9ydW4uYwor
+KysgYi9jY2FuL2FsdHN0YWNrL3Rlc3QvcnVuLmMKQEAgLTI0LDcgKzI0LDcgQEAgY2hhciAqbV87
+CiBybGltX3QgbXN6XzsKICNkZWZpbmUgZSh4KSAoOTAwKyh4KSkKICNkZWZpbmUgc2V0ZXJyKHgp
+IChlcnJubyA9IGUoeCkpCi0jZGVmaW5lIHNldGNhbGwoeCkgKChjYWxsMSB8PSAhZXJybm8gPyAo
+eCkgOiAwKSwgKGNhbGwyIHw9IGVycm5vIHx8IG91dF8gPyAoeCkgOiAwKSkKKyNkZWZpbmUgc2V0
+Y2FsbCh4KSAoKGNhbGwxIHw9ICFlcnJubyA/ICh4KSA6IDApLCAoY2FsbDIgfD0gZXJybm8gfHwg
+c3RhdGUub3V0ID8gKHgpIDogMCkpCiAjZGVmaW5lIGdldHJsaW1pdCguLi4pCQkoZmFpbCZnZXRy
+bGltaXRfCT8gKHNldGVycihnZXRybGltaXRfKSwJCS0xKSA6IChzZXRjYWxsKGdldHJsaW1pdF8p
+LAlnZXRybGltaXQoX19WQV9BUkdTX18pKSkKICNkZWZpbmUgbW1hcCguLi4pCQkoZmFpbCZtbWFw
+XwkJPyAoc2V0ZXJyKG1tYXBfKSwJKHZvaWQgKiktMSkgOiAoc2V0Y2FsbChtbWFwXyksCQltbWFw
+KF9fVkFfQVJHU19fKSkpCiAjZGVmaW5lIG11bm1hcChhLCBiKQkJKGZhaWwmbXVubWFwXwkJPyAo
+c2V0ZXJyKG11bm1hcF8pLAkJLTEpIDogKHNldGNhbGwobXVubWFwXyksCW11bm1hcChtXz0oYSks
+IG1zel89KGIpKSkpCi0tIAoyLjUuNQoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX18KY2NhbiBtYWlsaW5nIGxpc3QKY2NhbkBsaXN0cy5vemxhYnMub3JnCmh0
+dHBzOi8vbGlzdHMub3psYWJzLm9yZy9saXN0aW5mby9jY2FuCg==
