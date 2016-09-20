@@ -1,21 +1,19 @@
-From: Kevin Locke <kevin@kevinlocke.name>
-Subject: Re: [PATCH 8/9] configurator: Pass output cflag to
- configurator
-Date: Tue, 20 Sep 2016 00:22:47 -0600
-Message-ID: <5e147bac-4111-060b-1fbe-f652bbfd7dc0@kevinlocke.name>
+From: David Gibson <david@gibson.dropbear.id.au>
+Subject: Re: [PATCH 0/9] configurator: Support for Windows and MSVC
+Date: Tue, 20 Sep 2016 22:25:24 +1000
+Message-ID: <20160920122524.GE20488@umbus>
 References: <cover.1474239353.git.kevin@kevinlocke.name>
- <39df3703e2b3c4be2524990f4a8ea10fa3a42b21.1474239353.git.kevin@kevinlocke.name>
- <20160920052359.GR20488@umbus>
+ <20160920044822.GJ20488@umbus>
+ <b317f282-f357-e3f8-deeb-048c5793492f@kevinlocke.name>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
+Content-Type: multipart/mixed; boundary="===============8636484522154600846=="
 Return-path: <ccan-bounces+gclcc-ccan=m.gmane.org@lists.ozlabs.org>
-Received: from praxis.kevinlocke.name (praxis.kevinlocke.name [205.185.125.39])
- (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
+ (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 3sdXk14LzZzDsgg
- for <ccan@lists.ozlabs.org>; Tue, 20 Sep 2016 16:22:49 +1000 (AEST)
-In-Reply-To: <20160920052359.GR20488@umbus>
+ by lists.ozlabs.org (Postfix) with ESMTPS id 3sdjlJ1jh2zDsky
+ for <ccan@lists.ozlabs.org>; Tue, 20 Sep 2016 23:09:32 +1000 (AEST)
+In-Reply-To: <b317f282-f357-e3f8-deeb-048c5793492f@kevinlocke.name>
 List-Unsubscribe: <https://lists.ozlabs.org/options/ccan>,
  <mailto:ccan-request@lists.ozlabs.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/ccan/>
@@ -25,46 +23,104 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/ccan>,
  <mailto:ccan-request@lists.ozlabs.org?subject=subscribe>
 Errors-To: ccan-bounces+gclcc-ccan=m.gmane.org@lists.ozlabs.org
 Sender: "ccan" <ccan-bounces+gclcc-ccan=m.gmane.org@lists.ozlabs.org>
-To: David Gibson <david@gibson.dropbear.id.au>
+To: Kevin Locke <kevin@kevinlocke.name>
 Cc: ccan@lists.ozlabs.org
 List-Id: ccan@lists.ozlabs.org
 
-T24gMDkvMTkvMjAxNiAxMToyMyBQTSwgRGF2aWQgR2lic29uIHdyb3RlOgo+IE9uIFN1biwgU2Vw
-IDE4LCAyMDE2IGF0IDA2OjUyOjA1UE0gLTA2MDAsIEtldmluIExvY2tlIHdyb3RlOgo+PiBVbmZv
-cnR1bmF0ZWx5LCBub3QgYWxsIGNvbXBpbGVycyBzdXBwb3J0IC1vIGFzIGEgY29tbWFuZC1saW5l
-IG9wdGlvbiBmb3IKPj4gc3BlY2lmeWluZyB0aGUgb3V0cHV0IGZpbGUuICBWaXN1YWwgU3R1ZGlv
-IGNsLmV4ZSBpc3N1ZXMgd2FybmluZyBEOTAzNQo+PiB3aGVuIC1vIGlzIGdpdmVuLCB3aGljaCBp
-cyBkZXRlY3RlZCBhcyBhIGNvbXBpbGUgd2FybmluZyBieSB0aGUKPj4gY29uZmlndXJhdG9yLgo+
-Pgo+PiBUbyBzdXBwb3J0IHN1Y2ggY29tcGlsZXJzLCBwYXNzIHRoZSBvdXRwdXQgZmxhZyBhcyB0
-aGUgbGFzdCBmbGFnIHRvIHRoZQo+PiBjb25maWd1cmF0b3IuCj4+Cj4+IFRoaXMgaXMgYSBicmVh
-a2luZyBjaGFuZ2UuICBFeGlzdGluZyBzY3JpcHRzIHdoaWNoIHBhc3MgZmxhZ3MgdG8gdGhlCj4+
-IGNvbXBpbGVyIG11c3QgYmUgbW9kaWZpZWQgdG8gYWRkICItbyIgYXMgdGhlIGxhc3QgZmxhZy4g
-IEFzIG5vdGVkIGluIHRoZQo+PiBjb3ZlciBsZXR0ZXIgZm9yIHRoaXMgcGF0Y2ggc2VyaWVzLCBJ
-J20gb3BlbiB0byBjb25zaWRlcmluZyBhbHRlcm5hdGl2ZXMKPj4gaWYgdGhpcyBpcyB1bmFjY2Vw
-dGFibGUuCj4KPiBTbywgYXMgaXQgc3RhbmRzLCB0aGlzIGNoYW5nZSBjb21wbGV0ZWx5IGJyZWFr
-cyBjY2FubGludCBvbiBQT1NJWCwKPiB3aGljaCBpcyBub3Qgb2suICBTcGVjaWZpY2FsbHkgaXQg
-bG9va3MgbGlrZSB0aGUgcHJvYmxlbSBpcyB0aGF0IHRoZQo+IERFRkFVTFRfRkxBR1MgZnJvbSB0
-aGUgY29uZmlndXJhdG9yIG1ha2UgaXQgaW50byBDQ0FOX0NGTEFHUyBpbgo+IGNvbmZpZy5oLiAg
-Y2NhbmxpbnQgdGhlbiB0cmllcyB0byBhZGQgZnVydGhlciBvcHRpb25zIGFuZCBpdHMgb3duIC1v
-Cj4gdG8gdGhlIGVuZCBvZiB0aGF0LCB3aGljaCBpc24ndCBnb2luZyB0byB3b3JrLgo+Cj4gSW4g
-c2hvcnQsIEkgdGhpbmsgdGhlIHByb2JsZW0gaXMgdGhhdCBjY2FubGludCBuZWVkcyBmaXhlcyB0
-byB3b3JrCj4gd2l0aCBNU1ZDIChhbmQgcG9zc2libHkgYW55dGhpbmcgbXVjaCBlbHNlIGFwYXJ0
-IGZyb20gZ2NjKS4gIEkgdGhpbmsKPiB3ZSBuZWVkIHRvIGxvb2sgYXQgaG93IHRvIGZpeCB0aGF0
-IGFuZCB0aGUgY29uZmlndXJhdG9yIHRvZ2V0aGVyIHdpdGgKPiBlYWNoIG90aGVyLgo+Cj4gTm90
-IGhhdmluZyB3b3JraW5nIGNjYW5saW50IG9uIFdpbmRvd3Mgc2VlbXMgbGlrZSBhIHByZXR0eSBi
-aWcsIHNpbmNlCj4gaXRzIHRoZSBtYWluIHRvb2wgZm9yIHRlc3RpbmcgY2NhbiwgYW1vbmdzdCBv
-dGhlciB0aGluZ3MuCgpHb29kIGNhdGNoLiAgSSBoYWRuJ3Qgbm90aWNlZCB0aGUgY2NhbmxpbnQg
-YnJlYWthZ2UuICBUaGF0IHdhcyBhIGJpZyAKb3ZlcnNpZ2h0IG9uIG15IHBhcnQuCgpUaGUgYnJl
-YWthZ2UgbGlrZWx5IGV4dGVuZHMgdG8gYW55IG90aGVyIHByb2dyYW1zIHdoaWNoIHVzZSBDQ0FO
-X0NGTEFHUywgCnNpbmNlIG5vbmUgYXJlIGV4cGVjdGluZyB0aGUgb3V0cHV0IGZsYWcgYXQgdGhl
-IGVuZC4gIFBlcmhhcHMgYSBiZXR0ZXIgCnNvbHV0aW9uIHdvdWxkIGJlIHRvIGVtaXQgdGhlIG91
-dHB1dCBmbGFnIGFzIGEgc2VwYXJhdGUgbWFjcm8uIApTb21ldGhpbmcgbGlrZSBDQ0FOX09VVFBV
-VF9DRkxBRy4gIFdoYXQgZG8geW91IHRoaW5rPwoKVGhlIGNvbW1hbmQgbGluZSBBUEkgZm9yIGNv
-bmZpZ3VyYXRvciBjb3VsZCBlaXRoZXIgZXhwZWN0IHRoZSBvdXRwdXQgCmZsYWcgdG8gYmUgdGhl
-IGxhc3QgYXJndW1lbnQgYXMgY3VycmVudGx5IGluIHRoZSBwYXRjaCAod2hpY2ggaXMgYSAKYnJl
-YWtpbmcgY2hhbmdlIGZvciBhbnl0aGluZyB3aGljaCBjYWxsIGl0KS4gIE9yIGEgY29tbWFuZCBs
-aW5lIG9wdGlvbiAKc3VjaCBhcyAtLW91dHB1dC1jZmxhZyBjb3VsZCBiZSBhZGRlZCB0byBzcGVj
-aWZ5IHRoZSBmbGFnIGFuZCBwcmVzZXJ2ZSAKY29tbWFuZC1saW5lIHN5bnRheCBjb21wYXRpYmls
-aXR5LgoKVGhvdWdodHM/CgpLZXZpbgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fXwpjY2FuIG1haWxpbmcgbGlzdApjY2FuQGxpc3RzLm96bGFicy5vcmcKaHR0
-cHM6Ly9saXN0cy5vemxhYnMub3JnL2xpc3RpbmZvL2NjYW4K
+
+--===============8636484522154600846==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="Th5JPit8I3Q6/gDv"
+Content-Disposition: inline
+
+
+--Th5JPit8I3Q6/gDv
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Tue, Sep 20, 2016 at 12:21:25AM -0600, Kevin Locke wrote:
+> Hi David,
+>=20
+> Thank you for taking the time to review these patches, especially for a
+> platform that you don't have a strong stake in.  I really appreciate it.
+>=20
+> On 09/19/2016 10:48 PM, David Gibson wrote:
+> > On Sun, Sep 18, 2016 at 06:51:57PM -0600, Kevin Locke wrote:
+> > > This patch series adds support for building configurator with Microso=
+ft
+> > > Visual C++ and running it on Windows.  The motivation is to add
+> > > sufficient support for Windows to allow using header-only modules
+> > > with minimal hassle.  For me, this patch series is sufficient, so I
+> > > don't have any further plans for changes to other files or the build
+> > > system at the moment.
+> >=20
+> > First, thanks for this.  ccan isn't supposed to be platform specific,
+> > but it kind of is at the moment, simply because most of the
+> > contributions have been from Linux developers.  I'm really happy to
+> > see some work to make it useful on different platforms.
+> >=20
+> > Second, because I'm not and have never been a Windows dev, my ability
+> > to review these is limited - so I'm inclined to apply anything that
+> > doesn't break builds on Linux / POSIX.
+> >=20
+> > Third, because most of the main ccan contributors are not Windows
+> > devs, I'm a bit worried about bitrot.  If you can think of any way of
+> > making some kind of automated smoke test form builds on Windows, that
+> > would be terrific.  Otherwise, I guess we'll just hope for the best.
+>=20
+> I think that's a very legitimate concern.  I'm not a frequent Windows
+> developer myself, but had a need for a current project.  I've tried to
+> minimize the amount of Windows-specific code, with good results I think, =
+but
+> that's obviously not much of a guarantee that it won't rot or subtly break
+> on Windows going forward.
+>=20
+> I've seen appveyor.com used quite often for Windows CI, and it is free for
+> FOSS projects.  I'd be happy to work up some basic smoke tests if it seems
+> like that might be useful and not too much of a maintenance burden.  Let =
+me
+> know what you think.
+
+Sounds good to me.
+
+--=20
+David Gibson			| I'll have my music baroque, and my code
+david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
+				| _way_ _around_!
+http://www.ozlabs.org/~dgibson
+
+--Th5JPit8I3Q6/gDv
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAEBCAAGBQJX4SqvAAoJEGw4ysog2bOSto0P/RCQezXGibx5yZj3z8qPpfUw
+AobmgpKEbylBhapJTAovuOwVQudgTepcPaHNkhAxXhRZv+DIDVd6Doh91FeLaiXK
+r6gTtazXJhAqU2/gYFAujjVessLqH55tyi5D1MB1JILMmDiJzf8gNyrCSXUT35DO
+N1LXsw785HQ00VzuftFS5j+J8CvIJiEWBLW9r5sWlDYFBKYvg3BFWG9QKvgMLtsw
+Pu8stwbjH7UP5dQby48wodcWi89Np65PMILjFykshTStmhdm7fXa5YoRLuUwPwrZ
+noJ3H1fOb+v7EYDd30R8/NgZp4BUrpUJFRRbY/f4C9cNdT72ttnkTJ2QezrBODlW
+vGt04peP0FIkBeyDaZLxz1XrTSebsiXEWoOKuwvYkxa/qEDZC/AWceL25b7F1R2Z
++5SsKdjbsGJolEwszbUSMkmSqAfcuLjjO+2L0M3FKZjVq4fcPaYK0HzqvrdzZDk9
+eGhZhE7+9ZuW+8rbH9klx388eTnr878OauhaeJ33qeyofRJYlB4n6hUYVPiA/Eq0
+DXSobw80VUDMggl/ldgmyo2XDK2OqTUwwRtAJhSJeo3BiJIl7f0+86XzaWiPuteO
+yriYzpPopoOEEMk4aXooWbS7M3/GoeJfbkG0R1JW+OaxIMNz5vaS9rTCjbiJYIQG
+NRioLfwLpeTXMZxZ8+OT
+=5YM8
+-----END PGP SIGNATURE-----
+
+--Th5JPit8I3Q6/gDv--
+
+--===============8636484522154600846==
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: inline
+
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KY2NhbiBtYWls
+aW5nIGxpc3QKY2NhbkBsaXN0cy5vemxhYnMub3JnCmh0dHBzOi8vbGlzdHMub3psYWJzLm9yZy9s
+aXN0aW5mby9jY2FuCg==
+
+--===============8636484522154600846==--
