@@ -1,20 +1,19 @@
-From: Kevin Locke <kevin@kevinlocke.name>
-Subject: [PATCH 3/9] configurator: Inline err.h functions from musl
- libc
-Date: Sun, 18 Sep 2016 18:52:00 -0600
-Message-ID: <d7b109044f3d73a3f91c56136ad487fe07b518a7.1474239353.git.kevin@kevinlocke.name>
+From: David Gibson <david@gibson.dropbear.id.au>
+Subject: Re: [PATCH 3/9] configurator: Inline err.h functions from
+ musl libc
+Date: Tue, 20 Sep 2016 15:03:09 +1000
+Message-ID: <20160920050309.GM20488@umbus>
 References: <cover.1474239353.git.kevin@kevinlocke.name>
+ <d7b109044f3d73a3f91c56136ad487fe07b518a7.1474239353.git.kevin@kevinlocke.name>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: multipart/mixed; boundary="===============6775916984427583844=="
 Return-path: <ccan-bounces+gclcc-ccan=m.gmane.org@lists.ozlabs.org>
-Received: from praxis.kevinlocke.name (praxis.kevinlocke.name
- [IPv6:2605:6400:2:fed5:22:0:f2f6:c0f7])
- (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
+ (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 3scndq0RKzzDsdr
- for <ccan@lists.ozlabs.org>; Mon, 19 Sep 2016 11:01:35 +1000 (AEST)
-In-Reply-To: <cover.1474239353.git.kevin@kevinlocke.name>
+ by lists.ozlabs.org (Postfix) with ESMTPS id 3sdWjl5wc9zDsfh
+ for <ccan@lists.ozlabs.org>; Tue, 20 Sep 2016 15:37:31 +1000 (AEST)
+In-Reply-To: <d7b109044f3d73a3f91c56136ad487fe07b518a7.1474239353.git.kevin@kevinlocke.name>
 List-Unsubscribe: <https://lists.ozlabs.org/options/ccan>,
  <mailto:ccan-request@lists.ozlabs.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/ccan/>
@@ -24,56 +23,178 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/ccan>,
  <mailto:ccan-request@lists.ozlabs.org?subject=subscribe>
 Errors-To: ccan-bounces+gclcc-ccan=m.gmane.org@lists.ozlabs.org
 Sender: "ccan" <ccan-bounces+gclcc-ccan=m.gmane.org@lists.ozlabs.org>
-To: ccan@lists.ozlabs.org
+To: Kevin Locke <kevin@kevinlocke.name>
+Cc: ccan@lists.ozlabs.org
 List-Id: ccan@lists.ozlabs.org
 
-U2luY2Ugd2UgY2FuJ3QgdXNlIEhBVkVfRVJSX0ggaW4gY29uZmlndXJhdG9yLCBwcm92aWRlIGEg
-ZGVmaW5pdGlvbiBmb3IKdGhlIGVyci5oIGZ1bmN0aW9ucyB1c2VkLiAgVGhlIHZlcnNpb24gcHJv
-dmlkZWQgaXMgdGhlIG9uZSBmcm9tIG11c2wKbGliYywgc2luY2UgaXQgaXMgY29uY2lzZSBhbmQg
-c2hhcmVzIHRoZSBNSVQgTGljZW5zZSB3aXRoIGNvbmZpZ3VyYXRvci4KClNpZ25lZC1vZmYtYnk6
-IEtldmluIExvY2tlIDxrZXZpbkBrZXZpbmxvY2tlLm5hbWU+Ci0tLQogdG9vbHMvY29uZmlndXJh
-dG9yL2NvbmZpZ3VyYXRvci5jIHwgNTQgKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysr
-KysrKystCiAxIGZpbGUgY2hhbmdlZCwgNTMgaW5zZXJ0aW9ucygrKSwgMSBkZWxldGlvbigtKQoK
-ZGlmZiAtLWdpdCBhL3Rvb2xzL2NvbmZpZ3VyYXRvci9jb25maWd1cmF0b3IuYyBiL3Rvb2xzL2Nv
-bmZpZ3VyYXRvci9jb25maWd1cmF0b3IuYwppbmRleCA5ODE3ZmNkLi45ZGNmMzA3IDEwMDY0NAot
-LS0gYS90b29scy9jb25maWd1cmF0b3IvY29uZmlndXJhdG9yLmMKKysrIGIvdG9vbHMvY29uZmln
-dXJhdG9yL2NvbmZpZ3VyYXRvci5jCkBAIC0zLDYgKzMsOSBAQAogICoKICAqIENvcHlyaWdodCAy
-MDExIFJ1c3R5IFJ1c3NlbGwgPHJ1c3R5QHJ1c3Rjb3JwLmNvbS5hdT4uICBNSVQgbGljZW5zZS4K
-ICAqCisgKiBlcnIsIGVycngsIHZlcnIsIHZlcnJ4LCB2d2Fybiwgdndhcm54IGZ1bmN0aW9ucyBm
-cm9tIG11c2wgbGliYworICogQ29weXJpZ2h0IDIwMDUtMjAxMyBSaWNoIEZlbGtlci4gIE1JVCBs
-aWNlbnNlLgorICoKICAqIFBlcm1pc3Npb24gaXMgaGVyZWJ5IGdyYW50ZWQsIGZyZWUgb2YgY2hh
-cmdlLCB0byBhbnkgcGVyc29uIG9idGFpbmluZyBhIGNvcHkKICAqIG9mIHRoaXMgc29mdHdhcmUg
-YW5kIGFzc29jaWF0ZWQgZG9jdW1lbnRhdGlvbiBmaWxlcyAodGhlICJTb2Z0d2FyZSIpLCB0byBk
-ZWFsCiAgKiBpbiB0aGUgU29mdHdhcmUgd2l0aG91dCByZXN0cmljdGlvbiwgaW5jbHVkaW5nIHdp
-dGhvdXQgbGltaXRhdGlvbiB0aGUgcmlnaHRzCkBAIC0yMiw5ICsyNSw5IEBACiAgKiBUSEUgU09G
-VFdBUkUuCiAgKi8KICNpbmNsdWRlIDxzdGRpby5oPgorI2luY2x1ZGUgPHN0ZGFyZy5oPgogI2lu
-Y2x1ZGUgPHN0ZGJvb2wuaD4KICNpbmNsdWRlIDxzdGRsaWIuaD4KLSNpbmNsdWRlIDxlcnIuaD4K
-ICNpbmNsdWRlIDxzdHJpbmcuaD4KIAogI2lmZGVmIF9NU0NfVkVSCkBAIC0zOCw2ICs0MSw3IEBA
-CiAjZGVmaW5lIE9VVFBVVF9GSUxFICJjb25maWd1cmF0b3Iub3V0IgogI2RlZmluZSBJTlBVVF9G
-SUxFICJjb25maWd1cmF0b3J0ZXN0LmMiCiAKK3N0YXRpYyBjb25zdCBjaGFyICpwcm9nbmFtZSA9
-ICIiOwogc3RhdGljIGludCB2ZXJib3NlOwogCiBlbnVtIHRlc3Rfc3R5bGUgewpAQCAtMzY3LDYg
-KzM3MSw1MSBAQCBzdGF0aWMgc3RydWN0IHRlc3QgdGVzdHNbXSA9IHsKIAl9LAogfTsKIAorc3Rh
-dGljIHZvaWQgdndhcm4oY29uc3QgY2hhciAqZm10LCB2YV9saXN0IGFwKQoreworCWZwcmludGYg
-KHN0ZGVyciwgIiVzOiAiLCBwcm9nbmFtZSk7CisJaWYgKGZtdCkgeworCQl2ZnByaW50ZihzdGRl
-cnIsIGZtdCwgYXApOworCQlmcHV0cyAoIjogIiwgc3RkZXJyKTsKKwl9CisJcGVycm9yKDApOwor
-fQorCitzdGF0aWMgdm9pZCB2d2FybngoY29uc3QgY2hhciAqZm10LCB2YV9saXN0IGFwKQorewor
-CWZwcmludGYgKHN0ZGVyciwgIiVzOiAiLCBwcm9nbmFtZSk7CisJaWYgKGZtdCkgdmZwcmludGYo
-c3RkZXJyLCBmbXQsIGFwKTsKKwlwdXRjKCdcbicsIHN0ZGVycik7Cit9CisKK3N0YXRpYyB2b2lk
-IHZlcnIoaW50IHN0YXR1cywgY29uc3QgY2hhciAqZm10LCB2YV9saXN0IGFwKQoreworCXZ3YXJu
-KGZtdCwgYXApOworCWV4aXQoc3RhdHVzKTsKK30KKworc3RhdGljIHZvaWQgdmVycngoaW50IHN0
-YXR1cywgY29uc3QgY2hhciAqZm10LCB2YV9saXN0IGFwKQoreworCXZ3YXJueChmbXQsIGFwKTsK
-KwlleGl0KHN0YXR1cyk7Cit9CisKK3N0YXRpYyB2b2lkIGVycihpbnQgc3RhdHVzLCBjb25zdCBj
-aGFyICpmbXQsIC4uLikKK3sKKwl2YV9saXN0IGFwOworCXZhX3N0YXJ0KGFwLCBmbXQpOworCXZl
-cnIoc3RhdHVzLCBmbXQsIGFwKTsKKwl2YV9lbmQoYXApOworfQorCitzdGF0aWMgdm9pZCBlcnJ4
-KGludCBzdGF0dXMsIGNvbnN0IGNoYXIgKmZtdCwgLi4uKQoreworCXZhX2xpc3QgYXA7CisJdmFf
-c3RhcnQoYXAsIGZtdCk7CisJdmVycngoc3RhdHVzLCBmbXQsIGFwKTsKKwl2YV9lbmQoYXApOwor
-fQorCiBzdGF0aWMgY2hhciAqZ3JhYl9zdHJlYW0oRklMRSAqZmlsZSkKIHsKIAlzaXplX3QgbWF4
-LCByZXQsIHNpemUgPSAwOwpAQCAtNTkzLDYgKzY0Miw5IEBAIGludCBtYWluKGludCBhcmdjLCBj
-b25zdCBjaGFyICphcmd2W10pCiAJY29uc3QgY2hhciAqZGVmYXVsdF9hcmdzW10KIAkJPSB7ICIi
-LCBERUZBVUxUX0NPTVBJTEVSLCBERUZBVUxUX0ZMQUdTLCBOVUxMIH07CiAKKwlpZiAoYXJnYyA+
-IDApCisJCXByb2duYW1lID0gYXJndlswXTsKKwogCWlmIChhcmdjID4gMSkgewogCQlpZiAoc3Ry
-Y21wKGFyZ3ZbMV0sICItLWhlbHAiKSA9PSAwKSB7CiAJCQlwcmludGYoIlVzYWdlOiBjb25maWd1
-cmF0b3IgWy12XSBbPGNvbXBpbGVyPiA8ZmxhZ3M+Li4uXVxuIgotLSAKMi45LjMKCl9fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmNjYW4gbWFpbGluZyBsaXN0
-CmNjYW5AbGlzdHMub3psYWJzLm9yZwpodHRwczovL2xpc3RzLm96bGFicy5vcmcvbGlzdGluZm8v
-Y2Nhbgo=
+
+--===============6775916984427583844==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="XlS4q8O07AKt4+K1"
+Content-Disposition: inline
+
+
+--XlS4q8O07AKt4+K1
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Sun, Sep 18, 2016 at 06:52:00PM -0600, Kevin Locke wrote:
+> Since we can't use HAVE_ERR_H in configurator, provide a definition for
+> the err.h functions used.  The version provided is the one from musl
+> libc, since it is concise and shares the MIT License with configurator.
+>=20
+> Signed-off-by: Kevin Locke <kevin@kevinlocke.name>
+
+Right, so this is a general problem of how do we make the configurator
+itself sufficiently portable, since it hasn't yet worked out the
+portbility macros.
+
+Personally, I think duplicating these here is an acceptable
+workaround.  Rusty, any opinion?
+
+> ---
+>  tools/configurator/configurator.c | 54 +++++++++++++++++++++++++++++++++=
++++++-
+>  1 file changed, 53 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/tools/configurator/configurator.c b/tools/configurator/confi=
+gurator.c
+> index 9817fcd..9dcf307 100644
+> --- a/tools/configurator/configurator.c
+> +++ b/tools/configurator/configurator.c
+> @@ -3,6 +3,9 @@
+>   *
+>   * Copyright 2011 Rusty Russell <rusty@rustcorp.com.au>.  MIT license.
+>   *
+> + * err, errx, verr, verrx, vwarn, vwarnx functions from musl libc
+> + * Copyright 2005-2013 Rich Felker.  MIT license.
+> + *
+>   * Permission is hereby granted, free of charge, to any person obtaining=
+ a copy
+>   * of this software and associated documentation files (the "Software"),=
+ to deal
+>   * in the Software without restriction, including without limitation the=
+ rights
+> @@ -22,9 +25,9 @@
+>   * THE SOFTWARE.
+>   */
+>  #include <stdio.h>
+> +#include <stdarg.h>
+>  #include <stdbool.h>
+>  #include <stdlib.h>
+> -#include <err.h>
+>  #include <string.h>
+> =20
+>  #ifdef _MSC_VER
+> @@ -38,6 +41,7 @@
+>  #define OUTPUT_FILE "configurator.out"
+>  #define INPUT_FILE "configuratortest.c"
+> =20
+> +static const char *progname =3D "";
+>  static int verbose;
+> =20
+>  enum test_style {
+> @@ -367,6 +371,51 @@ static struct test tests[] =3D {
+>  	},
+>  };
+> =20
+> +static void vwarn(const char *fmt, va_list ap)
+> +{
+> +	fprintf (stderr, "%s: ", progname);
+> +	if (fmt) {
+> +		vfprintf(stderr, fmt, ap);
+> +		fputs (": ", stderr);
+> +	}
+> +	perror(0);
+> +}
+> +
+> +static void vwarnx(const char *fmt, va_list ap)
+> +{
+> +	fprintf (stderr, "%s: ", progname);
+> +	if (fmt) vfprintf(stderr, fmt, ap);
+> +	putc('\n', stderr);
+> +}
+> +
+> +static void verr(int status, const char *fmt, va_list ap)
+> +{
+> +	vwarn(fmt, ap);
+> +	exit(status);
+> +}
+> +
+> +static void verrx(int status, const char *fmt, va_list ap)
+> +{
+> +	vwarnx(fmt, ap);
+> +	exit(status);
+> +}
+> +
+> +static void err(int status, const char *fmt, ...)
+> +{
+> +	va_list ap;
+> +	va_start(ap, fmt);
+> +	verr(status, fmt, ap);
+> +	va_end(ap);
+> +}
+> +
+> +static void errx(int status, const char *fmt, ...)
+> +{
+> +	va_list ap;
+> +	va_start(ap, fmt);
+> +	verrx(status, fmt, ap);
+> +	va_end(ap);
+> +}
+> +
+>  static char *grab_stream(FILE *file)
+>  {
+>  	size_t max, ret, size =3D 0;
+> @@ -593,6 +642,9 @@ int main(int argc, const char *argv[])
+>  	const char *default_args[]
+>  		=3D { "", DEFAULT_COMPILER, DEFAULT_FLAGS, NULL };
+> =20
+> +	if (argc > 0)
+> +		progname =3D argv[0];
+> +
+>  	if (argc > 1) {
+>  		if (strcmp(argv[1], "--help") =3D=3D 0) {
+>  			printf("Usage: configurator [-v] [<compiler> <flags>...]\n"
+
+--=20
+David Gibson			| I'll have my music baroque, and my code
+david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
+				| _way_ _around_!
+http://www.ozlabs.org/~dgibson
+
+--XlS4q8O07AKt4+K1
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAEBCAAGBQJX4MMNAAoJEGw4ysog2bOSl4UP/RWgbNEsuFN4XLlYcCMFoIcG
+xR9gNcs+jR3IiK2WMK/cfZhPkRM7flbdqRweqdvcYJpcdXeEx38Ud4QpuPFwbbXB
+9/6f/TaONHCeotYmOn8xnFjcUrVU4GBNIPmU2Vh/0fRY/+JvHGKPmqSNf7xwTzb6
+rYWu/EJn7eM26uFCTJRd7NoMAoZqzrH+oM1jeCIvGxoUAygCnUEo8qUC3nXzoZ29
+W0Zc8TCPq6/prXaAq0LQlKJchvwwN9gWafrvgSYWR4nrPl22Pomck4Pzxex9sbtc
+JSlvK/xgVMrzU0+2f5nJQHYsydip58Dl1o8kJc4+5zMsirzIWJP01h6IKPyKigTV
+3FbkH7Vb2zugPuHlMIl3yC7DLLF1iuQcQQNyLvsNsyrG9ZWfUyowZgn7uKgleqVe
+iZ5hTeNTq2wmKj2REluR43SYN1xofbuxIl7ppOjYjN1FToeEGhWlGnX19MDQWXOd
+jR7/l6C3vmJTGW78qurYjwfmyATRqg2qsFyubNTjA720Ce0TWo+3bzUmW81XMQ1v
+rbXk0dXk9eID5dRXEGQ0fyD+SgtXQ8xZGk7VFQbSGatN9VgPsbcRv0L0I8u9kznh
+ioIwVtfUwt18ZIMADD0tp/Aexvud0sstTeD2d92iZRY+fh9IzgMKxLn3OhW3BXQW
+INXApgs0jRxJGLpgJjAI
+=wNCS
+-----END PGP SIGNATURE-----
+
+--XlS4q8O07AKt4+K1--
+
+--===============6775916984427583844==
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: inline
+
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KY2NhbiBtYWls
+aW5nIGxpc3QKY2NhbkBsaXN0cy5vemxhYnMub3JnCmh0dHBzOi8vbGlzdHMub3psYWJzLm9yZy9s
+aXN0aW5mby9jY2FuCg==
+
+--===============6775916984427583844==--
