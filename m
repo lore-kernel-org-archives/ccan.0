@@ -1,23 +1,20 @@
-From: Daniel Burke <dan.p.burke@gmail.com>
-Subject: Re: [PATCH 0/9] configurator: Support for Windows and MSVC
-Date: Tue, 20 Sep 2016 23:46:23 +0930
-Message-ID: <CAGqEwiYXyGJn0qTVpzXinzdEXdzrE7ngLzM8mTYcY21WmjWHBA@mail.gmail.com>
+From: David Gibson <david@gibson.dropbear.id.au>
+Subject: Re: [PATCH 2/9] configurator: Reimplement run using popen
+Date: Tue, 20 Sep 2016 23:28:26 +1000
+Message-ID: <20160920132826.GI20488@umbus>
 References: <cover.1474239353.git.kevin@kevinlocke.name>
- <20160920044822.GJ20488@umbus>
- <b317f282-f357-e3f8-deeb-048c5793492f@kevinlocke.name>
- <20160920122524.GE20488@umbus>
+ <ecf5714e7fa8075e08d54911675aa0a55b95b014.1474239353.git.kevin@kevinlocke.name>
+ <20160920050023.GL20488@umbus>
+ <3c2cefdf-ea69-d3c4-dff6-bfdbbe63e8eb@kevinlocke.name>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============2957580289054480666=="
+Content-Type: multipart/mixed; boundary="===============5397646614576884651=="
 Return-path: <ccan-bounces+gclcc-ccan=m.gmane.org@lists.ozlabs.org>
-Received: from mail-it0-x235.google.com (mail-it0-x235.google.com
- [IPv6:2607:f8b0:4001:c0b::235])
- (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
+ (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 3sdlDV40HzzDsfj
- for <ccan@lists.ozlabs.org>; Wed, 21 Sep 2016 00:16:26 +1000 (AEST)
-Received: by mail-it0-x235.google.com with SMTP id o3so98950485ita.1
- for <ccan@lists.ozlabs.org>; Tue, 20 Sep 2016 07:16:26 -0700 (PDT)
-In-Reply-To: <20160920122524.GE20488@umbus>
+ by lists.ozlabs.org (Postfix) with ESMTPS id 3sdlL30Bw6zDsfk
+ for <ccan@lists.ozlabs.org>; Wed, 21 Sep 2016 00:21:15 +1000 (AEST)
+In-Reply-To: <3c2cefdf-ea69-d3c4-dff6-bfdbbe63e8eb@kevinlocke.name>
 List-Unsubscribe: <https://lists.ozlabs.org/options/ccan>,
  <mailto:ccan-request@lists.ozlabs.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/ccan/>
@@ -27,217 +24,103 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/ccan>,
  <mailto:ccan-request@lists.ozlabs.org?subject=subscribe>
 Errors-To: ccan-bounces+gclcc-ccan=m.gmane.org@lists.ozlabs.org
 Sender: "ccan" <ccan-bounces+gclcc-ccan=m.gmane.org@lists.ozlabs.org>
-To: David Gibson <david@gibson.dropbear.id.au>
+To: Kevin Locke <kevin@kevinlocke.name>
 Cc: ccan@lists.ozlabs.org
 List-Id: ccan@lists.ozlabs.org
 
---===============2957580289054480666==
-Content-Type: multipart/alternative; boundary=94eb2c05c364d2cc78053cf11297
 
---94eb2c05c364d2cc78053cf11297
-Content-Type: text/plain; charset=UTF-8
+--===============5397646614576884651==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="FYos7FMnk2wAe7eG"
+Content-Disposition: inline
 
-I do have a bit of experience with windows/linux C code interop, and while
-Visual C++ tends to be somewhat... unpredictable (It's getting much better
-than it used to be), I can tell you that...
 
-x86_64-w64-mingw32-gcc
-
-will output binaries that will happily run on windows, so long as you're
-using a version at least as new as is provided with Debian Jessie. (the
-wheezy version produced broken binaries). Wine can then be used to test
-them quite reliably. That compiler comes with enough windows libraries and
-headers to do most reasonable jobs, and quite a few unix headers mangled to
-work in windows environments.
-
-sudo apt-get install mingw-w64
-
-There's a 32bit version if you're that way inclined (which is also broken
-on wheezy), although I haven't used it recently enough to recall it.
-
-regards,
-
-dan
---
-"The world is full of magical things patiently waiting for our wits to grow
-sharper." - Bertrand Russell
-
-On 20 September 2016 at 21:55, David Gibson <david@gibson.dropbear.id.au>
-wrote:
-
-> On Tue, Sep 20, 2016 at 12:21:25AM -0600, Kevin Locke wrote:
-> > Hi David,
-> >
-> > Thank you for taking the time to review these patches, especially for a
-> > platform that you don't have a strong stake in.  I really appreciate it.
-> >
-> > On 09/19/2016 10:48 PM, David Gibson wrote:
-> > > On Sun, Sep 18, 2016 at 06:51:57PM -0600, Kevin Locke wrote:
-> > > > This patch series adds support for building configurator with
-> Microsoft
-> > > > Visual C++ and running it on Windows.  The motivation is to add
-> > > > sufficient support for Windows to allow using header-only modules
-> > > > with minimal hassle.  For me, this patch series is sufficient, so I
-> > > > don't have any further plans for changes to other files or the build
-> > > > system at the moment.
-> > >
-> > > First, thanks for this.  ccan isn't supposed to be platform specific,
-> > > but it kind of is at the moment, simply because most of the
-> > > contributions have been from Linux developers.  I'm really happy to
-> > > see some work to make it useful on different platforms.
-> > >
-> > > Second, because I'm not and have never been a Windows dev, my ability
-> > > to review these is limited - so I'm inclined to apply anything that
-> > > doesn't break builds on Linux / POSIX.
-> > >
-> > > Third, because most of the main ccan contributors are not Windows
-> > > devs, I'm a bit worried about bitrot.  If you can think of any way of
-> > > making some kind of automated smoke test form builds on Windows, that
-> > > would be terrific.  Otherwise, I guess we'll just hope for the best.
-> >
-> > I think that's a very legitimate concern.  I'm not a frequent Windows
-> > developer myself, but had a need for a current project.  I've tried to
-> > minimize the amount of Windows-specific code, with good results I think,
-> but
-> > that's obviously not much of a guarantee that it won't rot or subtly
-> break
-> > on Windows going forward.
-> >
-> > I've seen appveyor.com used quite often for Windows CI, and it is free
-> for
-> > FOSS projects.  I'd be happy to work up some basic smoke tests if it
-> seems
-> > like that might be useful and not too much of a maintenance burden.  Let
-> me
-> > know what you think.
->
-> Sounds good to me.
->
-> --
-> David Gibson                    | I'll have my music baroque, and my code
-> david AT gibson.dropbear.id.au  | minimalist, thank you.  NOT _the_
-> _other_
->                                 | _way_ _around_!
-> http://www.ozlabs.org/~dgibson
->
-> _______________________________________________
-> ccan mailing list
-> ccan@lists.ozlabs.org
-> https://lists.ozlabs.org/listinfo/ccan
->
->
-
---94eb2c05c364d2cc78053cf11297
-Content-Type: text/html; charset=UTF-8
+--FYos7FMnk2wAe7eG
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-<div dir=3D"ltr">I do have a bit of experience with windows/linux C code in=
-terop, and while Visual C++ tends to be somewhat... unpredictable (It&#39;s=
- getting much better than it used to be), I can tell you that...<div><br></=
-div><div>x86_64-w64-mingw32-gcc<br><br>will output binaries that will happi=
-ly run on windows, so long as you&#39;re using a version at least as new as=
- is provided with Debian Jessie. (the wheezy version produced broken binari=
-es). Wine can then be used to test them quite reliably. That compiler comes=
- with enough windows libraries and headers to do most reasonable jobs, and =
-quite a few unix headers mangled to work in windows environments.<br><br>su=
-do apt-get install mingw-w64</div><div><br></div><div>There&#39;s a 32bit v=
-ersion if you&#39;re that way inclined (which is also broken on wheezy), al=
-though I haven&#39;t used it recently enough to recall it.</div></div><div =
-class=3D"gmail_extra"><br clear=3D"all"><div><div class=3D"gmail_signature"=
- data-smartmail=3D"gmail_signature"><div dir=3D"ltr">regards,<div><br></div=
-><div>dan</div><div>--</div><div>&quot;The world is full of magical things =
-patiently waiting for our wits to grow sharper.&quot; - Bertrand Russell<br=
-></div></div></div></div>
-<br><div class=3D"gmail_quote">On 20 September 2016 at 21:55, David Gibson =
-<span dir=3D"ltr">&lt;<a href=3D"mailto:david@gibson.dropbear.id.au" target=
-=3D"_blank">david@gibson.dropbear.id.au</a>&gt;</span> wrote:<br><blockquot=
-e class=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-left:1px #ccc sol=
-id;padding-left:1ex"><div class=3D"HOEnZb"><div class=3D"h5">On Tue, Sep 20=
-, 2016 at 12:21:25AM -0600, Kevin Locke wrote:<br>
-&gt; Hi David,<br>
-&gt;<br>
-&gt; Thank you for taking the time to review these patches, especially for =
-a<br>
-&gt; platform that you don&#39;t have a strong stake in.=C2=A0 I really app=
-reciate it.<br>
-&gt;<br>
-&gt; On 09/19/2016 10:48 PM, David Gibson wrote:<br>
-&gt; &gt; On Sun, Sep 18, 2016 at 06:51:57PM -0600, Kevin Locke wrote:<br>
-&gt; &gt; &gt; This patch series adds support for building configurator wit=
-h Microsoft<br>
-&gt; &gt; &gt; Visual C++ and running it on Windows.=C2=A0 The motivation i=
-s to add<br>
-&gt; &gt; &gt; sufficient support for Windows to allow using header-only mo=
-dules<br>
-&gt; &gt; &gt; with minimal hassle.=C2=A0 For me, this patch series is suff=
-icient, so I<br>
-&gt; &gt; &gt; don&#39;t have any further plans for changes to other files =
-or the build<br>
-&gt; &gt; &gt; system at the moment.<br>
-&gt; &gt;<br>
-&gt; &gt; First, thanks for this.=C2=A0 ccan isn&#39;t supposed to be platf=
-orm specific,<br>
-&gt; &gt; but it kind of is at the moment, simply because most of the<br>
-&gt; &gt; contributions have been from Linux developers.=C2=A0 I&#39;m real=
-ly happy to<br>
-&gt; &gt; see some work to make it useful on different platforms.<br>
-&gt; &gt;<br>
-&gt; &gt; Second, because I&#39;m not and have never been a Windows dev, my=
- ability<br>
-&gt; &gt; to review these is limited - so I&#39;m inclined to apply anythin=
-g that<br>
-&gt; &gt; doesn&#39;t break builds on Linux / POSIX.<br>
-&gt; &gt;<br>
-&gt; &gt; Third, because most of the main ccan contributors are not Windows=
-<br>
-&gt; &gt; devs, I&#39;m a bit worried about bitrot.=C2=A0 If you can think =
-of any way of<br>
-&gt; &gt; making some kind of automated smoke test form builds on Windows, =
-that<br>
-&gt; &gt; would be terrific.=C2=A0 Otherwise, I guess we&#39;ll just hope f=
-or the best.<br>
-&gt;<br>
-&gt; I think that&#39;s a very legitimate concern.=C2=A0 I&#39;m not a freq=
-uent Windows<br>
-&gt; developer myself, but had a need for a current project.=C2=A0 I&#39;ve=
- tried to<br>
-&gt; minimize the amount of Windows-specific code, with good results I thin=
-k, but<br>
-&gt; that&#39;s obviously not much of a guarantee that it won&#39;t rot or =
-subtly break<br>
-&gt; on Windows going forward.<br>
-&gt;<br>
-&gt; I&#39;ve seen <a href=3D"http://appveyor.com" rel=3D"noreferrer" targe=
-t=3D"_blank">appveyor.com</a> used quite often for Windows CI, and it is fr=
-ee for<br>
-&gt; FOSS projects.=C2=A0 I&#39;d be happy to work up some basic smoke test=
-s if it seems<br>
-&gt; like that might be useful and not too much of a maintenance burden.=C2=
-=A0 Let me<br>
-&gt; know what you think.<br>
-<br>
-</div></div>Sounds good to me.<br>
-<div class=3D"HOEnZb"><div class=3D"h5"><br>
---<br>
-David Gibson=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
-=C2=A0 | I&#39;ll have my music baroque, and my code<br>
-david AT <a href=3D"http://gibson.dropbear.id.au" rel=3D"noreferrer" target=
-=3D"_blank">gibson.dropbear.id.au</a>=C2=A0 | minimalist, thank you.=C2=A0 =
-NOT _the_ _other_<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 | _way_ _around_!<br>
-<a href=3D"http://www.ozlabs.org/~dgibson" rel=3D"noreferrer" target=3D"_bl=
-ank">http://www.ozlabs.org/~dgibson</a><br>
-</div></div><br>______________________________<wbr>_________________<br>
-ccan mailing list<br>
-<a href=3D"mailto:ccan@lists.ozlabs.org">ccan@lists.ozlabs.org</a><br>
-<a href=3D"https://lists.ozlabs.org/listinfo/ccan" rel=3D"noreferrer" targe=
-t=3D"_blank">https://lists.ozlabs.org/<wbr>listinfo/ccan</a><br>
-<br></blockquote></div><br></div>
+On Tue, Sep 20, 2016 at 12:22:41AM -0600, Kevin Locke wrote:
+> On 09/19/2016 11:00 PM, David Gibson wrote:
+> > On Sun, Sep 18, 2016 at 06:51:59PM -0600, Kevin Locke wrote:
+> >> Rather than using fork+pipe+system+waitpid, most of which are only
+> >> available on POSIX-like systems, use popen which is also available on
+> >> Windows (under the name _popen).
+> >
+> > Concept looks good, one little wart.
+> >
+> >> [...]
+> >>
+> >> -static char *grab_fd(int fd)
+> >> +static char *grab_stream(FILE *file)
+> >>  {
+> >> -	int ret;
+> >> -	size_t max, size =3D 0;
+> >> +	size_t max, ret, size =3D 0;
+> >>  	char *buffer;
+> >>
+> >> -	max =3D 16384;
+> >> -	buffer =3D malloc(max+1);
+> >> -	while ((ret =3D read(fd, buffer + size, max - size)) > 0) {
+> >> +	max =3D BUFSIZ;
+> >> +	buffer =3D malloc(max);
+> >> +	while ((ret =3D fread(buffer+size, 1, max - size, file)) =3D=3D max =
+- size) {
+> >
+> > This assumes that fread() will never return a short read except on EOF
+> > or error.  I expect that will be true in practice for regular files,
+> > but I'm not sure if it's a good idea to rely on it.
+>=20
+> Interesting.  I was under the impression that the fread couldn't short re=
+ad.
+> POSIX describes the return value as "the number of elements successfully
+> read which is less than nitems only if a read error or end-of-file is
+> encountered."[1]  Now that I think about it, I suppose EINTR could be an
+> issue for non-glibc systems.  Is that what you had in mind, or are there
+> other issues I'm overlooking?  (Also for fwrite in 6/9?)
 
---94eb2c05c364d2cc78053cf11297--
+Ah..so it does.  I'm afraid I just looked at the Linux man page, not
+the POSIX requirements, and it didn't mention this constraint.
 
---===============2957580289054480666==
+I guess it's ok then.  Although.. I do wonder a bit whether we can
+trust all implementations to actually comply with this requirement.
+
+>=20
+> Kevin
+>=20
+> 1.  http://pubs.opengroup.org/onlinepubs/9699919799/functions/fread.html
+>=20
+
+--=20
+David Gibson			| I'll have my music baroque, and my code
+david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
+				| _way_ _around_!
+http://www.ozlabs.org/~dgibson
+
+--FYos7FMnk2wAe7eG
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAEBCAAGBQJX4Tl6AAoJEGw4ysog2bOS0RsP/R6hYit9sy5TvEV//Pi1TbYD
+aLdu1iE1Zops2JZIuODzUCoeyYPaZY6DQYQShe4B50l9RIU+LTE7GBPCsl9JAUXN
+AQV5Z2ZN4XppnGIKO0uPs8dt89WnFtP+FzU4brvFHpOT4wkG1VUn7XUhJMVTQd3b
+3QP+BXI9+VAZo0dHEV8bpPoCzhSDHDXP9eNMM0Pg4R0q9cGFyDLYns+PfjPPggB8
+6LoMM+E7w1gOqbsGO9+/V1L4gfm+r+ELHrKh6pPKtxfrNdK3jtrlIwk2htqwaGbS
+WTEf9vP6b89UPx7I3WC/e+4sHjCPz8bwxRXkKFJbQiD/QkTyvEuZnksiMbCLlK0F
+TWE27EgnP4LRpQiBUV6+s6zXdRYXCbotfi9SDXhCQx8QUjzAbWh7V2ZSES693zwb
+8sGbt/utGK3kzEfEILEkvz4/24Pl467nb1wfEP6j8Fc+eegbaBsPlwp1wlISl9d0
+GsBkRADkIAYcT+cL99/kzj4/JyiW7UicL1tusmSF1ccEPQgr1xMt2NIqEB+25EwW
+ziKqIJEmd2Oi6GuPXQgTOOb4QQAuvI72f/W8TkfcstvnKxq9S47iHrfIp2FvK8M+
+Fy+i8JHT86UYnBntmqLF+UzQeG8PXVIcFWZ/VH9lkVutFhquEaXecyuINxB3yXlf
+VyZ8vm0jTSioS044k5Fa
+=AHUk
+-----END PGP SIGNATURE-----
+
+--FYos7FMnk2wAe7eG--
+
+--===============5397646614576884651==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: base64
@@ -247,4 +130,4 @@ X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KY2NhbiBtYWls
 aW5nIGxpc3QKY2NhbkBsaXN0cy5vemxhYnMub3JnCmh0dHBzOi8vbGlzdHMub3psYWJzLm9yZy9s
 aXN0aW5mby9jY2FuCg==
 
---===============2957580289054480666==--
+--===============5397646614576884651==--
