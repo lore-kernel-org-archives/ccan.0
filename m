@@ -1,19 +1,18 @@
 From: David Gibson <david@gibson.dropbear.id.au>
-Subject: Re: [PATCH 3/9] configurator: Inline err.h functions from
- musl libc
-Date: Tue, 20 Sep 2016 15:03:09 +1000
-Message-ID: <20160920050309.GM20488@umbus>
+Subject: Re: [PATCH 2/9] configurator: Reimplement run using popen
+Date: Tue, 20 Sep 2016 15:00:23 +1000
+Message-ID: <20160920050023.GL20488@umbus>
 References: <cover.1474239353.git.kevin@kevinlocke.name>
- <d7b109044f3d73a3f91c56136ad487fe07b518a7.1474239353.git.kevin@kevinlocke.name>
+ <ecf5714e7fa8075e08d54911675aa0a55b95b014.1474239353.git.kevin@kevinlocke.name>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============6775916984427583844=="
+Content-Type: multipart/mixed; boundary="===============4398352803347202778=="
 Return-path: <ccan-bounces+gclcc-ccan=m.gmane.org@lists.ozlabs.org>
-Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
+Received: from ozlabs.org (ozlabs.org [103.22.144.67])
  (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 3sdWjl5wc9zDsfh
+ by lists.ozlabs.org (Postfix) with ESMTPS id 3sdWjl4NczzDsff
  for <ccan@lists.ozlabs.org>; Tue, 20 Sep 2016 15:37:31 +1000 (AEST)
-In-Reply-To: <d7b109044f3d73a3f91c56136ad487fe07b518a7.1474239353.git.kevin@kevinlocke.name>
+In-Reply-To: <ecf5714e7fa8075e08d54911675aa0a55b95b014.1474239353.git.kevin@kevinlocke.name>
 List-Unsubscribe: <https://lists.ozlabs.org/options/ccan>,
  <mailto:ccan-request@lists.ozlabs.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/ccan/>
@@ -28,135 +27,152 @@ Cc: ccan@lists.ozlabs.org
 List-Id: ccan@lists.ozlabs.org
 
 
---===============6775916984427583844==
+--===============4398352803347202778==
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="XlS4q8O07AKt4+K1"
+	protocol="application/pgp-signature"; boundary="oY1uq2ONqt5kuovO"
 Content-Disposition: inline
 
 
---XlS4q8O07AKt4+K1
+--oY1uq2ONqt5kuovO
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Sun, Sep 18, 2016 at 06:52:00PM -0600, Kevin Locke wrote:
-> Since we can't use HAVE_ERR_H in configurator, provide a definition for
-> the err.h functions used.  The version provided is the one from musl
-> libc, since it is concise and shares the MIT License with configurator.
+On Sun, Sep 18, 2016 at 06:51:59PM -0600, Kevin Locke wrote:
+> Rather than using fork+pipe+system+waitpid, most of which are only
+> available on POSIX-like systems, use popen which is also available on
+> Windows (under the name _popen).
+
+Concept looks good, one little wart.
+
 >=20
 > Signed-off-by: Kevin Locke <kevin@kevinlocke.name>
-
-Right, so this is a general problem of how do we make the configurator
-itself sufficiently portable, since it hasn't yet worked out the
-portbility macros.
-
-Personally, I think duplicating these here is an acceptable
-workaround.  Rusty, any opinion?
-
 > ---
->  tools/configurator/configurator.c | 54 +++++++++++++++++++++++++++++++++=
-+++++-
->  1 file changed, 53 insertions(+), 1 deletion(-)
+>  tools/configurator/configurator.c | 77 +++++++++++++++------------------=
+------
+>  1 file changed, 29 insertions(+), 48 deletions(-)
 >=20
 > diff --git a/tools/configurator/configurator.c b/tools/configurator/confi=
 gurator.c
-> index 9817fcd..9dcf307 100644
+> index e322c76..9817fcd 100644
 > --- a/tools/configurator/configurator.c
 > +++ b/tools/configurator/configurator.c
-> @@ -3,6 +3,9 @@
->   *
->   * Copyright 2011 Rusty Russell <rusty@rustcorp.com.au>.  MIT license.
->   *
-> + * err, errx, verr, verrx, vwarn, vwarnx functions from musl libc
-> + * Copyright 2005-2013 Rich Felker.  MIT license.
-> + *
->   * Permission is hereby granted, free of charge, to any person obtaining=
- a copy
->   * of this software and associated documentation files (the "Software"),=
- to deal
->   * in the Software without restriction, including without limitation the=
- rights
-> @@ -22,9 +25,9 @@
->   * THE SOFTWARE.
->   */
+> @@ -24,14 +24,14 @@
 >  #include <stdio.h>
-> +#include <stdarg.h>
 >  #include <stdbool.h>
 >  #include <stdlib.h>
-> -#include <err.h>
+> -#include <unistd.h>
+>  #include <err.h>
+> -#include <sys/types.h>
+> -#include <sys/wait.h>
+> -#include <sys/stat.h>
+> -#include <fcntl.h>
 >  #include <string.h>
 > =20
->  #ifdef _MSC_VER
-> @@ -38,6 +41,7 @@
->  #define OUTPUT_FILE "configurator.out"
->  #define INPUT_FILE "configuratortest.c"
+> +#ifdef _MSC_VER
+> +#define popen _popen
+> +#define pclose _pclose
+> +#endif
+> +
+>  #define DEFAULT_COMPILER "cc"
+>  #define DEFAULT_FLAGS "-g3 -ggdb -Wall -Wundef -Wmissing-prototypes -Wmi=
+ssing-declarations -Wstrict-prototypes -Wold-style-definition"
 > =20
-> +static const char *progname =3D "";
->  static int verbose;
-> =20
->  enum test_style {
-> @@ -367,6 +371,51 @@ static struct test tests[] =3D {
+> @@ -367,20 +367,19 @@ static struct test tests[] =3D {
 >  	},
 >  };
 > =20
-> +static void vwarn(const char *fmt, va_list ap)
-> +{
-> +	fprintf (stderr, "%s: ", progname);
-> +	if (fmt) {
-> +		vfprintf(stderr, fmt, ap);
-> +		fputs (": ", stderr);
-> +	}
-> +	perror(0);
-> +}
-> +
-> +static void vwarnx(const char *fmt, va_list ap)
-> +{
-> +	fprintf (stderr, "%s: ", progname);
-> +	if (fmt) vfprintf(stderr, fmt, ap);
-> +	putc('\n', stderr);
-> +}
-> +
-> +static void verr(int status, const char *fmt, va_list ap)
-> +{
-> +	vwarn(fmt, ap);
-> +	exit(status);
-> +}
-> +
-> +static void verrx(int status, const char *fmt, va_list ap)
-> +{
-> +	vwarnx(fmt, ap);
-> +	exit(status);
-> +}
-> +
-> +static void err(int status, const char *fmt, ...)
-> +{
-> +	va_list ap;
-> +	va_start(ap, fmt);
-> +	verr(status, fmt, ap);
-> +	va_end(ap);
-> +}
-> +
-> +static void errx(int status, const char *fmt, ...)
-> +{
-> +	va_list ap;
-> +	va_start(ap, fmt);
-> +	verrx(status, fmt, ap);
-> +	va_end(ap);
-> +}
-> +
->  static char *grab_stream(FILE *file)
+> -static char *grab_fd(int fd)
+> +static char *grab_stream(FILE *file)
 >  {
->  	size_t max, ret, size =3D 0;
-> @@ -593,6 +642,9 @@ int main(int argc, const char *argv[])
->  	const char *default_args[]
->  		=3D { "", DEFAULT_COMPILER, DEFAULT_FLAGS, NULL };
+> -	int ret;
+> -	size_t max, size =3D 0;
+> +	size_t max, ret, size =3D 0;
+>  	char *buffer;
 > =20
-> +	if (argc > 0)
-> +		progname =3D argv[0];
+> -	max =3D 16384;
+> -	buffer =3D malloc(max+1);
+> -	while ((ret =3D read(fd, buffer + size, max - size)) > 0) {
+> +	max =3D BUFSIZ;
+> +	buffer =3D malloc(max);
+> +	while ((ret =3D fread(buffer+size, 1, max - size, file)) =3D=3D max - s=
+ize) {
+
+This assumes that fread() will never return a short read except on EOF
+or error.  I expect that will be true in practice for regular files,
+but I'm not sure if it's a good idea to rely on it.
+
+>  		size +=3D ret;
+> -		if (size =3D=3D max)
+> -			buffer =3D realloc(buffer, max *=3D 2);
+> +		buffer =3D realloc(buffer, max *=3D 2);
+>  	}
+> -	if (ret < 0)
+> +	size +=3D ret;
+> +	if (ferror(file))
+>  		err(1, "reading from command");
+>  	buffer[size] =3D '\0';
+>  	return buffer;
+> @@ -388,43 +387,25 @@ static char *grab_fd(int fd)
+> =20
+>  static char *run(const char *cmd, int *exitstatus)
+>  {
+> -	pid_t pid;
+> -	int p[2];
+> +	static const char redir[] =3D " 2>&1";
+> +	size_t cmdlen;
+> +	char *cmdredir;
+> +	FILE *cmdout;
+>  	char *ret;
+> -	int status;
+> =20
+> -	if (pipe(p) !=3D 0)
+> -		err(1, "creating pipe");
+> -
+> -	pid =3D fork();
+> -	if (pid =3D=3D -1)
+> -		err(1, "forking");
+> -
+> -	if (pid =3D=3D 0) {
+> -		if (dup2(p[1], STDOUT_FILENO) !=3D STDOUT_FILENO
+> -		    || dup2(p[1], STDERR_FILENO) !=3D STDERR_FILENO
+> -		    || close(p[0]) !=3D 0
+> -		    || close(STDIN_FILENO) !=3D 0
+> -		    || open("/dev/null", O_RDONLY) !=3D STDIN_FILENO)
+> -			exit(128);
+> -
+> -		status =3D system(cmd);
+> -		if (WIFEXITED(status))
+> -			exit(WEXITSTATUS(status));
+> -		/* Here's a hint... */
+> -		exit(128 + WTERMSIG(status));
+> -	}
+> +	cmdlen =3D strlen(cmd);
+> +	cmdredir =3D malloc(cmdlen + sizeof(redir));
+> +	memcpy(cmdredir, cmd, cmdlen);
+> +	memcpy(cmdredir + cmdlen, redir, sizeof(redir));
 > +
->  	if (argc > 1) {
->  		if (strcmp(argv[1], "--help") =3D=3D 0) {
->  			printf("Usage: configurator [-v] [<compiler> <flags>...]\n"
+> +	cmdout =3D popen(cmdredir, "r");
+> +	if (!cmdout)
+> +		err(1, "popen \"%s\"", cmdredir);
+> +
+> +	free(cmdredir);
+> =20
+> -	close(p[1]);
+> -	ret =3D grab_fd(p[0]);
+> -	/* This shouldn't fail... */
+> -	if (waitpid(pid, &status, 0) !=3D pid)
+> -		err(1, "Failed to wait for child");
+> -	close(p[0]);
+> -	if (WIFEXITED(status))
+> -		*exitstatus =3D WEXITSTATUS(status);
+> -	else
+> -		*exitstatus =3D -WTERMSIG(status);
+> +	ret =3D grab_stream(cmdout);
+> +	*exitstatus =3D pclose(cmdout);
+>  	return ret;
+>  }
+> =20
 
 --=20
 David Gibson			| I'll have my music baroque, and my code
@@ -164,30 +180,30 @@ david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
 				| _way_ _around_!
 http://www.ozlabs.org/~dgibson
 
---XlS4q8O07AKt4+K1
+--oY1uq2ONqt5kuovO
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2
 
-iQIcBAEBCAAGBQJX4MMNAAoJEGw4ysog2bOSl4UP/RWgbNEsuFN4XLlYcCMFoIcG
-xR9gNcs+jR3IiK2WMK/cfZhPkRM7flbdqRweqdvcYJpcdXeEx38Ud4QpuPFwbbXB
-9/6f/TaONHCeotYmOn8xnFjcUrVU4GBNIPmU2Vh/0fRY/+JvHGKPmqSNf7xwTzb6
-rYWu/EJn7eM26uFCTJRd7NoMAoZqzrH+oM1jeCIvGxoUAygCnUEo8qUC3nXzoZ29
-W0Zc8TCPq6/prXaAq0LQlKJchvwwN9gWafrvgSYWR4nrPl22Pomck4Pzxex9sbtc
-JSlvK/xgVMrzU0+2f5nJQHYsydip58Dl1o8kJc4+5zMsirzIWJP01h6IKPyKigTV
-3FbkH7Vb2zugPuHlMIl3yC7DLLF1iuQcQQNyLvsNsyrG9ZWfUyowZgn7uKgleqVe
-iZ5hTeNTq2wmKj2REluR43SYN1xofbuxIl7ppOjYjN1FToeEGhWlGnX19MDQWXOd
-jR7/l6C3vmJTGW78qurYjwfmyATRqg2qsFyubNTjA720Ce0TWo+3bzUmW81XMQ1v
-rbXk0dXk9eID5dRXEGQ0fyD+SgtXQ8xZGk7VFQbSGatN9VgPsbcRv0L0I8u9kznh
-ioIwVtfUwt18ZIMADD0tp/Aexvud0sstTeD2d92iZRY+fh9IzgMKxLn3OhW3BXQW
-INXApgs0jRxJGLpgJjAI
-=wNCS
+iQIcBAEBCAAGBQJX4MJmAAoJEGw4ysog2bOSwVEQALqw07ZBuVlL/MG9UlAGD7dJ
+mAgrgBcf6IYq3O+aGlRtcEMyU7cyKab1g/1LzZjd+pXuINEHnw4lliSlTrHK3RPf
+NugTxXDgDUB9EqYUYIX3v7GISQKj5kr5nCgtLoYefh5JtvLB1/nPDJBKj1VBCK6X
+BGYm1vD7EUj9vy9sLYJjT4dDnA0qdWdfuJN7Ne26KlvUxcmr42p+AOWJcPOcIlC7
++wxdqmpgPMNVj6LtICqS8LykC2A9pwrMwOywKVA412gp5RJJvcwd6MYbeKz2LiXe
+uz6edM3CRwtWkNEr71OLuIqDWepOeutAzVkivB3YAxhyrX7UqW+/RbIW4GxaS+GN
+/VidXk1mfT/Bf61isjdENeNQsMHp9VBaCfo6/7CINa48dG6lKRhsKjfbYSDD9olA
+KQAfKLatlGHGESzaODwAlEinTKzliLneSHdgmyz9gVNtx6jX/1d/KR7E0D2AmTLD
+4mZWoJSyGH6wXKwto4dsQUAQY2sOmUGQzYr4+FAzulue/2Xrkwr3GBbHiA7WYIWD
+bqeEEYWZHlGan+IYh9A0UDw0v301Xq+Il76aw+8p7hSPvpg1FxIInlueIKnoz2An
+ILR5CSsHnchbyqkp6ZDTCSVaYQaZLasXEKNNjazORYjM+XqhBgGLpgUwjkGhBIC9
+NKE8byHXWrKXr8W7Ubt+
+=eZOv
 -----END PGP SIGNATURE-----
 
---XlS4q8O07AKt4+K1--
+--oY1uq2ONqt5kuovO--
 
---===============6775916984427583844==
+--===============4398352803347202778==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: base64
@@ -197,4 +213,4 @@ X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KY2NhbiBtYWls
 aW5nIGxpc3QKY2NhbkBsaXN0cy5vemxhYnMub3JnCmh0dHBzOi8vbGlzdHMub3psYWJzLm9yZy9s
 aXN0aW5mby9jY2FuCg==
 
---===============6775916984427583844==--
+--===============4398352803347202778==--
