@@ -1,20 +1,19 @@
 From: David Gibson <david@gibson.dropbear.id.au>
-Subject: Re: [PATCH v2 09/13] configurator: DEFAULT_{COMPILER,
- FLAGS} for MSVC
-Date: Tue, 27 Sep 2016 15:17:47 +1000
-Message-ID: <20160927051747.GS30322@umbus.fritz.box>
+Subject: Re: [PATCH v2 00/13] configurator: Support for Windows and
+ MSVC
+Date: Tue, 27 Sep 2016 15:23:42 +1000
+Message-ID: <20160927052342.GV30322@umbus.fritz.box>
 References: <cover.1474239353.git.kevin@kevinlocke.name>
  <cover.1474600863.git.kevin@kevinlocke.name>
- <38a3e83cad6eb6574fd91f83ca0282d441ef43cf.1474600863.git.kevin@kevinlocke.name>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============0234807068656360053=="
+Content-Type: multipart/mixed; boundary="===============4645117682417576258=="
 Return-path: <ccan-bounces+gclcc-ccan=m.gmane.org@lists.ozlabs.org>
-Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
+Received: from ozlabs.org (ozlabs.org [103.22.144.67])
  (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 3sjq0w3HSLzDrSt
- for <ccan@lists.ozlabs.org>; Tue, 27 Sep 2016 15:20:32 +1000 (AEST)
-In-Reply-To: <38a3e83cad6eb6574fd91f83ca0282d441ef43cf.1474600863.git.kevin@kevinlocke.name>
+ by lists.ozlabs.org (Postfix) with ESMTPS id 3sjqSp58j0zDrSv
+ for <ccan@lists.ozlabs.org>; Tue, 27 Sep 2016 15:41:14 +1000 (AEST)
+In-Reply-To: <cover.1474600863.git.kevin@kevinlocke.name>
 List-Unsubscribe: <https://lists.ozlabs.org/options/ccan>,
  <mailto:ccan-request@lists.ozlabs.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/ccan/>
@@ -29,71 +28,65 @@ Cc: ccan@lists.ozlabs.org
 List-Id: ccan@lists.ozlabs.org
 
 
---===============0234807068656360053==
+--===============4645117682417576258==
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="8N5nZmKALFZnI1Hj"
+	protocol="application/pgp-signature"; boundary="Q/AGl/UrDvkbRExF"
 Content-Disposition: inline
 
 
---8N5nZmKALFZnI1Hj
+--Q/AGl/UrDvkbRExF
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Sep 22, 2016 at 09:33:12PM -0600, Kevin Locke wrote:
-> When compiling with Visual Studio, use default compiler name and flags
-> which are likely to work with the known-available compiler.
+On Thu, Sep 22, 2016 at 09:33:03PM -0600, Kevin Locke wrote:
+> Hi all,
 >=20
-> This is also a convenience for users who may not know what arguments
-> cl.exe may need to compile the tests.
+> This is the second revision of my patch series which adds support for
+> building configurator with Microsoft Visual C++ and running it on
+> Windows.  The motivation is to add sufficient support for Windows to
+> allow using header-only modules with minimal hassle.
 >=20
-> Changes since v1:
-> - Use "-option" instead of "/option" to avoid issues running under msys.
-> - Disable C4200 warning for use of flexible array members, which MSVC
->   considers an extension (since it does not fully support C99).
+> The major change in this revision is the handling of the output cflag,
+> which can now be specified by a command-line option to configurator and
+> is set in a separate config.h macro.  This both fixes the ccanlint
+> breakage in the previous series and preserves backwards-compatibility
+> for any code calling configurator or using CCAN_CFLAGS.
 >=20
-> Signed-off-by: Kevin Locke <kevin@kevinlocke.name>
+> Patches which need special attention:
+>=20
+> As before, patch 3 adds a copy of the err.h functions used by
+> configurator to work around the lack of err.h on Windows.  If this is
+> too much code to lump into configurator.c, I can split it out (and copy
+> err.{c,h} verbatim from musl) or call fprintf+exit directly or consider
+> modifying the ccan/err module for use by configurator.
+>=20
+> Patch 8 changes the configurator API by adding a command-line option and
+> config.h macro.  The names are different than I had previously
+> suggested, as noted in the commit message.
+>=20
+> Patch 13 adds appveyor.yml for AppVeyor CI.  This will require (free)
+> account setup on ci.appveyor.com once merged to enable automatic
+> building and GitHub integration (if desired).  You may also wish to
+> consider whether to add a README badge or email notification or other
+> mechanism to be notified of build status (beyond the default pull
+> request hooks).
+>=20
+> Thanks for considering once again,
 
-Reviewed-by: David Gibson <david@gibson.dropbear.id.au>
+Thanks for sending again.  I've applied a number of the simpler ones
+already.  The remainder I still have some comments on.
 
-But I won't apply it for now, since it makes no sense without the
-previous one.
+Incidentally you are introducing a new concept here which isn't really
+comment on.  The use of more #ifdefs on system macros into
+configurator means that the way our default compiler options will be
+set up is basically going to be dependent on the setup used to compile
+configurator itself.
 
-> ---
->  tools/configurator/configurator.c | 12 ++++++++++++
->  1 file changed, 12 insertions(+)
->=20
-> diff --git a/tools/configurator/configurator.c b/tools/configurator/confi=
-gurator.c
-> index d81f878..d3e01cd 100644
-> --- a/tools/configurator/configurator.c
-> +++ b/tools/configurator/configurator.c
-> @@ -38,9 +38,21 @@
->  #define pclose _pclose
->  #endif
-> =20
-> +#ifdef _MSC_VER
-> +#define DEFAULT_COMPILER "cl"
-> +/* Note:  Dash options avoid POSIX path conversion when used under msys =
-bash
-> + *        and are therefore preferred to slash (e.g. -nologo over /nolog=
-o)
-> + * Note:  Disable Warning 4200 "nonstandard extension used : zero-sized =
-array
-> + *        in struct/union" for flexible array members.
-> + */
-> +#define DEFAULT_FLAGS "-nologo -Zi -W4 -wd4200 " \
-> +	"-D_CRT_NONSTDC_NO_WARNINGS -D_CRT_SECURE_NO_WARNINGS"
-> +#define DEFAULT_OUTPUT_EXE_FLAG "-Fe:"
-> +#else
->  #define DEFAULT_COMPILER "cc"
->  #define DEFAULT_FLAGS "-g3 -ggdb -Wall -Wundef -Wmissing-prototypes -Wmi=
-ssing-declarations -Wstrict-prototypes -Wold-style-definition"
->  #define DEFAULT_OUTPUT_EXE_FLAG "-o"
-> +#endif
-> =20
->  #define OUTPUT_FILE "configurator.out"
->  #define INPUT_FILE "configuratortest.c"
+That seems like a sensible approach to me; we just need to be a bit
+careful of interactions with make and/or other build systems when we
+could have a system with multiple compilation options (e.g. both MSVC
+and cygwin/gcc installed on a Windows machine).
 
 --=20
 David Gibson			| I'll have my music baroque, and my code
@@ -101,30 +94,30 @@ david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
 				| _way_ _around_!
 http://www.ozlabs.org/~dgibson
 
---8N5nZmKALFZnI1Hj
+--Q/AGl/UrDvkbRExF
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2
 
-iQIcBAEBCAAGBQJX6gD7AAoJEGw4ysog2bOSxEwP/2IJHWkzpFpVojquCQymt4s4
-dEucGZ2V+dlw8jyumn1IVANlWvhOSmZ5x2YSoulwG5TPBkE5utkPKnPzzuXzKtd1
-5V1SJdxGQStlUDS2v11Bou75UHR2qN6evYh6dNbCZ22A3TIKNWuyKV/yMMfLk8VK
-PZ9zZZIiMIXFGInq5wzsUcIq/EYyoYVMEGIXeVCebxs5+rNVDjSA/I57kEmhIIIz
-eQcaLHZKoRwLbSVZChZGDVfFEMAQ1vuXUUiVACZ8jeR+utcZ430MZdv3P3AgtbUV
-jtLjz7RXmnQ+waB27aT86MO5k0VgHxBhU4qFC56kgsR/rhldK98K0EAtd4vD7d5e
-uoMY4WU+mfq5tkrAGbCwDGTuaadigZInD2L+SOCJ2riMhcSvAwpe+jeXx30+OFRO
-XVR+PkBS57i03vfeVGGGBXSUy4zcsvqpQPq1Xf/Y5Q3XmNWnQWHWT3pqlVyrONxW
-/v67e8VFWLzJ/HHfDO33dJceRsdiEqFWRnPhUa/IyMiLAUNjQZNqYTf1Nsb0hPF/
-rqqOPfxmSqzPySC8fGz+sBkhW7orb+PQYjvp4fG3HvBRx2tSJjWja73EgkgpTcn6
-pesyWMw9lriKpE5KxRqbENtI1EH7738PQsaO5Td7gUFOtVJEnd04FLX+OolBPlHR
-ST7isJTslQWwR/MRHAsD
-=n9LD
+iQIcBAEBCAAGBQJX6gJeAAoJEGw4ysog2bOSz8wP/1eWDzwnlVjc4GgD8jZoanJ6
+eoHV5qSv1MMXohWTmt3BtZUZtd4JZRMbbyYJoLvwRrrOGV44tUmf9PPPdUto3jgc
+eikUDYr6+PGf0Co+q3YVrZdWwQ+4dgIkZ/RxPbhNkrr+id9qUOgeiv99FfhZh90V
+p1wncx/uUxfdGV/7fyj2s2CMg8QM0nj4ontHoB68JmaFxKpiukDiSbCZ7po5HywS
+y/cFiJcBvTo8NUZFdMc1juBHq+FMOv/1ftN89Uz/Z98JCJKIz+lktjTxiQi3LTGk
+ygT5S+jpV1zgdnrgsqj4Vg73lKEss5rx+tZAAzGsVRN+AKinqP7LAD7Bmkwm62QY
+n4vNWTLxXirszPiQAwIrRpjSKE2LPAbtOALB7y1vteZLB8fko2EoTX+trJbiZ28Y
+oozloxZnNdsmgih30NIDOrCjit655tzquW/0dDIF2eJClY2jOVFO7b6F8GEGRq1C
+y9Q6mhER5JjZ1WEhIWZ+ObjQrgxgS01Me/QVOUSvtF5mNtP+55Y2XPzBp8HrwrBi
+tEIwkIy6wVBDj7KR7f9/858nwvV0t66nmDr0hi8CmByqDWi2+6U+/PgubW/huQBG
+CtrFh96VlubQeSp6akyVeyAVkhwCyi5WiLNTN2xkQxeW5DAwsNKgkuWeVvs/or09
+TaoDMLK6zx+O0RbHZsXM
+=ZEQr
 -----END PGP SIGNATURE-----
 
---8N5nZmKALFZnI1Hj--
+--Q/AGl/UrDvkbRExF--
 
---===============0234807068656360053==
+--===============4645117682417576258==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: base64
@@ -134,4 +127,4 @@ X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KY2NhbiBtYWls
 aW5nIGxpc3QKY2NhbkBsaXN0cy5vemxhYnMub3JnCmh0dHBzOi8vbGlzdHMub3psYWJzLm9yZy9s
 aXN0aW5mby9jY2FuCg==
 
---===============0234807068656360053==--
+--===============4645117682417576258==--
