@@ -1,20 +1,20 @@
 From: David Gibson <david@gibson.dropbear.id.au>
-Subject: Re: [PATCH v2 10/13] configurator: Fix warning in
- HAVE_FOR_LOOP_DECLARATION
-Date: Tue, 27 Sep 2016 15:10:11 +1000
-Message-ID: <20160927051011.GP30322@umbus.fritz.box>
+Subject: Re: [PATCH v2 09/13] configurator: DEFAULT_{COMPILER,
+ FLAGS} for MSVC
+Date: Tue, 27 Sep 2016 15:17:47 +1000
+Message-ID: <20160927051747.GS30322@umbus.fritz.box>
 References: <cover.1474239353.git.kevin@kevinlocke.name>
  <cover.1474600863.git.kevin@kevinlocke.name>
- <9ea3d4767d9c89fad47facb5d51f4b7b9ccd813f.1474600863.git.kevin@kevinlocke.name>
+ <38a3e83cad6eb6574fd91f83ca0282d441ef43cf.1474600863.git.kevin@kevinlocke.name>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============0903780133483484540=="
+Content-Type: multipart/mixed; boundary="===============0234807068656360053=="
 Return-path: <ccan-bounces+gclcc-ccan=m.gmane.org@lists.ozlabs.org>
-Received: from ozlabs.org (ozlabs.org [103.22.144.67])
+Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
  (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 3sjq0w1hXWzDrT4
+ by lists.ozlabs.org (Postfix) with ESMTPS id 3sjq0w3HSLzDrSt
  for <ccan@lists.ozlabs.org>; Tue, 27 Sep 2016 15:20:32 +1000 (AEST)
-In-Reply-To: <9ea3d4767d9c89fad47facb5d51f4b7b9ccd813f.1474600863.git.kevin@kevinlocke.name>
+In-Reply-To: <38a3e83cad6eb6574fd91f83ca0282d441ef43cf.1474600863.git.kevin@kevinlocke.name>
 List-Unsubscribe: <https://lists.ozlabs.org/options/ccan>,
  <mailto:ccan-request@lists.ozlabs.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/ccan/>
@@ -29,47 +29,71 @@ Cc: ccan@lists.ozlabs.org
 List-Id: ccan@lists.ozlabs.org
 
 
---===============0903780133483484540==
+--===============0234807068656360053==
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="6iXXu7NwgEt9u5a7"
+	protocol="application/pgp-signature"; boundary="8N5nZmKALFZnI1Hj"
 Content-Disposition: inline
 
 
---6iXXu7NwgEt9u5a7
+--8N5nZmKALFZnI1Hj
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Sep 22, 2016 at 09:33:13PM -0600, Kevin Locke wrote:
-> Visual C++ prints "warning C4702: unreachable code" due to the return
-> statement after the for loop which is never reached.  Fix this by
-> setting a variable returned by a single return statement at the end.
+On Thu, Sep 22, 2016 at 09:33:12PM -0600, Kevin Locke wrote:
+> When compiling with Visual Studio, use default compiler name and flags
+> which are likely to work with the known-available compiler.
+>=20
+> This is also a convenience for users who may not know what arguments
+> cl.exe may need to compile the tests.
+>=20
+> Changes since v1:
+> - Use "-option" instead of "/option" to avoid issues running under msys.
+> - Disable C4200 warning for use of flexible array members, which MSVC
+>   considers an extension (since it does not fully support C99).
 >=20
 > Signed-off-by: Kevin Locke <kevin@kevinlocke.name>
 
-Applying.
+Reviewed-by: David Gibson <david@gibson.dropbear.id.au>
+
+But I won't apply it for now, since it makes no sense without the
+previous one.
 
 > ---
->  tools/configurator/configurator.c | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
+>  tools/configurator/configurator.c | 12 ++++++++++++
+>  1 file changed, 12 insertions(+)
 >=20
 > diff --git a/tools/configurator/configurator.c b/tools/configurator/confi=
 gurator.c
-> index d3e01cd..a43061b 100644
+> index d81f878..d3e01cd 100644
 > --- a/tools/configurator/configurator.c
 > +++ b/tools/configurator/configurator.c
-> @@ -222,8 +222,9 @@ static struct test tests[] =3D {
->  	  "	return sizeof(off_t) =3D=3D 8 ? 0 : 1;\n"
->  	  "}\n" },
->  	{ "HAVE_FOR_LOOP_DECLARATION", INSIDE_MAIN, NULL, NULL,
-> -	  "for (int i =3D 0; i < argc; i++) { return 0; };\n"
-> -	  "return 1;" },
-> +	  "int ret =3D 1;\n"
-> +	  "for (int i =3D 0; i < argc; i++) { ret =3D 0; };\n"
-> +	  "return ret;" },
->  	{ "HAVE_FLEXIBLE_ARRAY_MEMBER", OUTSIDE_MAIN, NULL, NULL,
->  	  "struct foo { unsigned int x; int arr[]; };" },
->  	{ "HAVE_GETPAGESIZE", DEFINES_FUNC, NULL, NULL,
+> @@ -38,9 +38,21 @@
+>  #define pclose _pclose
+>  #endif
+> =20
+> +#ifdef _MSC_VER
+> +#define DEFAULT_COMPILER "cl"
+> +/* Note:  Dash options avoid POSIX path conversion when used under msys =
+bash
+> + *        and are therefore preferred to slash (e.g. -nologo over /nolog=
+o)
+> + * Note:  Disable Warning 4200 "nonstandard extension used : zero-sized =
+array
+> + *        in struct/union" for flexible array members.
+> + */
+> +#define DEFAULT_FLAGS "-nologo -Zi -W4 -wd4200 " \
+> +	"-D_CRT_NONSTDC_NO_WARNINGS -D_CRT_SECURE_NO_WARNINGS"
+> +#define DEFAULT_OUTPUT_EXE_FLAG "-Fe:"
+> +#else
+>  #define DEFAULT_COMPILER "cc"
+>  #define DEFAULT_FLAGS "-g3 -ggdb -Wall -Wundef -Wmissing-prototypes -Wmi=
+ssing-declarations -Wstrict-prototypes -Wold-style-definition"
+>  #define DEFAULT_OUTPUT_EXE_FLAG "-o"
+> +#endif
+> =20
+>  #define OUTPUT_FILE "configurator.out"
+>  #define INPUT_FILE "configuratortest.c"
 
 --=20
 David Gibson			| I'll have my music baroque, and my code
@@ -77,30 +101,30 @@ david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
 				| _way_ _around_!
 http://www.ozlabs.org/~dgibson
 
---6iXXu7NwgEt9u5a7
+--8N5nZmKALFZnI1Hj
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2
 
-iQIcBAEBCAAGBQJX6f8zAAoJEGw4ysog2bOSWKEQAOCtYq0I/W3bymcNL2S+AQVd
-btzeOmXzR1eVy5DLy3XCWBEXoD/sA8828iEZzHyxxHTDlDhl621IcUhhzEbimtwj
-mavqKNIauNWu7clQKGkshYRFXiHGcSI49fLXohVBNJgzpMOwiMR73SV7LpYwzv1m
-0NzmScCJAC2YiqcTb1nsscbOlaXngxaUNuE1gmsPpJ4jNoief+fZ8pNT6huf7L57
-GtM43KpODCKR4aaaSCQKL32RLs61tYRacZ2ElpfOZrzn+06Z6yIu8yiCwFp9Jg9m
-eHgC2a3O1uXcj3RkaWD9g4AN/5IQ6pSh7B+6p295fuiaxkpY+qvcs09W61H+0wAy
-pZ0zwBAeTOdSjYj849uczB7dCWa5vKMCa6uxj4sDuG4bSJabEvCWfxtpl8M6V/56
-POmmpiS2jzwc2Lwk5jdzqp9OHQ+Za9qDRXT2guHKtO3JLOGccfZD9FCYlYdZfL8G
-qGu/etYDzyT3mjp8P43cou86cDp6LigKNqcIrpqoDpxsPqNukQcN1bV5Lke2ErR2
-VxdvS1gnxeQmSzzDL6o/pgWWPqvcm1Q6FrwZvW3CTHGYwRCLpeZC5Fai4muD3g9y
-pGso46pKzwqn+/LK9H8ckbut9chHKIgAp8Mn6n270AkaVjo6IN+vKSq6ACX7CQep
-lcIcYQqtfCsvLjFCE2kB
-=o/8Y
+iQIcBAEBCAAGBQJX6gD7AAoJEGw4ysog2bOSxEwP/2IJHWkzpFpVojquCQymt4s4
+dEucGZ2V+dlw8jyumn1IVANlWvhOSmZ5x2YSoulwG5TPBkE5utkPKnPzzuXzKtd1
+5V1SJdxGQStlUDS2v11Bou75UHR2qN6evYh6dNbCZ22A3TIKNWuyKV/yMMfLk8VK
+PZ9zZZIiMIXFGInq5wzsUcIq/EYyoYVMEGIXeVCebxs5+rNVDjSA/I57kEmhIIIz
+eQcaLHZKoRwLbSVZChZGDVfFEMAQ1vuXUUiVACZ8jeR+utcZ430MZdv3P3AgtbUV
+jtLjz7RXmnQ+waB27aT86MO5k0VgHxBhU4qFC56kgsR/rhldK98K0EAtd4vD7d5e
+uoMY4WU+mfq5tkrAGbCwDGTuaadigZInD2L+SOCJ2riMhcSvAwpe+jeXx30+OFRO
+XVR+PkBS57i03vfeVGGGBXSUy4zcsvqpQPq1Xf/Y5Q3XmNWnQWHWT3pqlVyrONxW
+/v67e8VFWLzJ/HHfDO33dJceRsdiEqFWRnPhUa/IyMiLAUNjQZNqYTf1Nsb0hPF/
+rqqOPfxmSqzPySC8fGz+sBkhW7orb+PQYjvp4fG3HvBRx2tSJjWja73EgkgpTcn6
+pesyWMw9lriKpE5KxRqbENtI1EH7738PQsaO5Td7gUFOtVJEnd04FLX+OolBPlHR
+ST7isJTslQWwR/MRHAsD
+=n9LD
 -----END PGP SIGNATURE-----
 
---6iXXu7NwgEt9u5a7--
+--8N5nZmKALFZnI1Hj--
 
---===============0903780133483484540==
+--===============0234807068656360053==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: base64
@@ -110,4 +134,4 @@ X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KY2NhbiBtYWls
 aW5nIGxpc3QKY2NhbkBsaXN0cy5vemxhYnMub3JnCmh0dHBzOi8vbGlzdHMub3psYWJzLm9yZy9s
 aXN0aW5mby9jY2FuCg==
 
---===============0903780133483484540==--
+--===============0234807068656360053==--
