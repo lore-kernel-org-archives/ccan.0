@@ -1,20 +1,20 @@
 From: David Gibson <david@gibson.dropbear.id.au>
-Subject: Re: [PATCH v2 11/13] configurator: Return pointer difference
- as ptrdiff_t
-Date: Tue, 27 Sep 2016 15:10:39 +1000
-Message-ID: <20160927051039.GQ30322@umbus.fritz.box>
+Subject: Re: [PATCH v2 06/13] configurator: Print test source without
+ cat
+Date: Tue, 27 Sep 2016 15:06:31 +1000
+Message-ID: <20160927050631.GN30322@umbus.fritz.box>
 References: <cover.1474239353.git.kevin@kevinlocke.name>
  <cover.1474600863.git.kevin@kevinlocke.name>
- <054fcecdae96c41af557f6e7e2981074a69317a9.1474600863.git.kevin@kevinlocke.name>
+ <626f8d4f08934a2e69472f2b5eed34631aabfa5e.1474600863.git.kevin@kevinlocke.name>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============8068762987651812121=="
+Content-Type: multipart/mixed; boundary="===============0643386044307937169=="
 Return-path: <ccan-bounces+gclcc-ccan=m.gmane.org@lists.ozlabs.org>
 Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
  (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 3sjq0w1hfLzDrT9
+ by lists.ozlabs.org (Postfix) with ESMTPS id 3sjq0w1qtczDrTC
  for <ccan@lists.ozlabs.org>; Tue, 27 Sep 2016 15:20:32 +1000 (AEST)
-In-Reply-To: <054fcecdae96c41af557f6e7e2981074a69317a9.1474600863.git.kevin@kevinlocke.name>
+In-Reply-To: <626f8d4f08934a2e69472f2b5eed34631aabfa5e.1474600863.git.kevin@kevinlocke.name>
 List-Unsubscribe: <https://lists.ozlabs.org/options/ccan>,
  <mailto:ccan-request@lists.ozlabs.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/ccan/>
@@ -29,50 +29,116 @@ Cc: ccan@lists.ozlabs.org
 List-Id: ccan@lists.ozlabs.org
 
 
---===============8068762987651812121==
+--===============0643386044307937169==
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="1MCZUn4MZNv/LeVo"
+	protocol="application/pgp-signature"; boundary="0kRkyLZR5zsR9u2P"
 Content-Disposition: inline
 
 
---1MCZUn4MZNv/LeVo
+--0kRkyLZR5zsR9u2P
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Sep 22, 2016 at 09:33:14PM -0600, Kevin Locke wrote:
-> On LLP64 systems (like 64-bit Windows) long is 32 bits while pointers
-> are 64 bits, which results in a warning similar to the following:
+On Thu, Sep 22, 2016 at 09:33:09PM -0600, Kevin Locke wrote:
+> Windows does not provide cat.  Instead, copy the test source to stdout
+> using the file stream to which it was written.
 >=20
-> warning C4244: 'return': conversion from '__int64' to 'long', possible lo=
-ss of data
->=20
-> for HAVE_STACK_GROWS_UPWARDS.  Fix this by using the ptrdiff_t type
-> introduced by C99 for this purpose.
+> Changes since v1:
+> - Create fwrite_noeintr to avoid EINTR in fwrite without writing any
+>   data.
+> - Handle short reads from fread.  This can happen with non-conformant
+>   libc or if EINTR occurs after reading some data.
+> - Handle short writes from fwrite.  This can happen with non-conformant
+>   libc or if EINTR occurs after writing some data.
 >=20
 > Signed-off-by: Kevin Locke <kevin@kevinlocke.name>
 
-Applying.
+As with patch 2, I'm not sure about the need for fwrite_noeintr().
 
 > ---
->  tools/configurator/configurator.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
+>  tools/configurator/configurator.c | 48 +++++++++++++++++++++++++++++++++=
+++----
+>  1 file changed, 43 insertions(+), 5 deletions(-)
 >=20
 > diff --git a/tools/configurator/configurator.c b/tools/configurator/confi=
 gurator.c
-> index a43061b..2acb0b2 100644
+> index 31e3d11..51d7ac8 100644
 > --- a/tools/configurator/configurator.c
 > +++ b/tools/configurator/configurator.c
-> @@ -298,7 +298,8 @@ static struct test tests[] =3D {
->  	  "	return __stop_mysec - __start_mysec;\n"
->  	  "}\n" },
->  	{ "HAVE_STACK_GROWS_UPWARDS", DEFINES_EVERYTHING|EXECUTE, NULL, NULL,
-> -	  "static long nest(const void *base, unsigned int i)\n"
-> +	  "#include <stddef.h>\n"
-> +	  "static ptrdiff_t nest(const void *base, unsigned int i)\n"
->  	  "{\n"
->  	  "	if (i =3D=3D 0)\n"
->  	  "		return (const char *)&i - (const char *)base;\n"
+> @@ -438,6 +438,42 @@ static size_t fread_noeintr(void *ptr, size_t size, =
+size_t nitems,
+>  	return ret;
+>  }
+> =20
+> +static size_t fwrite_noeintr(const void *ptr, size_t size, size_t nitems,
+> +		FILE *stream)
+> +{
+> +	size_t ret;
+> +
+> +	do {
+> +		errno =3D 0;
+> +		ret =3D fwrite(ptr, size, nitems, stream);
+> +	} while (ret =3D=3D 0 && errno =3D=3D EINTR);
+> +
+> +	return ret;
+> +}
+> +
+> +static size_t fcopy(FILE *fsrc, FILE *fdst)
+> +{
+> +	char buffer[BUFSIZ];
+> +	size_t copied =3D 0, rsize;
+> +
+> +	while ((rsize =3D fread_noeintr(buffer, 1, BUFSIZ, fsrc)) > 0) {
+> +		size_t wsize, wtotal =3D 0;
+> +
+> +		while (wtotal < rsize &&
+> +		       ((wsize =3D fwrite_noeintr(buffer + wtotal, 1,
+> +						rsize - wtotal, fdst)) > 0)) {
+> +			wtotal +=3D wsize;
+> +		}
+> +
+> +		if (wtotal < rsize)
+> +			break;
+> +
+> +		copied +=3D wtotal;
+> +	}
+> +
+> +	return copied;
+> +}
+> +
+>  static char *grab_stream(FILE *file)
+>  {
+>  	size_t max, ret, size =3D 0;
+> @@ -562,7 +598,7 @@ static bool run_test(const char *cmd, struct test *te=
+st)
+>  		}
+>  	}
+> =20
+> -	outf =3D fopen(INPUT_FILE, "w");
+> +	outf =3D fopen(INPUT_FILE, verbose > 1 ? "w+" : "w");
+>  	if (!outf)
+>  		err(1, "creating %s", INPUT_FILE);
+> =20
+> @@ -593,11 +629,13 @@ static bool run_test(const char *cmd, struct test *=
+test)
+>  		abort();
+> =20
+>  	}
+> -	fclose(outf);
+> =20
+> -	if (verbose > 1)
+> -		if (system("cat " INPUT_FILE) =3D=3D -1)
+> -			;
+> +	if (verbose > 1) {
+> +		fseek(outf, 0, SEEK_SET);
+> +		fcopy(outf, stdout);
+> +	}
+> +
+> +	fclose(outf);
+> =20
+>  	newcmd =3D strdup(cmd);
+> =20
 
 --=20
 David Gibson			| I'll have my music baroque, and my code
@@ -80,30 +146,30 @@ david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
 				| _way_ _around_!
 http://www.ozlabs.org/~dgibson
 
---1MCZUn4MZNv/LeVo
+--0kRkyLZR5zsR9u2P
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2
 
-iQIcBAEBCAAGBQJX6f9OAAoJEGw4ysog2bOSyB8QAL14C6+d4siBqgbEvDthrec0
-cbXkDWiUaK+r/R1sTUd/InOABUGud5OfJK7d3OJ2D/YIQueE5eWvTN/Oc2kbpd1+
-SKsQ1iJS6gNXf605jNeVaxTDn+MdtXgGuIpYd8Y0dobW1RNd0bk/H13o0GvbkCeQ
-WpHZQwlI8Emy/81RRY6DnzQJ1LQBtQ874QfC6srsWCYBi6MQZITu8VdkuHHAA89a
-L4lqlfNtpzBVtdRA4zQJnZAXXKIxKTyK91EJQKQ3xDyyNw59H8DC9cVhlJ0nXOnu
-7ukFD83EvseNw4ecyAaFxdrrf4Sg9NoDEIoEKTG9nBc0iJgadHlaqivPRXIiViRw
-Jf2HpnMd8QkyNSbIg3Ex0qjcdjfPxDxuzwIyM9QODP9pEpMrEZgZsdNcsByWOfT4
-rXwT55TOv6VlxsvWykxukbC83A8dwce78Akxz7BKpUElsGapJq7bZRVekIcHio90
-QPjwzt+IZFL7+i/5QRtFq3CRdMYld9ScAvgCvgdwgXgDT59GwPqaJadAazpXRofB
-Id1rE4qO173w7D2Sa9BhW5RW1iwWCdRsL0Cnj7KE+dOu7iaTdbkyoXJGH2Qp4w1O
-gZyvbVdgdj4D8203mbX6tMQ43v4MlX/wy3l3gqvYWweCxH77rXF8TOn8dlxNBh1J
-/M0FNvnnHRhSmH79MtXB
-=PHKR
+iQIcBAEBCAAGBQJX6f5WAAoJEGw4ysog2bOSX3AP/j5WDCXCPRNryTZCDWJ79utT
++wNwn4sC9YuiYw/pDXyjj9ueit1P9ESPawIUAxfQAKwNYKJoON0FiVJIWKKBY0xN
+4xxj/LWaWMqOPvIiw+N3WA1gvuXqrYCj2wnf9tqOnqwZ9Fjdn2mncDlTT2Jrvifq
+LSj7UdF9d5anxfXx1oyVmC4di9FSm9k55GCdLaBUsEsHv9m7BMfUsagm3ERtKfFt
+boQDa7HDOs4OlcBQO+8lVUx/rBBoCOkSr/KR2+tuDJvf5XcqXNDtsc8sWeDRhpGY
+ODC0Jyw4+n9o55Hl/zH97aZjIxBdBNhDHDOkY7ia4K8rABe5RVlIckmz4hCdDAb9
+XGeY5CSh3mgD4ooWXJPh+T0srNmwl+omXRS9CWlllSGnvqX47lbBPqo/G0iQiGXd
+5thf5UaI2heU1jEjHDH5sTl7OcdwOiaDPBwMs30Fl0Frf7hXjh1m/h3PNgxFN62h
+4FscrYa68RBfYOSXMWK1Snj9lznkfqefSLgm8DDb3dSv/0hU+7RRvUEWbTO3B/Aj
+LCW/VXDe688+V5Nr/3falZuMeCfoiUj03u3nPG3XnPqYYbPg44m4vlI9AkIuPpFS
+1LLReRv/wd06K2BY6CFT5cFTQBAPLIf/V4qMOJ7/4jcWiNvAViPNwPcJ7lXWwp3b
+B+nzi7Zcgu9n9qkuNe3j
+=9u94
 -----END PGP SIGNATURE-----
 
---1MCZUn4MZNv/LeVo--
+--0kRkyLZR5zsR9u2P--
 
---===============8068762987651812121==
+--===============0643386044307937169==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: base64
@@ -113,4 +179,4 @@ X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KY2NhbiBtYWls
 aW5nIGxpc3QKY2NhbkBsaXN0cy5vemxhYnMub3JnCmh0dHBzOi8vbGlzdHMub3psYWJzLm9yZy9s
 aXN0aW5mby9jY2FuCg==
 
---===============8068762987651812121==--
+--===============0643386044307937169==--
