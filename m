@@ -1,17 +1,20 @@
 From: David Gibson <david@gibson.dropbear.id.au>
-Subject: Re: [PATCH] time: add timemono_since
-Date: Wed, 28 Sep 2016 11:26:00 +1000
-Message-ID: <20160928012600.GB14447@umbus.fritz.box>
-References: <1475013473-18813-1-git-send-email-cota@braap.org>
+Subject: Re: dgraph, tlist,
+ tcon: MSVC error due to array of flexible structs
+Date: Wed, 28 Sep 2016 13:12:40 +1000
+Message-ID: <20160928031240.GG18880@umbus>
+References: <20160923043116.ytrxrm7dsgusdrif@kevinolos>
+ <20160927044556.GH30322@umbus.fritz.box>
+ <87fuokn598.fsf@rustcorp.com.au>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============9174600852162838796=="
+Content-Type: multipart/mixed; boundary="===============1402593934757593722=="
 Return-path: <ccan-bounces+gclcc-ccan=m.gmane.org@lists.ozlabs.org>
 Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
  (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 3skMD77374zDrWX
- for <ccan@lists.ozlabs.org>; Wed, 28 Sep 2016 12:32:07 +1000 (AEST)
-In-Reply-To: <1475013473-18813-1-git-send-email-cota@braap.org>
+ by lists.ozlabs.org (Postfix) with ESMTPS id 3skNZx6QjHzDrZR
+ for <ccan@lists.ozlabs.org>; Wed, 28 Sep 2016 13:33:29 +1000 (AEST)
+In-Reply-To: <87fuokn598.fsf@rustcorp.com.au>
 List-Unsubscribe: <https://lists.ozlabs.org/options/ccan>,
  <mailto:ccan-request@lists.ozlabs.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/ccan/>
@@ -21,96 +24,48 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/ccan>,
  <mailto:ccan-request@lists.ozlabs.org?subject=subscribe>
 Errors-To: ccan-bounces+gclcc-ccan=m.gmane.org@lists.ozlabs.org
 Sender: "ccan" <ccan-bounces+gclcc-ccan=m.gmane.org@lists.ozlabs.org>
-To: "Emilio G. Cota" <cota@braap.org>
+To: Rusty Russell <rusty@rustcorp.com.au>
 Cc: ccan@lists.ozlabs.org
 List-Id: ccan@lists.ozlabs.org
 
 
---===============9174600852162838796==
+--===============1402593934757593722==
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="SkvwRMAIpAhPCcCJ"
+	protocol="application/pgp-signature"; boundary="Qf1oXS95uex85X0R"
 Content-Disposition: inline
 
 
---SkvwRMAIpAhPCcCJ
+--Qf1oXS95uex85X0R
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Sep 27, 2016 at 05:57:53PM -0400, Emilio G. Cota wrote:
-> time_mono()'s documentation references time_since(), which is nowhere
-> to be found.
+On Wed, Sep 28, 2016 at 11:40:43AM +0930, Paul 'Rusty' Russell wrote:
+> David Gibson <david@gibson.dropbear.id.au> writes:
+> > IIRC, Rusty didn't want to simply replace the tlist module in case
+> > there could be subtle brekages in usage.
 >=20
-> A possible fix would be to just remove that stale reference.
->=20
-> Instead, this patch adds timemono_since(), which hopefully
-> captures the meaning of the original time_since().
+> BTW, I think this gives us good reason to simply mv tlist2 -> tlist and
+> fix up the callers.
 
-Indeed it does.  Thanks for filling in that gap.
+Hm.. perhaps.  As noted in another mail, converting dgraph at least to
+tlist2 might be a bit ugly.  The two lists it keeps would now have
+different types, so it couldn't just keep them as an array, which
+might make things less natural in other places.
 
-> Signed-off-by: Emilio G. Cota <cota@braap.org>
+Maybe any extra switch/ifs will be cancelled out by removing (or
+folding into) existing ones.
 
-Applied to master.
+It would also be possible to make a more minimal conversion of tlist
+to TCON_WRAP() which keeps the tlist interface unchanged.
 
-> ---
->  ccan/time/test/run-monotonic.c |  3 ++-
->  ccan/time/time.h               | 13 ++++++++++++-
->  2 files changed, 14 insertions(+), 2 deletions(-)
->=20
-> diff --git a/ccan/time/test/run-monotonic.c b/ccan/time/test/run-monotoni=
-c.c
-> index ed70f3d..787ca68 100644
-> --- a/ccan/time/test/run-monotonic.c
-> +++ b/ccan/time/test/run-monotonic.c
-> @@ -7,7 +7,7 @@ int main(void)
->  	struct timemono t1, t2;
->  	struct timerel t3;
-> =20
-> -	plan_tests(2);
-> +	plan_tests(3);
-> =20
->  	/* Test time_mono */
->  	t1 =3D time_mono();
-> @@ -19,6 +19,7 @@ int main(void)
->  	t3.ts.tv_nsec =3D 0;
-> =20
->  	ok1(time_less(timemono_between(t1, t2), t3));
-> +	ok1(time_less(timemono_since(t1), t3));
-> =20
->  	return exit_status();
->  }
-> diff --git a/ccan/time/time.h b/ccan/time/time.h
-> index 5c916f4..54d92c5 100644
-> --- a/ccan/time/time.h
-> +++ b/ccan/time/time.h
-> @@ -127,7 +127,7 @@ struct timeabs time_now(void);
->   * This value is only really useful for measuring time intervals.
->   *
->   * See also:
-> - *	time_since()
-> + *	timemono_since()
->   */
->  struct timemono time_mono(void);
-> =20
-> @@ -321,6 +321,17 @@ static inline struct timerel timemono_between(struct=
- timemono recent,
->  }
-> =20
->  /**
-> + * timemono_since - elapsed monotonic time since @old
-> + * @old: a monotonic time from the past.
-> + */
-> +static inline struct timerel timemono_since(struct timemono old)
-> +{
-> +	struct timemono now =3D time_mono();
-> +
-> +	return timemono_between(now, old);
-> +}
-> +
-> +/**
->   * timeabs_sub - subtract a relative time from an absolute time
->   * @abs: the absolute time.
->   * @rel: the relative time.
+I am thinking we should probably phase out TCON in favour of TCON_WRAP
+everywhere - that flexible array member is causing repeated trouble.
+
+Another thing we might want as an interim approach is to add a new
+config test for zero-length array members (as opposed to flexible
+array members).  TCON could then use those when available and fall
+back to the space wasting 1-member array method otherwise.
 
 --=20
 David Gibson			| I'll have my music baroque, and my code
@@ -118,30 +73,30 @@ david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
 				| _way_ _around_!
 http://www.ozlabs.org/~dgibson
 
---SkvwRMAIpAhPCcCJ
+--Qf1oXS95uex85X0R
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2
 
-iQIcBAEBCAAGBQJX6xwmAAoJEGw4ysog2bOSDfkP/jVR9ZjhfMdh25tmM+Zra6dS
-5cNClvO2P6KDCj/BOUXqZQ/l7wJgtD0Qaj0adp2NUu2tZ6MHNCyEUdESIY12Xb6X
-WQds2IEwLw8JOTUxJhL3H7UCyMRNyAPZRA4PzDuDzmH7NBC83X1iKsa/Tdt0vnGU
-iNfNMAPViqN0IKNXjEqL1Kja11CjYIHv6azyvKs3fj+fOB8mO2GiRA4VFg5LkSmr
-hmls6ppLajHSTEFyCPDcFrrJ1KNJSB4o0ZUwM1mFaagkKoy5f94cKCiLJJSfuBxb
-aIHwAnJ96U1iRwmSUiRKpXIYEV9RAlSQwL5Lhhy0WXETvlF5csGQlIEIyd6ukQ+n
-Tterg5kpJS3UKZMSIW49fwOOJTAp19aa86Sm/TNOIz3vZOLucRYaU3lv5ve4ifFN
-bvI0PHMm35PS/8lPQsIqIHufDL5wl3DshtgZ06DpaCZhUhBe4bRiDY8/FZbEdoF7
-HtxQsnNyyLGYjlSiurX38e1sJjP9J5eBHCDicl+W2CQKJwqIH2vHhFqWa4ku6uhA
-pYWLsb11+2MeSvyso5ALhwf+fXFpywpDRG1c2pvibM4CageLaaLDXHM4QIqnk3Aj
-3gMIWhGsA6daou8+Uz194x0EnSRwkL0xxBgVPcniqQkfdKl/MTfwFiY0Y38PyBvO
-nZWfw0Ra7ixoPxJHw3hG
-=6FCp
+iQIcBAEBCAAGBQJX6zUnAAoJEGw4ysog2bOSH7MQAI9GQXBAIIiWX/LQ73j5MtHX
+HoH90Nifd5Cj0P81YmbEev7irxXB5/LUk1sVTowRF29L1J+0z4k7+4C1VjabF2E6
+tBH9gCnwt+9F9W9F1cpKgovjMyDTOd29/xj4ND+UmmqjwjsjCsQisNtyocA1Cm5L
+rmuFMPCtCgJu1m9Mz88GQMSTc5vB8id32JArNMDSc9/gEtBE3zhbT3HtRaRuZnGo
+KE3ymszNScCwu1YjPx6OM8ZxpKi/lG+MDimT7zSH5esYlfnmfL/ruNDgVRyzB1Ny
+1bmKYDAFaIjk20efQXiTZ+2EA/VkdzcJ/afUN05NH98opig+7cI0BK6ILdbpP9Re
+sCrfYMhsrVgkbpXsGHG9231XejlYoERrjiYEYjUw9FHNRs9DanIy0r8xc8ozT9LD
+WHr+HjPkMn6YmuXI+NxEDW58vRuArC3SyOcKFzkJ0vJ/iAonE77CcR5qUs/PN8A9
+r1TvSqGvxaMqrR4SwWtAW5T6/YAbt+SvocCyFYd3YloWGOstKK7d9CCT97IGQio3
+FW0n6ZTTiUIg4Z8hEvxKe6rQkFAwBfdszD/4I02cnZnmscvpz/Jo6XlLXO0wbBas
+8ZBBrG9o3RI3bF/K9B6kyj1ljbqFIPOJJBRF87Yx9ZT80r8Yi9NGG7b2CIL5dLnJ
+c39uN/JZvma7eiFDmP1Q
+=XpnS
 -----END PGP SIGNATURE-----
 
---SkvwRMAIpAhPCcCJ--
+--Qf1oXS95uex85X0R--
 
---===============9174600852162838796==
+--===============1402593934757593722==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: base64
@@ -151,4 +106,4 @@ X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KY2NhbiBtYWls
 aW5nIGxpc3QKY2NhbkBsaXN0cy5vemxhYnMub3JnCmh0dHBzOi8vbGlzdHMub3psYWJzLm9yZy9s
 aXN0aW5mby9jY2FuCg==
 
---===============9174600852162838796==--
+--===============1402593934757593722==--
