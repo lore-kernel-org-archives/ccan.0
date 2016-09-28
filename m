@@ -1,20 +1,23 @@
-From: David Gibson <david@gibson.dropbear.id.au>
-Subject: Re: dgraph, tlist,
- tcon: MSVC error due to array of flexible structs
-Date: Wed, 28 Sep 2016 13:12:40 +1000
-Message-ID: <20160928031240.GG18880@umbus>
-References: <20160923043116.ytrxrm7dsgusdrif@kevinolos>
- <20160927044556.GH30322@umbus.fritz.box>
- <87fuokn598.fsf@rustcorp.com.au>
+From: Kevin Locke <kevin@kevinlocke.name>
+Subject: [PATCH v3 2/13] configurator: Reimplement run using popen
+Date: Tue, 27 Sep 2016 23:29:24 -0600
+Message-ID: <20160928052924.eokn6ilhejiunrjh@kevinolos>
+References: <cover.1474239353.git.kevin@kevinlocke.name>
+ <cover.1474600863.git.kevin@kevinlocke.name>
+ <bd664ad818923efca7c5ca72a6f71abdc7e7af9e.1474600863.git.kevin@kevinlocke.name>
+ <20160927045215.GJ30322@umbus.fritz.box>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============1402593934757593722=="
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <ccan-bounces+gclcc-ccan=m.gmane.org@lists.ozlabs.org>
-Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
- (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+Received: from praxis.kevinlocke.name (praxis.kevinlocke.name
+ [IPv6:2605:6400:2:fed5:22:0:f2f6:c0f7])
+ (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 3skNZx6QjHzDrZR
- for <ccan@lists.ozlabs.org>; Wed, 28 Sep 2016 13:33:29 +1000 (AEST)
-In-Reply-To: <87fuokn598.fsf@rustcorp.com.au>
+ by lists.ozlabs.org (Postfix) with ESMTPS id 3skR8p5XvKzDrT1
+ for <ccan@lists.ozlabs.org>; Wed, 28 Sep 2016 15:29:30 +1000 (AEST)
+Content-Disposition: inline
+In-Reply-To: <20160927045215.GJ30322@umbus.fritz.box>
 List-Unsubscribe: <https://lists.ozlabs.org/options/ccan>,
  <mailto:ccan-request@lists.ozlabs.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/ccan/>
@@ -24,86 +27,92 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/ccan>,
  <mailto:ccan-request@lists.ozlabs.org?subject=subscribe>
 Errors-To: ccan-bounces+gclcc-ccan=m.gmane.org@lists.ozlabs.org
 Sender: "ccan" <ccan-bounces+gclcc-ccan=m.gmane.org@lists.ozlabs.org>
-To: Rusty Russell <rusty@rustcorp.com.au>
+To: David Gibson <david@gibson.dropbear.id.au>
 Cc: ccan@lists.ozlabs.org
 List-Id: ccan@lists.ozlabs.org
 
-
---===============1402593934757593722==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="Qf1oXS95uex85X0R"
-Content-Disposition: inline
-
-
---Qf1oXS95uex85X0R
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Wed, Sep 28, 2016 at 11:40:43AM +0930, Paul 'Rusty' Russell wrote:
-> David Gibson <david@gibson.dropbear.id.au> writes:
-> > IIRC, Rusty didn't want to simply replace the tlist module in case
-> > there could be subtle brekages in usage.
->=20
-> BTW, I think this gives us good reason to simply mv tlist2 -> tlist and
-> fix up the callers.
-
-Hm.. perhaps.  As noted in another mail, converting dgraph at least to
-tlist2 might be a bit ugly.  The two lists it keeps would now have
-different types, so it couldn't just keep them as an array, which
-might make things less natural in other places.
-
-Maybe any extra switch/ifs will be cancelled out by removing (or
-folding into) existing ones.
-
-It would also be possible to make a more minimal conversion of tlist
-to TCON_WRAP() which keeps the tlist interface unchanged.
-
-I am thinking we should probably phase out TCON in favour of TCON_WRAP
-everywhere - that flexible array member is causing repeated trouble.
-
-Another thing we might want as an interim approach is to add a new
-config test for zero-length array members (as opposed to flexible
-array members).  TCON could then use those when available and fall
-back to the space wasting 1-member array method otherwise.
-
---=20
-David Gibson			| I'll have my music baroque, and my code
-david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
-				| _way_ _around_!
-http://www.ozlabs.org/~dgibson
-
---Qf1oXS95uex85X0R
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAEBCAAGBQJX6zUnAAoJEGw4ysog2bOSH7MQAI9GQXBAIIiWX/LQ73j5MtHX
-HoH90Nifd5Cj0P81YmbEev7irxXB5/LUk1sVTowRF29L1J+0z4k7+4C1VjabF2E6
-tBH9gCnwt+9F9W9F1cpKgovjMyDTOd29/xj4ND+UmmqjwjsjCsQisNtyocA1Cm5L
-rmuFMPCtCgJu1m9Mz88GQMSTc5vB8id32JArNMDSc9/gEtBE3zhbT3HtRaRuZnGo
-KE3ymszNScCwu1YjPx6OM8ZxpKi/lG+MDimT7zSH5esYlfnmfL/ruNDgVRyzB1Ny
-1bmKYDAFaIjk20efQXiTZ+2EA/VkdzcJ/afUN05NH98opig+7cI0BK6ILdbpP9Re
-sCrfYMhsrVgkbpXsGHG9231XejlYoERrjiYEYjUw9FHNRs9DanIy0r8xc8ozT9LD
-WHr+HjPkMn6YmuXI+NxEDW58vRuArC3SyOcKFzkJ0vJ/iAonE77CcR5qUs/PN8A9
-r1TvSqGvxaMqrR4SwWtAW5T6/YAbt+SvocCyFYd3YloWGOstKK7d9CCT97IGQio3
-FW0n6ZTTiUIg4Z8hEvxKe6rQkFAwBfdszD/4I02cnZnmscvpz/Jo6XlLXO0wbBas
-8ZBBrG9o3RI3bF/K9B6kyj1ljbqFIPOJJBRF87Yx9ZT80r8Yi9NGG7b2CIL5dLnJ
-c39uN/JZvma7eiFDmP1Q
-=XpnS
------END PGP SIGNATURE-----
-
---Qf1oXS95uex85X0R--
-
---===============1402593934757593722==
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: inline
-
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KY2NhbiBtYWls
-aW5nIGxpc3QKY2NhbkBsaXN0cy5vemxhYnMub3JnCmh0dHBzOi8vbGlzdHMub3psYWJzLm9yZy9s
-aXN0aW5mby9jY2FuCg==
-
---===============1402593934757593722==--
+T24gVHVlLCAyMDE2LTA5LTI3IGF0IDE0OjUyICsxMDAwLCBEYXZpZCBHaWJzb24gd3JvdGU6Cj4g
+T24gVGh1LCBTZXAgMjIsIDIwMTYgYXQgMDk6MzM6MDVQTSAtMDYwMCwgS2V2aW4gTG9ja2Ugd3Jv
+dGU6Cj4+IC0gQ3JlYXRlIGZyZWFkX25vZWludHIgdG8gYXZvaWQgRUlOVFIgaW4gZnJlYWQgd2l0
+aG91dCByZWFkaW5nIGFueSBkYXRhLgo+PiAtIEhhbmRsZSBzaG9ydCByZWFkcyBmcm9tIGZyZWFk
+LiAgVGhpcyBjYW4gaGFwcGVuIHdpdGggbm9uLWNvbmZvcm1hbnQKPj4gICBsaWJjIG9yIGlmIEVJ
+TlRSIG9jY3VycyBhZnRlciByZWFkaW5nIHNvbWUgZGF0YS4KPiAKPiBIcm0uICBIYXZlIHlvdSBh
+Y3R1YWxseSBjb25maXJtZWQgdGhpcyBwcm9ibGVtIHdpdGggRUlOVFI/ICBNeQo+IHByZXZpb3Vz
+IG9iamVjdGlvbnMgdG8gbm90IGhhbmRsaW5nIHNob3J0IHJlYWQgd2VyZSBiYXNlZCBlbnRpcmVs
+eSBvbgo+IG5vdCByZWFsaXppbmcgdGhhdCBmcmVhZCgpIHdhc24ndCBzdXBwb3NlZCB0byBkbyB0
+aGF0LCByYXRoZXIgdGhhbgo+IHRoaW5raW5nIG9mIHNvbWUgZWRnZSBjYXNlIHlvdSBoYWRuJ3Qu
+Cj4gCj4gVW5sZXNzIHdlIGhhdmUgYSBjb25maXJtZWQgY2FzZSB3aGVyZSBmcmVhZCgpIGNhbiBn
+aXZlIGEgc2hvcnQgcmVhZAo+IHRoYXQgd29uJ3QgaGF2ZSBmZW9mKCkgb3IgZmVycm9yKCkgc2V0
+IGFmdGVyd2FyZHMsIEknbSBpbmNsaW5lZCB0byBnbwo+IGJhY2sgdG8geW91ciBpbml0aWFsIGlt
+cGxlbWVudGF0aW9uLgoKTm9wZSwgSSB3YXMganVzdCBiZWluZyBvdmVybHkgY2F1dGlvdXMuICBT
+b3VuZHMgZ29vZCB0byBtZS4gIEJlbG93IGlzCmFuIHVwZGF0ZWQgcGF0Y2ggd2hpY2ggaXMgdGhl
+IHNhbWUgYXMgdjEgYnV0IHdpdGggdGhlIGFkZGl0aW9uIG9mIHRoZQojZGVmaW5lIGZvciBfUE9T
+SVhfQ19TT1VSQ0UgdG8gZ2V0IHBjbG9zZSwgcG9wZW4sIGFuZCBzdHJkdXAuCgotODwtLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLQpSYXRoZXIgdGhhbiB1c2luZyBmb3JrK3BpcGUrc3lzdGVtK3dhaXRwaWQsIG1vc3Qgb2Yg
+d2hpY2ggYXJlIG9ubHkKYXZhaWxhYmxlIG9uIFBPU0lYLWxpa2Ugc3lzdGVtcywgdXNlIHBvcGVu
+IHdoaWNoIGlzIGFsc28gYXZhaWxhYmxlIG9uCldpbmRvd3MgKHVuZGVyIHRoZSBuYW1lIF9wb3Bl
+bikuCgpDaGFuZ2VzIHNpbmNlIHYxOgotIENyZWF0ZSBmcmVhZF9ub2VpbnRyIHRvIGF2b2lkIEVJ
+TlRSIGluIGZyZWFkIHdpdGhvdXQgcmVhZGluZyBhbnkgZGF0YS4KLSBIYW5kbGUgc2hvcnQgcmVh
+ZHMgZnJvbSBmcmVhZC4gIFRoaXMgY2FuIGhhcHBlbiB3aXRoIG5vbi1jb25mb3JtYW50CiAgbGli
+YyBvciBpZiBFSU5UUiBvY2N1cnMgYWZ0ZXIgcmVhZGluZyBzb21lIGRhdGEuCi0gRGVmaW5lIF9Q
+T1NJWF9DX1NPVVJDRSBmb3IgcG9wZW4vcGNsb3NlIHdpdGggc3RyaWN0IGltcGxlbWVudGF0aW9u
+cwogIHdoaWNoIHJlcXVpcmUgaXQgKGUuZy4gZ2NjIHdpdGggLXN0ZD1jMTEpLgoKQ2hhbmdlcyBz
+aW5jZSB2MjoKLSBSZXZlcnQgZnJlYWRfbm9laW50ciBhbmQgc2hvcnQgcmVhZCBjaGFuZ2VzIGlu
+IHYxIGFzIHVubmVjZXNzYXJ5LgoKU2lnbmVkLW9mZi1ieTogS2V2aW4gTG9ja2UgPGtldmluQGtl
+dmlubG9ja2UubmFtZT4KLS0tCiB0b29scy9jb25maWd1cmF0b3IvY29uZmlndXJhdG9yLmMgfCA3
+OSArKysrKysrKysrKysrKystLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0KIDEgZmlsZSBjaGFuZ2Vk
+LCAzMSBpbnNlcnRpb25zKCspLCA0OCBkZWxldGlvbnMoLSkKCmRpZmYgLS1naXQgYS90b29scy9j
+b25maWd1cmF0b3IvY29uZmlndXJhdG9yLmMgYi90b29scy9jb25maWd1cmF0b3IvY29uZmlndXJh
+dG9yLmMKaW5kZXggYzc1NzdjMC4uMmFkM2ZmZiAxMDA2NDQKLS0tIGEvdG9vbHMvY29uZmlndXJh
+dG9yL2NvbmZpZ3VyYXRvci5jCisrKyBiL3Rvb2xzL2NvbmZpZ3VyYXRvci9jb25maWd1cmF0b3Iu
+YwpAQCAtMjEsMTcgKzIxLDE5IEBACiAgKiBPVVQgT0YgT1IgSU4gQ09OTkVDVElPTiBXSVRIIFRI
+RSBTT0ZUV0FSRSBPUiBUSEUgVVNFIE9SIE9USEVSIERFQUxJTkdTIElOCiAgKiBUSEUgU09GVFdB
+UkUuCiAgKi8KKyNkZWZpbmUgX1BPU0lYX0NfU09VUkNFIDIwMDgwOUwgICAgICAgICAgICAgICAg
+LyogRm9yIHBjbG9zZSwgcG9wZW4sIHN0cmR1cCAqLworCiAjaW5jbHVkZSA8c3RkaW8uaD4KICNp
+bmNsdWRlIDxzdGRib29sLmg+CiAjaW5jbHVkZSA8c3RkbGliLmg+Ci0jaW5jbHVkZSA8dW5pc3Rk
+Lmg+CiAjaW5jbHVkZSA8ZXJyLmg+Ci0jaW5jbHVkZSA8c3lzL3R5cGVzLmg+Ci0jaW5jbHVkZSA8
+c3lzL3dhaXQuaD4KLSNpbmNsdWRlIDxzeXMvc3RhdC5oPgotI2luY2x1ZGUgPGZjbnRsLmg+CiAj
+aW5jbHVkZSA8c3RyaW5nLmg+CgorI2lmZGVmIF9NU0NfVkVSCisjZGVmaW5lIHBvcGVuIF9wb3Bl
+bgorI2RlZmluZSBwY2xvc2UgX3BjbG9zZQorI2VuZGlmCisKICNkZWZpbmUgREVGQVVMVF9DT01Q
+SUxFUiAiY2MiCiAjZGVmaW5lIERFRkFVTFRfRkxBR1MgIi1nMyAtZ2dkYiAtV2FsbCAtV3VuZGVm
+IC1XbWlzc2luZy1wcm90b3R5cGVzIC1XbWlzc2luZy1kZWNsYXJhdGlvbnMgLVdzdHJpY3QtcHJv
+dG90eXBlcyAtV29sZC1zdHlsZS1kZWZpbml0aW9uIgoKQEAgLTM3NSwyMCArMzc3LDE5IEBAIHN0
+YXRpYyBzdHJ1Y3QgdGVzdCB0ZXN0c1tdID0gewogCX0sCiB9OwoKLXN0YXRpYyBjaGFyICpncmFi
+X2ZkKGludCBmZCkKK3N0YXRpYyBjaGFyICpncmFiX3N0cmVhbShGSUxFICpmaWxlKQogewotCWlu
+dCByZXQ7Ci0Jc2l6ZV90IG1heCwgc2l6ZSA9IDA7CisJc2l6ZV90IG1heCwgcmV0LCBzaXplID0g
+MDsKIAljaGFyICpidWZmZXI7CgotCW1heCA9IDE2Mzg0OwotCWJ1ZmZlciA9IG1hbGxvYyhtYXgr
+MSk7Ci0Jd2hpbGUgKChyZXQgPSByZWFkKGZkLCBidWZmZXIgKyBzaXplLCBtYXggLSBzaXplKSkg
+PiAwKSB7CisJbWF4ID0gQlVGU0laOworCWJ1ZmZlciA9IG1hbGxvYyhtYXgpOworCXdoaWxlICgo
+cmV0ID0gZnJlYWQoYnVmZmVyK3NpemUsIDEsIG1heCAtIHNpemUsIGZpbGUpKSA9PSBtYXggLSBz
+aXplKSB7CiAJCXNpemUgKz0gcmV0OwotCQlpZiAoc2l6ZSA9PSBtYXgpCi0JCQlidWZmZXIgPSBy
+ZWFsbG9jKGJ1ZmZlciwgbWF4ICo9IDIpOworCQlidWZmZXIgPSByZWFsbG9jKGJ1ZmZlciwgbWF4
+ICo9IDIpOwogCX0KLQlpZiAocmV0IDwgMCkKKwlzaXplICs9IHJldDsKKwlpZiAoZmVycm9yKGZp
+bGUpKQogCQllcnIoMSwgInJlYWRpbmcgZnJvbSBjb21tYW5kIik7CiAJYnVmZmVyW3NpemVdID0g
+J1wwJzsKIAlyZXR1cm4gYnVmZmVyOwpAQCAtMzk2LDQzICszOTcsMjUgQEAgc3RhdGljIGNoYXIg
+KmdyYWJfZmQoaW50IGZkKQoKIHN0YXRpYyBjaGFyICpydW4oY29uc3QgY2hhciAqY21kLCBpbnQg
+KmV4aXRzdGF0dXMpCiB7Ci0JcGlkX3QgcGlkOwotCWludCBwWzJdOworCXN0YXRpYyBjb25zdCBj
+aGFyIHJlZGlyW10gPSAiIDI+JjEiOworCXNpemVfdCBjbWRsZW47CisJY2hhciAqY21kcmVkaXI7
+CisJRklMRSAqY21kb3V0OwogCWNoYXIgKnJldDsKLQlpbnQgc3RhdHVzOwoKLQlpZiAocGlwZShw
+KSAhPSAwKQotCQllcnIoMSwgImNyZWF0aW5nIHBpcGUiKTsKLQotCXBpZCA9IGZvcmsoKTsKLQlp
+ZiAocGlkID09IC0xKQotCQllcnIoMSwgImZvcmtpbmciKTsKLQotCWlmIChwaWQgPT0gMCkgewot
+CQlpZiAoZHVwMihwWzFdLCBTVERPVVRfRklMRU5PKSAhPSBTVERPVVRfRklMRU5PCi0JCSAgICB8
+fCBkdXAyKHBbMV0sIFNUREVSUl9GSUxFTk8pICE9IFNUREVSUl9GSUxFTk8KLQkJICAgIHx8IGNs
+b3NlKHBbMF0pICE9IDAKLQkJICAgIHx8IGNsb3NlKFNURElOX0ZJTEVOTykgIT0gMAotCQkgICAg
+fHwgb3BlbigiL2Rldi9udWxsIiwgT19SRE9OTFkpICE9IFNURElOX0ZJTEVOTykKLQkJCWV4aXQo
+MTI4KTsKLQotCQlzdGF0dXMgPSBzeXN0ZW0oY21kKTsKLQkJaWYgKFdJRkVYSVRFRChzdGF0dXMp
+KQotCQkJZXhpdChXRVhJVFNUQVRVUyhzdGF0dXMpKTsKLQkJLyogSGVyZSdzIGEgaGludC4uLiAq
+LwotCQlleGl0KDEyOCArIFdURVJNU0lHKHN0YXR1cykpOwotCX0KKwljbWRsZW4gPSBzdHJsZW4o
+Y21kKTsKKwljbWRyZWRpciA9IG1hbGxvYyhjbWRsZW4gKyBzaXplb2YocmVkaXIpKTsKKwltZW1j
+cHkoY21kcmVkaXIsIGNtZCwgY21kbGVuKTsKKwltZW1jcHkoY21kcmVkaXIgKyBjbWRsZW4sIHJl
+ZGlyLCBzaXplb2YocmVkaXIpKTsKKworCWNtZG91dCA9IHBvcGVuKGNtZHJlZGlyLCAiciIpOwor
+CWlmICghY21kb3V0KQorCQllcnIoMSwgInBvcGVuIFwiJXNcIiIsIGNtZHJlZGlyKTsKKworCWZy
+ZWUoY21kcmVkaXIpOwoKLQljbG9zZShwWzFdKTsKLQlyZXQgPSBncmFiX2ZkKHBbMF0pOwotCS8q
+IFRoaXMgc2hvdWxkbid0IGZhaWwuLi4gKi8KLQlpZiAod2FpdHBpZChwaWQsICZzdGF0dXMsIDAp
+ICE9IHBpZCkKLQkJZXJyKDEsICJGYWlsZWQgdG8gd2FpdCBmb3IgY2hpbGQiKTsKLQljbG9zZShw
+WzBdKTsKLQlpZiAoV0lGRVhJVEVEKHN0YXR1cykpCi0JCSpleGl0c3RhdHVzID0gV0VYSVRTVEFU
+VVMoc3RhdHVzKTsKLQllbHNlCi0JCSpleGl0c3RhdHVzID0gLVdURVJNU0lHKHN0YXR1cyk7CisJ
+cmV0ID0gZ3JhYl9zdHJlYW0oY21kb3V0KTsKKwkqZXhpdHN0YXR1cyA9IHBjbG9zZShjbWRvdXQp
+OwogCXJldHVybiByZXQ7CiB9CgotLQoyLjkuMwoKX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX18KY2NhbiBtYWlsaW5nIGxpc3QKY2NhbkBsaXN0cy5vemxhYnMu
+b3JnCmh0dHBzOi8vbGlzdHMub3psYWJzLm9yZy9saXN0aW5mby9jY2FuCg==
