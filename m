@@ -1,21 +1,19 @@
-From: David Gibson <david@gibson.dropbear.id.au>
-Subject: Re: [PATCH v2 00/13] configurator: Support for Windows and
- MSVC
-Date: Thu, 29 Sep 2016 10:21:22 +1000
-Message-ID: <20160929002122.GK18880@umbus>
-References: <cover.1474239353.git.kevin@kevinlocke.name>
- <cover.1474600863.git.kevin@kevinlocke.name>
- <20160927052342.GV30322@umbus.fritz.box>
- <20160928062803.zrjaxfylwcpog33l@kevinolos>
+From: Kevin Locke <kevin@kevinlocke.name>
+Subject: [PATCH v3 2/7] configurator: Inline err.h functions
+Date: Wed, 28 Sep 2016 18:44:43 -0600
+Message-ID: <bc4ca85cecb724db825cce1844c2e1a683840d30.1475109043.git.kevin@kevinlocke.name>
+References: <20160929002122.GK18880@umbus>
+ <cover.1475109043.git.kevin@kevinlocke.name>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============7704539428991323842=="
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <ccan-bounces+gclcc-ccan=m.gmane.org@lists.ozlabs.org>
-Received: from ozlabs.org (ozlabs.org [103.22.144.67])
- (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+Received: from praxis.kevinlocke.name (praxis.kevinlocke.name [205.185.125.39])
+ (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 3skwQq2C1pzDsTW
- for <ccan@lists.ozlabs.org>; Thu, 29 Sep 2016 10:28:19 +1000 (AEST)
-In-Reply-To: <20160928062803.zrjaxfylwcpog33l@kevinolos>
+ by lists.ozlabs.org (Postfix) with ESMTPS id 3skwnw3Nr0zDsTW
+ for <ccan@lists.ozlabs.org>; Thu, 29 Sep 2016 10:44:52 +1000 (AEST)
+In-Reply-To: <cover.1475109043.git.kevin@kevinlocke.name>
 List-Unsubscribe: <https://lists.ozlabs.org/options/ccan>,
  <mailto:ccan-request@lists.ozlabs.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/ccan/>
@@ -28,109 +26,83 @@ Sender: "ccan" <ccan-bounces+gclcc-ccan=m.gmane.org@lists.ozlabs.org>
 To: ccan@lists.ozlabs.org
 List-Id: ccan@lists.ozlabs.org
 
-
---===============7704539428991323842==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="GmiNL4+5WUWrod5m"
-Content-Disposition: inline
-
-
---GmiNL4+5WUWrod5m
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Wed, Sep 28, 2016 at 12:28:03AM -0600, Kevin Locke wrote:
-> On Tue, 2016-09-27 at 15:23 +1000, David Gibson wrote:
-> > On Thu, Sep 22, 2016 at 09:33:03PM -0600, Kevin Locke wrote:
-> >> This is the second revision of my patch series which adds support for
-> >> building configurator with Microsoft Visual C++ and running it on
-> >> Windows.  The motivation is to add sufficient support for Windows to
-> >> allow using header-only modules with minimal hassle.
-> >=20
-> > Thanks for sending again.  I've applied a number of the simpler ones
-> > already.  The remainder I still have some comments on.
->=20
-> Thanks for reviewing again!  I think I've addressed everything, but if
-> there is anything I've overlooked, let me know.
-
-Right.  Can you rebase your current patches and post them as a new
-series.  That's makes my life easier compared to updated versions of
-each patch in various places in the thread.
-
->=20
-> > Incidentally you are introducing a new concept here which isn't really
-> > comment on.  The use of more #ifdefs on system macros into
-> > configurator means that the way our default compiler options will be
-> > set up is basically going to be dependent on the setup used to compile
-> > configurator itself.
-> >=20
-> > That seems like a sensible approach to me; we just need to be a bit
-> > careful of interactions with make and/or other build systems when we
-> > could have a system with multiple compilation options (e.g. both MSVC
-> > and cygwin/gcc installed on a Windows machine).
->=20
-> That is a good point and probably deserves some more thought and
-> discussion.  I've tried to keep most additions configurable at
-> run-time (e.g. the new -O configurator flag) so if the compile-time
-> deduction is wrong it can be overridden.  But it still changes the
-> configurator behavior based on how it was compiled without any
-> explicit configuration.  That may or may not be desirable.
-
-I think it's desirable, on the whole.  But having overrides is
-generally a good idea too.
-
-> Has there
-> been any discussion of being more explicit about specifying build vs
-> host system at build time?  Anything in particular you have in mind?
-
-No, I'm afraid not.
-
-> A good example of something which can not be overridden at runtime is
-> the directory separator passed to popen(3).  I don't think there are
-> currently any problems, but the choice of directory separator could
-> easily cause problems between Cygwin and native binaries in other
-> situations.  Definitely worth thinking about.
-
-Yeah.
-
---=20
-David Gibson			| I'll have my music baroque, and my code
-david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
-				| _way_ _around_!
-http://www.ozlabs.org/~dgibson
-
---GmiNL4+5WUWrod5m
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAEBCAAGBQJX7F6AAAoJEGw4ysog2bOSwj4P/0HUoN4vEiZHQJbzG+EAVhBq
-BLQbDvNSlMpWMB+cywm6jn+UeZcYHyJNtMDqkwpC1RiwwduX5gEFkmocGDmbUvD5
-GUuWIn0hwsPaAyPe05MDBbovxIvtuGNYpepYjjJvVdZI/VlXC/xL6ex0cJ5iCigA
-6C81ZBK9rOf5EI5/OcFqlB03itiJwgrs2ppZ46htYp+dxMtROWULQn5RS2gsiitd
-8QtQ6RlRNqWkQ9cEwmtIJn/McYnVPo1o2yjQwgRtwYED0pzAFNk1mQAfEQeOIDle
-DxWiazSJebNnSZKdAYj7TTNbdjmkD5qX0AsNRS5GmljXlVZNvvrFtWQPMYjru0cy
-UWI8Lz9IYhMJ+g4JgkoAjd2CREYgfBMdjmPg623N+laAZsD2e1tqQj25Tndyy23Y
-V1BxL6ht/jP1vXhAnjgY0t1gnOGs7rdvQ3Mee+6sCFe3112BYYwMiLWctBHcrw8j
-5LuOLqhlBEhk1WLXIqGi0mrwKVF1WqT6/AceJwYUtwcSkcUApXYRNjVtlAgxWBm6
-Pr8xIi9VSocdz1zEBiYas9OmXIzhUYRnOHGbdzubxBqXm4ahEVRtmnegbKYjUS22
-takEig67QJ+tGZM2TyWd9Jw+xlFvNCZUXW83XUwAzHfPJv6pMianNen7d7Bbqyji
-hiUOjwdmhfEElx3Yqt2z
-=Bfmk
------END PGP SIGNATURE-----
-
---GmiNL4+5WUWrod5m--
-
---===============7704539428991323842==
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: inline
-
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KY2NhbiBtYWls
-aW5nIGxpc3QKY2NhbkBsaXN0cy5vemxhYnMub3JnCmh0dHBzOi8vbGlzdHMub3psYWJzLm9yZy9s
-aXN0aW5mby9jY2FuCg==
-
---===============7704539428991323842==--
+T24gc3lzdGVtcyB3aGVyZSBlcnIuaCBpcyBub3QgcHJvdmlkZWQgKGUuZy4gTVNWQykgY29uZmln
+dXJhdG9yIG11c3QKcHJvdmlkZSBpdHMgb3duIGRlZmluaXRpb24uICBUaGUgZXJyIG1vZHVsZSBj
+YW4gbm90IGJlIHVzZWQgYnkKY29uZmlndXJhdG9yIGR1ZSB0byBpdHMgZGVwZW5kZW5jeSBvbiBj
+b25maWcuaCwgc28gdGhlIHJlbGV2YW50IHNvdXJjZQppcyBjb3BpZWQgaW50byBjb25maWd1cmF0
+b3Igd2l0aCB0aGUgbWluaW11bSBjaGFuZ2VzIG5lY2Vzc2FyeS4KCkNoYW5nZXMgc2luY2UgdjI6
+Ci0gVXNlIHRoZSBDQ0FOIGVyciBtb2R1bGUgc291cmNlcyBpbnN0ZWFkIG9mIG11c2wgbGliYyBz
+b3VyY2VzIHRvIGF2b2lkCiAgaW50cm9kdWNpbmcgYW5vdGhlciBpbXBsZW1lbnRhdGlvbiBvZiB0
+aGVzZSBmdW5jdGlvbnMuCi0gUHJlZml4IGVyci5oIGZ1bmN0aW9ucyB3aXRoICJjMTJyXyIgdG8g
+YXZvaWQgbmFtZSBjb25mbGljdHMgYW5kCiAgInN0YXRpYyBkZWNsYXJhdGlvbiBmb2xsb3dzIG5v
+bi1zdGF0aWMiIGVycm9ycy4KClNpZ25lZC1vZmYtYnk6IEtldmluIExvY2tlIDxrZXZpbkBrZXZp
+bmxvY2tlLm5hbWU+Ci0tLQogdG9vbHMvY29uZmlndXJhdG9yL2NvbmZpZ3VyYXRvci5jIHwgNDkg
+KysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKystLS0tLS0tCiAxIGZpbGUgY2hhbmdlZCwg
+NDEgaW5zZXJ0aW9ucygrKSwgOCBkZWxldGlvbnMoLSkKCmRpZmYgLS1naXQgYS90b29scy9jb25m
+aWd1cmF0b3IvY29uZmlndXJhdG9yLmMgYi90b29scy9jb25maWd1cmF0b3IvY29uZmlndXJhdG9y
+LmMKaW5kZXggMmFkM2ZmZi4uYTdjYmZhNSAxMDA2NDQKLS0tIGEvdG9vbHMvY29uZmlndXJhdG9y
+L2NvbmZpZ3VyYXRvci5jCisrKyBiL3Rvb2xzL2NvbmZpZ3VyYXRvci9jb25maWd1cmF0b3IuYwpA
+QCAtMyw2ICszLDkgQEAKICAqCiAgKiBDb3B5cmlnaHQgMjAxMSBSdXN0eSBSdXNzZWxsIDxydXN0
+eUBydXN0Y29ycC5jb20uYXU+LiAgTUlUIGxpY2Vuc2UuCiAgKgorICogYzEycl9lcnIsIGMxMnJf
+ZXJyeCBmdW5jdGlvbnMgY29waWVkIGZyb20gY2Nhbi9lcnIvZXJyLmMKKyAqIENvcHlyaWdodCBS
+dXN0eSBSdXNzZWxsIDxydXN0eUBydXN0Y29ycC5jb20uYXU+LiBDQzAgKFB1YmxpYyBkb21haW4p
+IExpY2Vuc2UuCisgKgogICogUGVybWlzc2lvbiBpcyBoZXJlYnkgZ3JhbnRlZCwgZnJlZSBvZiBj
+aGFyZ2UsIHRvIGFueSBwZXJzb24gb2J0YWluaW5nIGEgY29weQogICogb2YgdGhpcyBzb2Z0d2Fy
+ZSBhbmQgYXNzb2NpYXRlZCBkb2N1bWVudGF0aW9uIGZpbGVzICh0aGUgIlNvZnR3YXJlIiksIHRv
+IGRlYWwKICAqIGluIHRoZSBTb2Z0d2FyZSB3aXRob3V0IHJlc3RyaWN0aW9uLCBpbmNsdWRpbmcg
+d2l0aG91dCBsaW1pdGF0aW9uIHRoZSByaWdodHMKQEAgLTIzLDEwICsyNiwxMSBAQAogICovCiAj
+ZGVmaW5lIF9QT1NJWF9DX1NPVVJDRSAyMDA4MDlMICAgICAgICAgICAgICAgIC8qIEZvciBwY2xv
+c2UsIHBvcGVuLCBzdHJkdXAgKi8KCisjaW5jbHVkZSA8ZXJybm8uaD4KICNpbmNsdWRlIDxzdGRp
+by5oPgorI2luY2x1ZGUgPHN0ZGFyZy5oPgogI2luY2x1ZGUgPHN0ZGJvb2wuaD4KICNpbmNsdWRl
+IDxzdGRsaWIuaD4KLSNpbmNsdWRlIDxlcnIuaD4KICNpbmNsdWRlIDxzdHJpbmcuaD4KCiAjaWZk
+ZWYgX01TQ19WRVIKQEAgLTQ2LDYgKzUwLDcgQEAKICNkZWZpbmUgRElSX1NFUCAgICIvIgogI2Vu
+ZGlmCgorc3RhdGljIGNvbnN0IGNoYXIgKnByb2duYW1lID0gIiI7CiBzdGF0aWMgaW50IHZlcmJv
+c2U7CgogZW51bSB0ZXN0X3N0eWxlIHsKQEAgLTM3Nyw2ICszODIsMzEgQEAgc3RhdGljIHN0cnVj
+dCB0ZXN0IHRlc3RzW10gPSB7CiAJfSwKIH07Cgorc3RhdGljIHZvaWQgYzEycl9lcnIoaW50IGV2
+YWwsIGNvbnN0IGNoYXIgKmZtdCwgLi4uKQoreworCWludCBlcnJfZXJybm8gPSBlcnJubzsKKwl2
+YV9saXN0IGFwOworCisJZnByaW50ZihzdGRlcnIsICIlczogIiwgcHJvZ25hbWUpOworCXZhX3N0
+YXJ0KGFwLCBmbXQpOworCXZmcHJpbnRmKHN0ZGVyciwgZm10LCBhcCk7CisJdmFfZW5kKGFwKTsK
+KwlmcHJpbnRmKHN0ZGVyciwgIjogJXNcbiIsIHN0cmVycm9yKGVycl9lcnJubykpOworCWV4aXQo
+ZXZhbCk7Cit9CisKK3N0YXRpYyB2b2lkIGMxMnJfZXJyeChpbnQgZXZhbCwgY29uc3QgY2hhciAq
+Zm10LCAuLi4pCit7CisJdmFfbGlzdCBhcDsKKworCWZwcmludGYoc3RkZXJyLCAiJXM6ICIsIHBy
+b2duYW1lKTsKKwl2YV9zdGFydChhcCwgZm10KTsKKwl2ZnByaW50ZihzdGRlcnIsIGZtdCwgYXAp
+OworCXZhX2VuZChhcCk7CisJZnByaW50ZihzdGRlcnIsICJcbiIpOworCWV4aXQoZXZhbCk7Cit9
+CisKIHN0YXRpYyBjaGFyICpncmFiX3N0cmVhbShGSUxFICpmaWxlKQogewogCXNpemVfdCBtYXgs
+IHJldCwgc2l6ZSA9IDA7CkBAIC0zOTAsNyArNDIwLDcgQEAgc3RhdGljIGNoYXIgKmdyYWJfc3Ry
+ZWFtKEZJTEUgKmZpbGUpCiAJfQogCXNpemUgKz0gcmV0OwogCWlmIChmZXJyb3IoZmlsZSkpCi0J
+CWVycigxLCAicmVhZGluZyBmcm9tIGNvbW1hbmQiKTsKKwkJYzEycl9lcnIoMSwgInJlYWRpbmcg
+ZnJvbSBjb21tYW5kIik7CiAJYnVmZmVyW3NpemVdID0gJ1wwJzsKIAlyZXR1cm4gYnVmZmVyOwog
+fQpAQCAtNDEwLDcgKzQ0MCw3IEBAIHN0YXRpYyBjaGFyICpydW4oY29uc3QgY2hhciAqY21kLCBp
+bnQgKmV4aXRzdGF0dXMpCgogCWNtZG91dCA9IHBvcGVuKGNtZHJlZGlyLCAiciIpOwogCWlmICgh
+Y21kb3V0KQotCQllcnIoMSwgInBvcGVuIFwiJXNcIiIsIGNtZHJlZGlyKTsKKwkJYzEycl9lcnIo
+MSwgInBvcGVuIFwiJXNcIiIsIGNtZHJlZGlyKTsKCiAJZnJlZShjbWRyZWRpcik7CgpAQCAtNTAy
+LDcgKzUzMiw3IEBAIHN0YXRpYyBib29sIHJ1bl90ZXN0KGNvbnN0IGNoYXIgKmNtZCwgc3RydWN0
+IHRlc3QgKnRlc3QpCgogCW91dGYgPSBmb3BlbihJTlBVVF9GSUxFLCAidyIpOwogCWlmICghb3V0
+ZikKLQkJZXJyKDEsICJjcmVhdGluZyAlcyIsIElOUFVUX0ZJTEUpOworCQljMTJyX2VycigxLCAi
+Y3JlYXRpbmcgJXMiLCBJTlBVVF9GSUxFKTsKCiAJZnByaW50ZihvdXRmLCAiJXMiLCBQUkVfQk9J
+TEVSUExBVEUpOwogCXN3aXRjaCAodGVzdC0+c3R5bGUgJiB+KEVYRUNVVEV8TUFZX05PVF9DT01Q
+SUxFKSkgewpAQCAtNTY3LDggKzU5Nyw4IEBAIHN0YXRpYyBib29sIHJ1bl90ZXN0KGNvbnN0IGNo
+YXIgKmNtZCwgc3RydWN0IHRlc3QgKnRlc3QpCiAJCQkgICAgICAgc3RhdHVzID8gImZhaWwiIDog
+Indhcm5pbmciLAogCQkJICAgICAgIHRlc3QtPm5hbWUsIHN0YXR1cywgb3V0cHV0KTsKIAkJaWYg
+KCh0ZXN0LT5zdHlsZSAmIEVYRUNVVEUpICYmICEodGVzdC0+c3R5bGUgJiBNQVlfTk9UX0NPTVBJ
+TEUpKQotCQkJZXJyeCgxLCAiVGVzdCBmb3IgJXMgZGlkIG5vdCBjb21waWxlOlxuJXMiLAotCQkJ
+ICAgICB0ZXN0LT5uYW1lLCBvdXRwdXQpOworCQkJYzEycl9lcnJ4KDEsICJUZXN0IGZvciAlcyBk
+aWQgbm90IGNvbXBpbGU6XG4lcyIsCisJCQkJICB0ZXN0LT5uYW1lLCBvdXRwdXQpOwogCQl0ZXN0
+LT5hbnN3ZXIgPSBmYWxzZTsKIAkJZnJlZShvdXRwdXQpOwogCX0gZWxzZSB7CkBAIC01NzgsOCAr
+NjA4LDggQEAgc3RhdGljIGJvb2wgcnVuX3Rlc3QoY29uc3QgY2hhciAqY21kLCBzdHJ1Y3QgdGVz
+dCAqdGVzdCkKIAkJaWYgKCh0ZXN0LT5zdHlsZSAmIEVYRUNVVEUpIHx8ICh0ZXN0LT5zdHlsZSAm
+IElOU0lERV9NQUlOKSkgewogCQkJb3V0cHV0ID0gcnVuKCIuIiBESVJfU0VQIE9VVFBVVF9GSUxF
+LCAmc3RhdHVzKTsKIAkJCWlmICghKHRlc3QtPnN0eWxlICYgRVhFQ1VURSkgJiYgc3RhdHVzICE9
+IDApCi0JCQkJZXJyeCgxLCAiVGVzdCBmb3IgJXMgZmFpbGVkIHdpdGggJWk6XG4lcyIsCi0JCQkJ
+ICAgICB0ZXN0LT5uYW1lLCBzdGF0dXMsIG91dHB1dCk7CisJCQkJYzEycl9lcnJ4KDEsICJUZXN0
+IGZvciAlcyBmYWlsZWQgd2l0aCAlaTpcbiVzIiwKKwkJCQkJICB0ZXN0LT5uYW1lLCBzdGF0dXMs
+IG91dHB1dCk7CiAJCQlpZiAodmVyYm9zZSAmJiBzdGF0dXMpCiAJCQkJcHJpbnRmKCIlcyBleGl0
+ZWQgJWlcbiIsIHRlc3QtPm5hbWUsIHN0YXR1cyk7CiAJCQlmcmVlKG91dHB1dCk7CkBAIC02MDMs
+NiArNjMzLDkgQEAgaW50IG1haW4oaW50IGFyZ2MsIGNvbnN0IGNoYXIgKmFyZ3ZbXSkKIAljb25z
+dCBjaGFyICpkZWZhdWx0X2FyZ3NbXQogCQk9IHsgIiIsIERFRkFVTFRfQ09NUElMRVIsIERFRkFV
+TFRfRkxBR1MsIE5VTEwgfTsKCisJaWYgKGFyZ2MgPiAwKQorCQlwcm9nbmFtZSA9IGFyZ3ZbMF07
+CisKIAlpZiAoYXJnYyA+IDEpIHsKIAkJaWYgKHN0cmNtcChhcmd2WzFdLCAiLS1oZWxwIikgPT0g
+MCkgewogCQkJcHJpbnRmKCJVc2FnZTogY29uZmlndXJhdG9yIFstdl0gWzxjb21waWxlcj4gPGZs
+YWdzPi4uLl1cbiIKLS0KMi45LjMKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fCmNjYW4gbWFpbGluZyBsaXN0CmNjYW5AbGlzdHMub3psYWJzLm9yZwpodHRw
+czovL2xpc3RzLm96bGFicy5vcmcvbGlzdGluZm8vY2Nhbgo=
