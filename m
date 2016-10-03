@@ -1,18 +1,22 @@
-From: David Gibson <david@gibson.dropbear.id.au>
+From: Kevin Locke <kevin@kevinlocke.name>
 Subject: Re: [PATCH v3 0/7] configurator: Support for Windows and MSVC
-Date: Sat, 1 Oct 2016 01:08:28 +1000
-Message-ID: <20160930150828.GC23399@umbus.fritz.box>
+Date: Sun, 2 Oct 2016 21:14:23 -0600
+Message-ID: <20161003031423.72ksg35ocg4mmu5h@kevinolos>
 References: <20160929002122.GK18880@umbus>
  <cover.1475109043.git.kevin@kevinlocke.name>
+ <20160930150828.GC23399@umbus.fritz.box>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============7656959200658473046=="
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <ccan-bounces+gclcc-ccan=m.gmane.org@lists.ozlabs.org>
-Received: from ozlabs.org (ozlabs.org [103.22.144.67])
- (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+Received: from praxis.kevinlocke.name (praxis.kevinlocke.name
+ [IPv6:2605:6400:2:fed5:22:0:f2f6:c0f7])
+ (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 3slvw66yVnzDvJR
- for <ccan@lists.ozlabs.org>; Sat,  1 Oct 2016 01:08:38 +1000 (AEST)
-In-Reply-To: <cover.1475109043.git.kevin@kevinlocke.name>
+ by lists.ozlabs.org (Postfix) with ESMTPS id 3snRwl0BP4zDrDv
+ for <ccan@lists.ozlabs.org>; Mon,  3 Oct 2016 14:14:30 +1100 (AEDT)
+Content-Disposition: inline
+In-Reply-To: <20160930150828.GC23399@umbus.fritz.box>
 List-Unsubscribe: <https://lists.ozlabs.org/options/ccan>,
  <mailto:ccan-request@lists.ozlabs.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/ccan/>
@@ -22,102 +26,55 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/ccan>,
  <mailto:ccan-request@lists.ozlabs.org?subject=subscribe>
 Errors-To: ccan-bounces+gclcc-ccan=m.gmane.org@lists.ozlabs.org
 Sender: "ccan" <ccan-bounces+gclcc-ccan=m.gmane.org@lists.ozlabs.org>
-To: Kevin Locke <kevin@kevinlocke.name>
+To: David Gibson <david@gibson.dropbear.id.au>
 Cc: ccan@lists.ozlabs.org
 List-Id: ccan@lists.ozlabs.org
 
-
---===============7656959200658473046==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="LTeJQqWS0MN7I/qa"
-Content-Disposition: inline
-
-
---LTeJQqWS0MN7I/qa
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Wed, Sep 28, 2016 at 06:44:41PM -0600, Kevin Locke wrote:
-> On Thu, 2016-09-29 at 10:21 +1000, David Gibson wrote:
-> > Right.  Can you rebase your current patches and post them as a new
-> > series.  That's makes my life easier compared to updated versions of
-> > each patch in various places in the thread.
->=20
-> Certainly.  No problem.
->=20
-> Here is the third revision of the patch series which adds support for
-> building configurator with Microsoft Visual C++ and running it on
-> Windows.
->=20
-> Significant changes from v2:
-> * Removing the unnecessary EINTR and short read/write handling code.
-> * Switching from the musl libc err.h implementation to the CCAN err
->   module one in hopes of reducing maintenance burden and code
->   proliferation.
-> * Additional documentation comments for AppVeyor.
-
-I've merged these to master.
-
-Judging by the FIXMEs in appveyor.yml there's still a lot of things
-broken, but it's a start.
-
-I set myself up an appveyor account and tweaked your comment to point
-at that instead of the hypothetical one Rusty may or may not set up at
-some point.
-
-I've actually set up two appveyor projects: one which tracks my github
-ccan repository at:
-    https://ci.appveyor.com/project/dgibson/ccan-c44x3
-
-And another which tracks the upstream master git for ccan at:
-    https://ci.appveyor.com/project/dgibson/ccan
-
-Bizarrely, the github one is working great, whereas the direct git one
-is giving errors, even though they're showing as building exactly the
-same commit :/.  It kind of looks like the master one is ignoring the
-appveyor.yml for no apparent reason - it seems to be looking for a
-vcproj file instead of using the build scripts you've supplied.
-
-Oh well, maybe we'll figure it out in future.
-
---=20
-David Gibson			| I'll have my music baroque, and my code
-david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
-				| _way_ _around_!
-http://www.ozlabs.org/~dgibson
-
---LTeJQqWS0MN7I/qa
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAEBCAAGBQJX7n/pAAoJEGw4ysog2bOSYMYP/RKABQ3d0Sqhsxmw0EE5BdpA
-9ax7y9eI5+R5y+pWWOB7SlODWFyp13TAOFpTWrkAHtIoafQoD/pL52NK0Eq3gtUA
-j/C+UF2A1h16PslAXU+MhKkJfLlFW6oj8g7B7zdjDWTO4z2hYVK0HQgRzCaURkuS
-TCsBh5Z6PqwyTKrw0MQJL8kzOwNLQ4uxCEs1DljjPdjcf2O13GP2sPyWZlm/9ey0
-q5UeqtncJI6PdM3eN0Jl0pYhgngks63yTySUKSXxczsf6VKyFnPJ6lOuAYQ7vI+b
-Kv/4sN6dn3Z4KbhfguR+7rES4DeyLUnYWhzPbGHcS7LFSrNOmznVVdnSvifqrTxi
-4coGohhF6Hs34JvLIt/BYPKWWNNnRp2lfd3VTY9u3jtrM0go5MUqSdKIcoljhn4J
-qoBf3rbO/DdEHfVsT6E7YW9Vi0tpVpq+MqgceBnQW+o1Avxnkm8MDVY/LDSc/LmU
-0HKY0erHfAJcCeF7d77v47A481KS3HPl2Vhmh8AplynaQpabSFDdf//C+1CTZBCK
-Yv8QRfOqpIic9e2Jqbl+q3C50RRS8OK+KmZZn7h6N6CoDZCTEszx+A253nbi0ZVd
-MDW9apiCnpKiDC9+SP9ScwGz0rQAlkNLqqgLoVX6gRoiFWS4qW6rdRgYbpn/Xpxk
-Hcxmo8ufSk2E1RddoqbV
-=9w0q
------END PGP SIGNATURE-----
-
---LTeJQqWS0MN7I/qa--
-
---===============7656959200658473046==
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: inline
-
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KY2NhbiBtYWls
-aW5nIGxpc3QKY2NhbkBsaXN0cy5vemxhYnMub3JnCmh0dHBzOi8vbGlzdHMub3psYWJzLm9yZy9s
-aXN0aW5mby9jY2FuCg==
-
---===============7656959200658473046==--
+T24gU2F0LCAyMDE2LTEwLTAxIGF0IDAxOjA4ICsxMDAwLCBEYXZpZCBHaWJzb24gd3JvdGU6Cj4g
+T24gV2VkLCBTZXAgMjgsIDIwMTYgYXQgMDY6NDQ6NDFQTSAtMDYwMCwgS2V2aW4gTG9ja2Ugd3Jv
+dGU6Cj4+IEhlcmUgaXMgdGhlIHRoaXJkIHJldmlzaW9uIG9mIHRoZSBwYXRjaCBzZXJpZXMgd2hp
+Y2ggYWRkcyBzdXBwb3J0IGZvcgo+PiBidWlsZGluZyBjb25maWd1cmF0b3Igd2l0aCBNaWNyb3Nv
+ZnQgVmlzdWFsIEMrKyBhbmQgcnVubmluZyBpdCBvbgo+PiBXaW5kb3dzLgo+PiAKPj4gU2lnbmlm
+aWNhbnQgY2hhbmdlcyBmcm9tIHYyOgo+PiAqIFJlbW92aW5nIHRoZSB1bm5lY2Vzc2FyeSBFSU5U
+UiBhbmQgc2hvcnQgcmVhZC93cml0ZSBoYW5kbGluZyBjb2RlLgo+PiAqIFN3aXRjaGluZyBmcm9t
+IHRoZSBtdXNsIGxpYmMgZXJyLmggaW1wbGVtZW50YXRpb24gdG8gdGhlIENDQU4gZXJyCj4+ICAg
+bW9kdWxlIG9uZSBpbiBob3BlcyBvZiByZWR1Y2luZyBtYWludGVuYW5jZSBidXJkZW4gYW5kIGNv
+ZGUKPj4gICBwcm9saWZlcmF0aW9uLgo+PiAqIEFkZGl0aW9uYWwgZG9jdW1lbnRhdGlvbiBjb21t
+ZW50cyBmb3IgQXBwVmV5b3IuCj4gCj4gSSd2ZSBtZXJnZWQgdGhlc2UgdG8gbWFzdGVyLgoKVGhh
+bmtzISAgVGhhdCdzIGdyZWF0IQoKPiBKdWRnaW5nIGJ5IHRoZSBGSVhNRXMgaW4gYXBwdmV5b3Iu
+eW1sIHRoZXJlJ3Mgc3RpbGwgYSBsb3Qgb2YgdGhpbmdzCj4gYnJva2VuLCBidXQgaXQncyBhIHN0
+YXJ0LgoKVmVyeSB0cnVlLiAgQXQgdGhlIG1vbWVudCBpdCBvbmx5IHRlc3RzIGNvbmZpZ3VyYXRv
+ciwgYWx0aG91Z2ggaXQKZ2VuZXJhdGVzIGFuZCBpZ25vcmVzIGNvbXBpbGUgZXJyb3JzIGZvciBj
+Y2FuX2RlcGVuZHMgZHVlIHRvCiItaW5jbHVkZSB0ZXN0LWRlcGVuZHMiLiAgRml4aW5nIHRoYXQg
+d2lsbCByZXF1aXJlIHRoZSBkZ3JhcGgvdGxpc3QKY2hhbmdlcyBwcmV2aW91c2x5IGRpc2N1c3Nl
+ZFsxXSBhbmQgcG9zc2libHkgb3RoZXIgbWFqb3IgY2hhbmdlcyBJCmhhdmVuJ3QgZGlzY292ZXJl
+ZCB5ZXQuICBTbyBpdCdzIG9uIGhvbGQgZm9yIG5vdyB1bmxlc3MgYW55b25lIGlzCnJlYWxseSBl
+YWdlciB0byBwdXNoIGl0IGZvcndhcmQuCgo+IEkgc2V0IG15c2VsZiB1cCBhbiBhcHB2ZXlvciBh
+Y2NvdW50IGFuZCB0d2Vha2VkIHlvdXIgY29tbWVudCB0byBwb2ludAo+IGF0IHRoYXQgaW5zdGVh
+ZCBvZiB0aGUgaHlwb3RoZXRpY2FsIG9uZSBSdXN0eSBtYXkgb3IgbWF5IG5vdCBzZXQgdXAgYXQK
+PiBzb21lIHBvaW50Lgo+IAo+IEkndmUgYWN0dWFsbHkgc2V0IHVwIHR3byBhcHB2ZXlvciBwcm9q
+ZWN0czogb25lIHdoaWNoIHRyYWNrcyBteSBnaXRodWIKPiBjY2FuIHJlcG9zaXRvcnkgYXQ6Cj4g
+ICAgIGh0dHBzOi8vY2kuYXBwdmV5b3IuY29tL3Byb2plY3QvZGdpYnNvbi9jY2FuLWM0NHgzCj4g
+Cj4gQW5kIGFub3RoZXIgd2hpY2ggdHJhY2tzIHRoZSB1cHN0cmVhbSBtYXN0ZXIgZ2l0IGZvciBj
+Y2FuIGF0Ogo+ICAgICBodHRwczovL2NpLmFwcHZleW9yLmNvbS9wcm9qZWN0L2RnaWJzb24vY2Nh
+bgo+IAo+IEJpemFycmVseSwgdGhlIGdpdGh1YiBvbmUgaXMgd29ya2luZyBncmVhdCwgd2hlcmVh
+cyB0aGUgZGlyZWN0IGdpdCBvbmUKPiBpcyBnaXZpbmcgZXJyb3JzLCBldmVuIHRob3VnaCB0aGV5
+J3JlIHNob3dpbmcgYXMgYnVpbGRpbmcgZXhhY3RseSB0aGUKPiBzYW1lIGNvbW1pdCA6Ly4gIEl0
+IGtpbmQgb2YgbG9va3MgbGlrZSB0aGUgbWFzdGVyIG9uZSBpcyBpZ25vcmluZyB0aGUKPiBhcHB2
+ZXlvci55bWwgZm9yIG5vIGFwcGFyZW50IHJlYXNvbiAtIGl0IHNlZW1zIHRvIGJlIGxvb2tpbmcg
+Zm9yIGEKPiB2Y3Byb2ogZmlsZSBpbnN0ZWFkIG9mIHVzaW5nIHRoZSBidWlsZCBzY3JpcHRzIHlv
+dSd2ZSBzdXBwbGllZC4KCkxvb2tzIGdyZWF0ISAgVGhhbmtzIGZvciB0YWtpbmcgdGhlIHRpbWUg
+dG8gc2V0IHRoYXQgdXAhCgpJIGl0IGxvb2tzIGxpa2UgdGhpcyBpcyBhIHJlc3VsdCBvZiBBcHBW
+ZXlvciBub3QgdXNpbmcgYXBwdmV5b3IueW1sCmZvciBjdXN0b20gR2l0IHJlcG9zaXRvcmllcy5b
+Ml0gIEkndmUgYWRkZWQgYSBjb21tZW50IHRvIHRoZSBpc3N1ZSBpbgp0aGVpciBHaXRIdWIgaXNz
+dWUgdHJhY2tlciB0byBzZWUgd2hhdCBjYW4gYmUgZG9uZS4gIElmIHRoZXkgZG9uJ3QKbW92ZSBv
+biBpdCwgaXQgd291bGQgYmUgcG9zc2libGUgdG8gY29weSB0aGUgc2V0dGluZ3MgZnJvbQphcHB2
+ZXlvci55bWwgaW50byB0aGUgcHJvamVjdCBzZXR0aW5ncyB3ZWIgaW50ZXJmYWNlLCB3aXRoIHRo
+ZSBjYXZlYXQKdGhhdCB0aGV5IHdvdWxkbid0IGJlIHVwZGF0ZWQgZnJvbSB0aGUgcmVwbyBpbiB0
+aGUgZnV0dXJlLiAgSSdsbApmb2xsb3cgdXAgd2hlbi9pZiBJIGhlYXIgYmFjayBmcm9tIHRoZSBB
+cHBWZXlvciBmb2xrcy4KClRoYW5rcyBhZ2FpbiBmb3IgYWxsIG9mIHlvdXIgZWZmb3J0IG9uIHRo
+aXMsCktldmluCgoxLiAgaHR0cHM6Ly9saXN0cy5vemxhYnMub3JnL3BpcGVybWFpbC9jY2FuLzIw
+MTYtU2VwdGVtYmVyLzAwMTI0OC5odG1sCjIuICBodHRwczovL2dpdGh1Yi5jb20vYXBwdmV5b3Iv
+Y2kvaXNzdWVzLzU0NQpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fXwpjY2FuIG1haWxpbmcgbGlzdApjY2FuQGxpc3RzLm96bGFicy5vcmcKaHR0cHM6Ly9saXN0
+cy5vemxhYnMub3JnL2xpc3RpbmZvL2NjYW4K
