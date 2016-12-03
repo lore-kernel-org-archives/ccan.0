@@ -1,23 +1,19 @@
-From: Kevin Locke <kevin@kevinlocke.name>
-Subject: AppVeyor custom Git URL support (was Re: [PATCH v3 0/7]
- configurator: Support for Windows and MSVC)
-Date: Fri, 2 Dec 2016 13:23:13 -0700
-Message-ID: <20161202202312.gsn46x7kube7smjd@kevinolos>
-References: <20160929002122.GK18880@umbus>
- <cover.1475109043.git.kevin@kevinlocke.name>
- <20160930150828.GC23399@umbus.fritz.box>
- <20161003031423.72ksg35ocg4mmu5h@kevinolos>
+From: Rusty Russell <rusty@rustcorp.com.au>
+Subject: Re: [PATCHv2 2/2] generator: Rewrite to use coroutine module
+Date: Sat, 03 Dec 2016 10:43:43 +1030
+Message-ID: <87h96l98eg.fsf@rustcorp.com.au>
+References: <20161201112840.32213-1-david@gibson.dropbear.id.au>
+ <20161201112840.32213-2-david@gibson.dropbear.id.au>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: base64
 Return-path: <ccan-bounces+gclcc-ccan=m.gmane.org@lists.ozlabs.org>
-Received: from praxis.kevinlocke.name (praxis.kevinlocke.name [205.185.125.39])
- (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from ozlabs.org (ozlabs.org [103.22.144.67])
+ (using TLSv1.2 with cipher ADH-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 3tVlwF4dQbzDvXg
- for <ccan@lists.ozlabs.org>; Sat,  3 Dec 2016 07:23:25 +1100 (AEDT)
-Content-Disposition: inline
-In-Reply-To: <20161003031423.72ksg35ocg4mmu5h@kevinolos>
+ by lists.ozlabs.org (Postfix) with ESMTPS id 3tVsm250v2zDw43
+ for <ccan@lists.ozlabs.org>; Sat,  3 Dec 2016 11:46:42 +1100 (AEDT)
+In-Reply-To: <20161201112840.32213-2-david@gibson.dropbear.id.au>
 List-Unsubscribe: <https://lists.ozlabs.org/options/ccan>,
  <mailto:ccan-request@lists.ozlabs.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/ccan/>
@@ -27,42 +23,12 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/ccan>,
  <mailto:ccan-request@lists.ozlabs.org?subject=subscribe>
 Errors-To: ccan-bounces+gclcc-ccan=m.gmane.org@lists.ozlabs.org
 Sender: "ccan" <ccan-bounces+gclcc-ccan=m.gmane.org@lists.ozlabs.org>
-To: ccan@lists.ozlabs.org
+To: David Gibson <david@gibson.dropbear.id.au>, ccan@lists.ozlabs.org
 List-Id: ccan@lists.ozlabs.org
 
-T24gU3VuLCAyMDE2LTEwLTAyIGF0IDIxOjE0IC0wNjAwLCBLZXZpbiBMb2NrZSB3cm90ZToKPiBP
-biBTYXQsIDIwMTYtMTAtMDEgYXQgMDE6MDggKzEwMDAsIERhdmlkIEdpYnNvbiB3cm90ZToKPj4g
-SSBzZXQgbXlzZWxmIHVwIGFuIGFwcHZleW9yIGFjY291bnQgYW5kIHR3ZWFrZWQgeW91ciBjb21t
-ZW50IHRvIHBvaW50Cj4+IGF0IHRoYXQgaW5zdGVhZCBvZiB0aGUgaHlwb3RoZXRpY2FsIG9uZSBS
-dXN0eSBtYXkgb3IgbWF5IG5vdCBzZXQgdXAgYXQKPj4gc29tZSBwb2ludC4KPj4gCj4+IEkndmUg
-YWN0dWFsbHkgc2V0IHVwIHR3byBhcHB2ZXlvciBwcm9qZWN0czogb25lIHdoaWNoIHRyYWNrcyBt
-eSBnaXRodWIKPj4gY2NhbiByZXBvc2l0b3J5IGF0Ogo+PiAgICAgaHR0cHM6Ly9jaS5hcHB2ZXlv
-ci5jb20vcHJvamVjdC9kZ2lic29uL2NjYW4tYzQ0eDMKPj4gCj4+IEFuZCBhbm90aGVyIHdoaWNo
-IHRyYWNrcyB0aGUgdXBzdHJlYW0gbWFzdGVyIGdpdCBmb3IgY2NhbiBhdDoKPj4gICAgIGh0dHBz
-Oi8vY2kuYXBwdmV5b3IuY29tL3Byb2plY3QvZGdpYnNvbi9jY2FuCj4+IAo+PiBCaXphcnJlbHks
-IHRoZSBnaXRodWIgb25lIGlzIHdvcmtpbmcgZ3JlYXQsIHdoZXJlYXMgdGhlIGRpcmVjdCBnaXQg
-b25lCj4+IGlzIGdpdmluZyBlcnJvcnMsIGV2ZW4gdGhvdWdoIHRoZXkncmUgc2hvd2luZyBhcyBi
-dWlsZGluZyBleGFjdGx5IHRoZQo+PiBzYW1lIGNvbW1pdCA6Ly4gIEl0IGtpbmQgb2YgbG9va3Mg
-bGlrZSB0aGUgbWFzdGVyIG9uZSBpcyBpZ25vcmluZyB0aGUKPj4gYXBwdmV5b3IueW1sIGZvciBu
-byBhcHBhcmVudCByZWFzb24gLSBpdCBzZWVtcyB0byBiZSBsb29raW5nIGZvciBhCj4+IHZjcHJv
-aiBmaWxlIGluc3RlYWQgb2YgdXNpbmcgdGhlIGJ1aWxkIHNjcmlwdHMgeW91J3ZlIHN1cHBsaWVk
-Lgo+IAo+IEkgaXQgbG9va3MgbGlrZSB0aGlzIGlzIGEgcmVzdWx0IG9mIEFwcFZleW9yIG5vdCB1
-c2luZyBhcHB2ZXlvci55bWwKPiBmb3IgY3VzdG9tIEdpdCByZXBvc2l0b3JpZXMuWzJdICBJJ3Zl
-IGFkZGVkIGEgY29tbWVudCB0byB0aGUgaXNzdWUgaW4KPiB0aGVpciBHaXRIdWIgaXNzdWUgdHJh
-Y2tlciB0byBzZWUgd2hhdCBjYW4gYmUgZG9uZS4gWy4uLl0KClRvIGZvbGxvdyB1cCBvbiB0aGlz
-LCBBcHBWZXlvciBqdXN0IHJlbGVhc2VkIGFuIHVwZGF0ZSB3aGljaCBpbmNsdWRlcwpzdXBwb3J0
-IGZvciBZQU1MIGNvbmZpZ3VyYXRpb24gZmlsZXMgbG9hZGVkIGZyb20gYSB1c2VyLXNwZWNpZmll
-ZApVUkwuWzFdICBJIHRyaWVkIGNyZWF0aW5nIGFuIEFwcFZleW9yIHByb2plY3Qgd2l0aCB0aGUg
-WUFNTApjb25maWd1cmF0aW9uIGxvYWRlZCB2aWEgZ2l0d2ViIHVzaW5nIHRoZSBmb2xsb3dpbmcg
-VVJMOgoKaHR0cHM6Ly9naXQub3psYWJzLm9yZy8/cD1jY2FuO2E9YmxvYl9wbGFpbjtmPWFwcHZl
-eW9yLnltbDtoYj1IRUFECgpJdCBidWlsdCBzdWNjZXNzZnVsbHkgdXNpbmcgdGhlIHByb2plY3Qg
-YXBwdmV5b3IueW1sIGNvbmZpZ3VyYXRpb24uCllvdSBtYXkgd2FudCB0byB0cnkgc3BlY2lmeWlu
-ZyB0aGUgYWJvdmUgVVJMIGFzIHRoZSAiQ3VzdG9tCmNvbmZpZ3VyYXRpb24gLnltbCBmaWxlIG5h
-bWUiIGluIHRoZSBHZW5lcmFsIFNldHRpbmdzIG9mIHlvdXIgQ0NBTgpBcHBWZXlvciBwcm9qZWN0
-IHVzaW5nIHRoZSBnaXQub3psYWJzLm9yZyBHaXQgVVJMLgoKMS4gIGh0dHBzOi8vZ2l0aHViLmNv
-bS9hcHB2ZXlvci9jaS9pc3N1ZXMvMTA4OSNpc3N1ZWNvbW1lbnQtMjY0NTQ5MTk2CgotLSAKQ2hl
-ZXJzLCAgICAgIHwgIGtldmluQGtldmlubG9ja2UubmFtZSAgICB8IFhNUFA6IGtldmluQGtldmlu
-bG9ja2UubmFtZQpLZXZpbiAgICAgICAgfCAgaHR0cHM6Ly9rZXZpbmxvY2tlLm5hbWUgIHwgSVJD
-OiAgIGtldmlub2lkIG9uIGZyZWVub2RlCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fCmNjYW4gbWFpbGluZyBsaXN0CmNjYW5AbGlzdHMub3psYWJzLm9yZwpo
-dHRwczovL2xpc3RzLm96bGFicy5vcmcvbGlzdGluZm8vY2Nhbgo=
+RGF2aWQgR2lic29uIDxkYXZpZEBnaWJzb24uZHJvcGJlYXIuaWQuYXU+IHdyaXRlczoKPiBVc2Ug
+dGhlIG5ldyBjb3JvdXRpbmUgbW9kdWxlIHRvIGFic3RyYWN0IGF3YXkgb3VyIGRlcGVuZGVuY2Ug
+b24KPiB1Y29udGV4dC4KClRoZXNlIGJvdGggbG9vayBncmVhdCEKCkNoZWVycywKUnVzdHkuCl9f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmNjYW4gbWFpbGlu
+ZyBsaXN0CmNjYW5AbGlzdHMub3psYWJzLm9yZwpodHRwczovL2xpc3RzLm96bGFicy5vcmcvbGlz
+dGluZm8vY2Nhbgo=
