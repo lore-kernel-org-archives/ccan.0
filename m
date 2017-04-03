@@ -1,20 +1,16 @@
 From: David Gibson <david@gibson.dropbear.id.au>
-Subject: Re: [PATCH 2/2] ccanlint: Move ccanlint test options from
- _info comments to code
-Date: Thu, 29 Dec 2016 19:01:23 +1100
-Message-ID: <20161229080123.GA18749@umbus.fritz.box>
-References: <20161225044915.24219-1-david@gibson.dropbear.id.au>
- <20161225044915.24219-2-david@gibson.dropbear.id.au>
- <871swuf3is.fsf@rustcorp.com.au>
+Subject: [PATCH 0/7] Coverity
+Date: Mon,  3 Apr 2017 21:11:05 +1000
+Message-ID: <20170403111112.27201-1-david@gibson.dropbear.id.au>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============3869715927488895303=="
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <ccan-bounces+gclcc-ccan=m.gmane.org@lists.ozlabs.org>
-Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
+Received: from ozlabs.org (ozlabs.org [103.22.144.67])
  (using TLSv1.2 with cipher ADH-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 3tq2fm2mTLzDq8V
- for <ccan@lists.ozlabs.org>; Thu, 29 Dec 2016 19:23:12 +1100 (AEDT)
-In-Reply-To: <871swuf3is.fsf@rustcorp.com.au>
+ by lists.ozlabs.org (Postfix) with ESMTPS id 3vxTts43QrzDq7Z
+ for <ccan@lists.ozlabs.org>; Mon,  3 Apr 2017 21:11:17 +1000 (AEST)
 List-Unsubscribe: <https://lists.ozlabs.org/options/ccan>,
  <mailto:ccan-request@lists.ozlabs.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/ccan/>
@@ -24,80 +20,27 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/ccan>,
  <mailto:ccan-request@lists.ozlabs.org?subject=subscribe>
 Errors-To: ccan-bounces+gclcc-ccan=m.gmane.org@lists.ozlabs.org
 Sender: "ccan" <ccan-bounces+gclcc-ccan=m.gmane.org@lists.ozlabs.org>
-To: Rusty Russell <rusty@rustcorp.com.au>
-Cc: ccan@lists.ozlabs.org
+To: ccan@lists.ozlabs.org
+Cc: rusty@rustcorp/com.au
 List-Id: ccan@lists.ozlabs.org
 
-
---===============3869715927488895303==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="PEIAKu/WMn1b1Hv9"
-Content-Disposition: inline
-
-
---PEIAKu/WMn1b1Hv9
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Tue, Dec 27, 2016 at 02:05:07PM +1030, Paul 'Rusty' Russell wrote:
-> David Gibson <david@gibson.dropbear.id.au> writes:
-> > Currently, _info files can specify options, or note expected failures, =
-for
-> > ccanlint checks in the _info file with specially structured comments. T=
-hat
-> > differs from most other things ccanlint gets from _info, where it inste=
-ad
-> > executes the info file with certain parameters.
-> >
-> > This changes ccanlint and existing _info files to use the normal method=
- for
-> > the ccanlint test options as well.  This also has the advantage that an
-> > info file can alter its test options based on things from config.h - in
-> > some cases whether a test can work or not might depend on various thing=
-s.
->=20
-> Agreed, please apply!
-
-Done.
-
---=20
-David Gibson			| I'll have my music baroque, and my code
-david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
-				| _way_ _around_!
-http://www.ozlabs.org/~dgibson
-
---PEIAKu/WMn1b1Hv9
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAEBCAAGBQJYZMLRAAoJEGw4ysog2bOSEqwP/RinAeJa0wigxhW3bJSTfcvV
-3arfD/ZEk0MauFRkofZN6oSWbKF9dcDtGLGSUuhZgk3tb+jWrD8SLUJyr9BYOOrW
-eEv3Af0gu4nDZyCrdLRfQbCVhy1Z92wJbazOsD6bc0Rw9YHFHl7lxhvw+rqH/LCL
-4bpXXameIhCT33vldveYFkMOB9VFP3q8rusvgjDmRqwUBWTW8I7fK6WZlDU3Uf8B
-251jXRU314gENcz0DqTjjFmY3QuKrSEE8F6BdY1yb2EUpmxy65zOwFOmjc4fXNww
-k2JyYYG8GfAs5uSJ5HLchDklNPYvBlnO8cg5xfyzKjcVa06qKtFWNedKIAAOXecg
-e+EArn59BfOWjP+pejx5L+/RpoKwSiKo+fl12FbZD4SnjHh68rH2i4PxWebZRBIT
-kGUx+Lb4RQrgAJEZC+DhcIsrd5U9b887mRSW/5iYDgkk/noKLLzxDXNEsNSBh2g2
-3WqqKxeqJhdoODpvQoa84vbRBNQYK59P0HKo5HiAh0NAGjZagP3uxDhXbVppdVAA
-nfBaL0bVjqKcYsMWjXdKlpATO1Ustn61Sg7mNbm/2AwiW1VNK3TQYRdPVz9QNxOs
-VFv8AcwgR3WGmQxIsXJHll7kRYVNBjGpgGhZ8H8XGRPCQwpQ2DYsQaSR8rjHAcyY
-T5tK/Nsj1IwfM6ariXqt
-=ouQm
------END PGP SIGNATURE-----
-
---PEIAKu/WMn1b1Hv9--
-
---===============3869715927488895303==
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: inline
-
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KY2NhbiBtYWls
-aW5nIGxpc3QKY2NhbkBsaXN0cy5vemxhYnMub3JnCmh0dHBzOi8vbGlzdHMub3psYWJzLm9yZy9s
-aXN0aW5mby9jY2FuCg==
-
---===============3869715927488895303==--
+U2luY2UgRW1pbGlvIGhhcyBzZXQgdXAgY2NhbiBvbiBDb3Zlcml0eSBTY2FuLCBoZXJlIGFyZSBz
+b21lIHBhdGNoZXMKbWFraW5nIHVzZSBvZiBpdC4gIFRoZSBmaXJzdCB1cGRhdGVzIG91ciBUcmF2
+aXMgY29uZmlndXJhdGlvbiB0byBwdXNoCmJ1aWxkcyB0byBDb3Zlcml0eSBmb3IgYW5hbHlzaXMu
+ICBUaGUgcmVzdCBmaXggc29tZSBvZiB0aGUgZWFzaWVyIHRvCmFkZHJlc3MgYnVncyB0aGF0IENv
+dmVyaXR5IGxvY2F0ZWQuCgpEYXZpZCBHaWJzb24gKDcpOgogIC50cmF2aXMueW1sOiBBZGQgc3Vw
+cG9ydCBmb3IgQ292ZXJpdHkgU2NhbgogIGZhaWx0ZXN0OiBSZW1vdmUgbWVtb3J5IGxlYWsKICB0
+b29sczogUmVtb3ZlIGZkIGxlYWsKICBjcnlwdG8vaG1hY19zaGEyNTY6IFJlbW92ZSB1bmRlZmlu
+ZWQgbWVtc2V0KCkKICBjcnlwdG8vcmlwZW1kMTYwOiBDb3JyZWN0IGJhZGx5IHNpemVkIHVuaW9u
+IG1lbWJlcgogIGNjYW5saW50OiBGaXggbGVhayBpbiBkb19yZWR1Y2VfZmVhdHVyZXMoKQogIG5l
+dDogQWRkIGNoZWNrIGZvciBmYWlsdXJlIG9mIHNldHNvY2tvcHQoKQoKIC50cmF2aXMueW1sICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgIHwgMTcgKysrKysrKysrKysrKysrKysKIGNjYW4vY3J5
+cHRvL2htYWNfc2hhMjU2L2htYWNfc2hhMjU2LmMgIHwgIDQgKysrLQogY2Nhbi9jcnlwdG8vcmlw
+ZW1kMTYwL3JpcGVtZDE2MC5oICAgICAgfCAgMiArLQogY2Nhbi9mYWlsdGVzdC9mYWlsdGVzdC5j
+ICAgICAgICAgICAgICAgfCAgNCArKystCiBjY2FuL25ldC9uZXQuYyAgICAgICAgICAgICAgICAg
+ICAgICAgICB8ICA0ICsrKy0KIHRvb2xzL2NjYW5saW50L3Rlc3RzL3JlZHVjZV9mZWF0dXJlcy5j
+IHwgIDEgKwogdG9vbHMvZGVwZW5kcy5jICAgICAgICAgICAgICAgICAgICAgICAgfCAgNCArKyst
+CiA3IGZpbGVzIGNoYW5nZWQsIDMxIGluc2VydGlvbnMoKyksIDUgZGVsZXRpb25zKC0pCgotLSAK
+Mi45LjMKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmNj
+YW4gbWFpbGluZyBsaXN0CmNjYW5AbGlzdHMub3psYWJzLm9yZwpodHRwczovL2xpc3RzLm96bGFi
+cy5vcmcvbGlzdGluZm8vY2Nhbgo=
