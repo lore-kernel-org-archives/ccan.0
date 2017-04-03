@@ -1,7 +1,7 @@
 From: David Gibson <david@gibson.dropbear.id.au>
-Subject: [PATCH 2/7] failtest: Remove memory leak
-Date: Mon,  3 Apr 2017 21:11:07 +1000
-Message-ID: <20170403111112.27201-3-david@gibson.dropbear.id.au>
+Subject: [PATCH 6/7] ccanlint: Fix leak in do_reduce_features()
+Date: Mon,  3 Apr 2017 21:11:11 +1000
+Message-ID: <20170403111112.27201-7-david@gibson.dropbear.id.au>
 References: <20170403111112.27201-1-david@gibson.dropbear.id.au>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -10,7 +10,7 @@ Return-path: <ccan-bounces+gclcc-ccan=m.gmane.org@lists.ozlabs.org>
 Received: from ozlabs.org (ozlabs.org [103.22.144.67])
  (using TLSv1.2 with cipher ADH-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 3vxTtt13HzzDqH6
+ by lists.ozlabs.org (Postfix) with ESMTPS id 3vxTtt3kxBzDqHJ
  for <ccan@lists.ozlabs.org>; Mon,  3 Apr 2017 21:11:18 +1000 (AEST)
 In-Reply-To: <20170403111112.27201-1-david@gibson.dropbear.id.au>
 List-Unsubscribe: <https://lists.ozlabs.org/options/ccan>,
@@ -26,21 +26,19 @@ To: ccan@lists.ozlabs.org
 Cc: rusty@rustcorp/com.au
 List-Id: ccan@lists.ozlabs.org
 
-U29tZXdoYXQgaXJvbmljYWxseSwgYSBwYXRoIGluIGZhaWx0ZXN0IHJlbGF0ZWQgdG8gZGV0ZWN0
-aW5nIGxlYWtzIGluIHRoZQp0ZXN0ZWQgcHJvZ3JhbSBpdHNlbGYgbGVha3MgbWVtb3J5LiAgVGhp
-cyBjb3JyZWN0cyBpdC4KCkRldGVjdGVkIGJ5IENvdmVyaXR5LgoKU2lnbmVkLW9mZi1ieTogRGF2
-aWQgR2lic29uIDxkYXZpZEBnaWJzb24uZHJvcGJlYXIuaWQuYXU+Ci0tLQogY2Nhbi9mYWlsdGVz
-dC9mYWlsdGVzdC5jIHwgNCArKystCiAxIGZpbGUgY2hhbmdlZCwgMyBpbnNlcnRpb25zKCspLCAx
-IGRlbGV0aW9uKC0pCgpkaWZmIC0tZ2l0IGEvY2Nhbi9mYWlsdGVzdC9mYWlsdGVzdC5jIGIvY2Nh
-bi9mYWlsdGVzdC9mYWlsdGVzdC5jCmluZGV4IGFhYjI4ZGQuLmM2MWNlNDQgMTAwNjQ0Ci0tLSBh
-L2NjYW4vZmFpbHRlc3QvZmFpbHRlc3QuYworKysgYi9jY2FuL2ZhaWx0ZXN0L2ZhaWx0ZXN0LmMK
-QEAgLTYxMyw4ICs2MTMsMTAgQEAgc3RhdGljIE5PUkVUVVJOIHZvaWQgZmFpbHRlc3RfY2xlYW51
-cChib29sIGZvcmNlZF9jbGVhbnVwLCBpbnQgc3RhdHVzKQogCiAJCS8qIEJ1dCB0aGVpciBwcm9n
-cmFtIHNob3VsZG4ndCBsZWFrLCBldmVuIG9uIGZhaWx1cmUuICovCiAJCWlmICghZm9yY2VkX2Ns
-ZWFudXAgJiYgaS0+Y2FuX2xlYWspIHsKKwkJCWNoYXIgKnAgPSBmYWlscGF0aF9zdHJpbmcoKTsK
-IAkJCXByaW50ZigiTGVhayBhdCAlczoldTogLS1mYWlscGF0aD0lc1xuIiwKLQkJCSAgICAgICBp
-LT5maWxlLCBpLT5saW5lLCBmYWlscGF0aF9zdHJpbmcoKSk7CisJCQkgICAgICAgaS0+ZmlsZSwg
-aS0+bGluZSwgcCk7CisJCQlmcmVlKHApOwogCQkJc3RhdHVzID0gMTsKIAkJfQogCX0KLS0gCjIu
-OS4zCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpjY2Fu
-IG1haWxpbmcgbGlzdApjY2FuQGxpc3RzLm96bGFicy5vcmcKaHR0cHM6Ly9saXN0cy5vemxhYnMu
-b3JnL2xpc3RpbmZvL2NjYW4K
+b3B0aW9uc19hdmFpbCBhbmQgb3B0aW9uc191c2VkIGdldCBmcmVlZCwgYnV0IG9wdGlvbnMgZG9l
+cyBub3QuCgpGb3VuZCBieSBDb3Zlcml0eSBzY2FuLgoKU2lnbmVkLW9mZi1ieTogRGF2aWQgR2li
+c29uIDxkYXZpZEBnaWJzb24uZHJvcGJlYXIuaWQuYXU+Ci0tLQogdG9vbHMvY2NhbmxpbnQvdGVz
+dHMvcmVkdWNlX2ZlYXR1cmVzLmMgfCAxICsKIDEgZmlsZSBjaGFuZ2VkLCAxIGluc2VydGlvbigr
+KQoKZGlmZiAtLWdpdCBhL3Rvb2xzL2NjYW5saW50L3Rlc3RzL3JlZHVjZV9mZWF0dXJlcy5jIGIv
+dG9vbHMvY2NhbmxpbnQvdGVzdHMvcmVkdWNlX2ZlYXR1cmVzLmMKaW5kZXggYjQ5OTIyYi4uMzRh
+ODk3MCAxMDA2NDQKLS0tIGEvdG9vbHMvY2NhbmxpbnQvdGVzdHMvcmVkdWNlX2ZlYXR1cmVzLmMK
+KysrIGIvdG9vbHMvY2NhbmxpbnQvdGVzdHMvcmVkdWNlX2ZlYXR1cmVzLmMKQEAgLTE4MSw2ICsx
+ODEsNyBAQCBzdGF0aWMgdm9pZCBkb19yZWR1Y2VfZmVhdHVyZXMoc3RydWN0IG1hbmlmZXN0ICpt
+LAogCQllcnIoMSwgIkNyZWF0aW5nIHJlZHVjZWQtZmVhdHVyZXMvY29uZmlnLmgiKTsKIAlpZiAo
+IXdyaXRlX2FsbChmZCwgaGRyLCBzdHJsZW4oaGRyKSkpCiAJCWVycigxLCAiV3JpdGluZyByZWR1
+Y2VkLWZlYXR1cmVzL2NvbmZpZy5oIik7CisJaHRhYmxlX29wdGlvbl9mcmVlKG9wdGlvbnMpOwog
+CWNsb3NlKGZkKTsKIAlmZWF0dXJlc193ZXJlX3JlZHVjZWQgPSB0cnVlOwogfQotLSAKMi45LjMK
+Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmNjYW4gbWFp
+bGluZyBsaXN0CmNjYW5AbGlzdHMub3psYWJzLm9yZwpodHRwczovL2xpc3RzLm96bGFicy5vcmcv
+bGlzdGluZm8vY2Nhbgo=
