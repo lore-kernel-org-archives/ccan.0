@@ -1,18 +1,19 @@
-From: David Gibson <david@gibson.dropbear.id.au>
-Subject: Re: [PATCH 1/7] .travis.yml: Add support for Coverity Scan
-Date: Mon, 3 Apr 2017 22:14:54 +1000
-Message-ID: <20170403121454.GA13614@umbus.fritz.box>
+From: Rusty Russell <rusty@rustcorp.com.au>
+Subject: Re: [PATCH 7/7] net: Add check for failure of setsockopt()
+Date: Tue, 04 Apr 2017 11:53:49 +0930
+Message-ID: <87tw64di6i.fsf@rustcorp.com.au>
 References: <20170403111112.27201-1-david@gibson.dropbear.id.au>
- <20170403111112.27201-2-david@gibson.dropbear.id.au>
+ <20170403111112.27201-8-david@gibson.dropbear.id.au>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============2500768681925814565=="
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <ccan-bounces+gclcc-ccan=m.gmane.org@lists.ozlabs.org>
-Received: from ozlabs.org (ozlabs.org [103.22.144.67])
+Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
  (using TLSv1.2 with cipher ADH-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 3vxYCZ6VfTzDq7Z
- for <ccan@lists.ozlabs.org>; Mon,  3 Apr 2017 23:40:58 +1000 (AEST)
-In-Reply-To: <20170403111112.27201-2-david@gibson.dropbear.id.au>
+ by lists.ozlabs.org (Postfix) with ESMTPS id 3vyVC0681GzDqGv
+ for <ccan@lists.ozlabs.org>; Wed,  5 Apr 2017 12:28:44 +1000 (AEST)
+In-Reply-To: <20170403111112.27201-8-david@gibson.dropbear.id.au>
 List-Unsubscribe: <https://lists.ozlabs.org/options/ccan>,
  <mailto:ccan-request@lists.ozlabs.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/ccan/>
@@ -22,109 +23,30 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/ccan>,
  <mailto:ccan-request@lists.ozlabs.org?subject=subscribe>
 Errors-To: ccan-bounces+gclcc-ccan=m.gmane.org@lists.ozlabs.org
 Sender: "ccan" <ccan-bounces+gclcc-ccan=m.gmane.org@lists.ozlabs.org>
-To: ccan@lists.ozlabs.org
+To: David Gibson <david@gibson.dropbear.id.au>, ccan@lists.ozlabs.org
 Cc: rusty@rustcorp/com.au
 List-Id: ccan@lists.ozlabs.org
 
-
---===============2500768681925814565==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="MGYHOYXEY6WxJCY8"
-Content-Disposition: inline
-
-
---MGYHOYXEY6WxJCY8
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Mon, Apr 03, 2017 at 09:11:06PM +1000, David Gibson wrote:
-> Add support for Travis to upload builds to Coverity Scan.
->=20
-> Travis encrypted keys are there which should make it work for builds
-> at either:
->     https://travis-ci.org/rustyrussell/ccan
-> or
->     https://travis-ci.org/dgibson/ccan
->=20
-> Signed-off-by: David Gibson <david@gibson.dropbear.id.au>
-> ---
->  .travis.yml | 17 +++++++++++++++++
->  1 file changed, 17 insertions(+)
->=20
-> diff --git a/.travis.yml b/.travis.yml
-> index 9f9dbcb..fe3dffc 100644
-> --- a/.travis.yml
-> +++ b/.travis.yml
-> @@ -1,6 +1,23 @@
->  language: c
->  sudo: false
-> =20
-> +# Coverity Scan uploads
-> +env:
-> +  global:
-> +  # COVERITY_SCAN_TOKEN (rustyrussell/ccan)
-> +  - secure: "RU+r62MYrhaUcFOiXykFt0lpFzQVL6f5gyAKOv39PpYK10rsI/cM6N8wORe=
-H1EmI7ktn7M+g3Fs2jA+i+bZW4rZSfm379hzduWisEo0vEWNwyWiIrl1WjgGptFDwOCzMQHwo+u=
-4zH6E+CAOWnje5Zw+elokVTfC1orLbuQHABG4=3D"
-> +  # COVERITY_SCAN_TOKEN (dgibson/ccan)
-> +  - secure: "OL7OqYjQPE6rpHwujZbZt1gR5TNYn6Z0b1JxBaL1AG+iHlTbRrFGqec/VpY=
-i2SAlqcDZK3x2lUzsF+hzx4pNBLFu8wvMtDKD4grlME5M+Bu3LT+YnmWSkaCw1/01n/SFyeRAkN=
-DUJhnp0wS5oJ9sWx6trKWf9Xw9HpoKlwbFEGM=3D"
-> +
-> +addons:
-> +  coverity_scan:
-> +    project:
-> +      name: CCAN
-> +      #description: CCAN
-> +    notification_email: ccan@lists.ozlabs.org
-
-Oops, this email still needs an update though.
-
-> +    build_command: make
-> +    branch_pattern: coverity_scan
-> +
->  matrix:
->    include:
->    - compiler: gcc
-
---=20
-David Gibson			| I'll have my music baroque, and my code
-david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
-				| _way_ _around_!
-http://www.ozlabs.org/~dgibson
-
---MGYHOYXEY6WxJCY8
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAEBCAAGBQJY4jy4AAoJEGw4ysog2bOSfIMQAJ4PVLaDq6AdfoPwgrEe2K0D
-HM27DF+wCKU7jClbXDRS8S2ka0n7cje4clqlNK1aPrvBEMWV18P1qeytwI0o4Gb5
-njDSn5A46TiEXZ2PwC6XEcOC569Ue4ViYzmosjT7KDrC2R9qGv5R3r5afxN3VdvQ
-QkAG2ZE3Af3pzfCc4B4JcfroyTVaJfy8MWruijbTksGYdiq43OxX1UVfA05PgCtc
-AZpMfo+n58idUFFZ5yJsfoFmSo01Cd5oTTGhXG+pZOzvGtwFaEsAoQWvEzkpPKEo
-g51wDhj+9ZXDd4eMq0QcQZFfXgvqV66WNfy7Dmw6DO4R5sEmCE1NtOKKHmYar+t+
-c7hP28goqZZIOeA9A8aYp+GsTitkQFmjEccbM8wmRP63ekCARKnMiJdJMZvUd1+v
-Oc3Xevzo+uzlaneNsecVXjNdKw3d32CR1ZGEay4qMS+aXm3QMEFUC5/eBhZETLAP
-Yq/C1ltVVk/qoZP4/B3z269c4TIebQ9g+8Ha0jPp+7Nn6elvoliQRPfJdcJ8nXuT
-FRYz7UeKXlKahfz+XmXGlzbyd18H9lCjp8TuAtWsgBBGdhANRTICzhAsVkii3rkX
-tisRuQHVJJB6UB6Rc06k+BjLkcSCt8LLGalE33lVf38aZgKrSyqMnfrR0nf6fKl6
-xkiPN5CMq/WcaBEVCtZI
-=Bqt1
------END PGP SIGNATURE-----
-
---MGYHOYXEY6WxJCY8--
-
---===============2500768681925814565==
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: inline
-
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KY2NhbiBtYWls
-aW5nIGxpc3QKY2NhbkBsaXN0cy5vemxhYnMub3JnCmh0dHBzOi8vbGlzdHMub3psYWJzLm9yZy9s
-aXN0aW5mby9jY2FuCg==
-
---===============2500768681925814565==--
+RGF2aWQgR2lic29uIDxkYXZpZEBnaWJzb24uZHJvcGJlYXIuaWQuYXU+IHdyaXRlczoKPiBtYWtl
+X2xpc3Rlbl9mZCgpIGRpZG4ndCBjaGVjayBmb3IgZmFpbHVyZSBvZiBzZXRzb2Nrb3B0KCkuICBU
+aGVyZSdzIG5vCj4gcmVhbCByZWFzb24gbm90IHRvLCBzaW5jZSB3ZSBoYXZlIGFuIG9idmlvdXMg
+d2F5IHRvIHJlcG9ydCBhbiBlcnJvciB0byB0aGUKPiBjYWxsZXIuCj4KPiBGb3VuZCB3aXRoIENv
+dmVyaXR5IFNjYW4uCj4KPiBTaWduZWQtb2ZmLWJ5OiBEYXZpZCBHaWJzb24gPGRhdmlkQGdpYnNv
+bi5kcm9wYmVhci5pZC5hdT4KCkdyZWF0LCBhbGwgYnV0IHRoZSBvbmUgSSBjb21tZW50ZWQgb24g
+bG9vayBmaW5lLiAgUGxlYXNlIGFwcGx5Li4uCgpBY2tlZC1ieTogUnVzdHkgUnVzc2VsbCA8cnVz
+dHlAcnVzdGNvcnAuY29tLmF1PgoKVGhhbmtzLApSdXN0eS4KCj4gLS0tCj4gIGNjYW4vbmV0L25l
+dC5jIHwgNCArKystCj4gIDEgZmlsZSBjaGFuZ2VkLCAzIGluc2VydGlvbnMoKyksIDEgZGVsZXRp
+b24oLSkKPgo+IGRpZmYgLS1naXQgYS9jY2FuL25ldC9uZXQuYyBiL2NjYW4vbmV0L25ldC5jCj4g
+aW5kZXggZTkxOTk4My4uMTFjNmI2NyAxMDA2NDQKPiAtLS0gYS9jY2FuL25ldC9uZXQuYwo+ICsr
+KyBiL2NjYW4vbmV0L25ldC5jCj4gQEAgLTIzOCw3ICsyMzgsOSBAQCBzdGF0aWMgaW50IG1ha2Vf
+bGlzdGVuX2ZkKGNvbnN0IHN0cnVjdCBhZGRyaW5mbyAqYWRkcmluZm8pCj4gIAlpZiAoZmQgPCAw
+KQo+ICAJCXJldHVybiAtMTsKPiAgCj4gLQlzZXRzb2Nrb3B0KGZkLCBTT0xfU09DS0VULCBTT19S
+RVVTRUFERFIsICZvbiwgc2l6ZW9mKG9uKSk7Cj4gKwlpZiAoc2V0c29ja29wdChmZCwgU09MX1NP
+Q0tFVCwgU09fUkVVU0VBRERSLCAmb24sIHNpemVvZihvbikpICE9IDApCj4gKwkJZ290byBmYWls
+Owo+ICsKPiAgCWlmIChiaW5kKGZkLCBhZGRyaW5mby0+YWlfYWRkciwgYWRkcmluZm8tPmFpX2Fk
+ZHJsZW4pICE9IDApCj4gIAkJZ290byBmYWlsOwo+ICAKPiAtLSAKPiAyLjkuMwo+Cj4gX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KPiBjY2FuIG1haWxpbmcg
+bGlzdAo+IGNjYW5AbGlzdHMub3psYWJzLm9yZwo+IGh0dHBzOi8vbGlzdHMub3psYWJzLm9yZy9s
+aXN0aW5mby9jY2FuCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fCmNjYW4gbWFpbGluZyBsaXN0CmNjYW5AbGlzdHMub3psYWJzLm9yZwpodHRwczovL2xpc3Rz
+Lm96bGFicy5vcmcvbGlzdGluZm8vY2Nhbgo=
