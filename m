@@ -1,17 +1,19 @@
-From: David Gibson <david@gibson.dropbear.id.au>
-Subject: Re: [PATCH 0/4] Replace TCON() with TCON_WRAP()
-Date: Thu, 27 Jul 2017 17:27:48 +1000
-Message-ID: <20170727072748.GD7970@umbus.fritz.box>
+From: Rusty Russell <rusty@rustcorp.com.au>
+Subject: Re: [PATCH 2/4] jset: Use TCON_WRAP instead of TCON
+Date: Mon, 31 Jul 2017 15:55:14 +0930
+Message-ID: <87y3r5p1h1.fsf@rustcorp.com.au>
 References: <20170723122907.10686-1-david@gibson.dropbear.id.au>
+ <20170723122907.10686-3-david@gibson.dropbear.id.au>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============0525755774424081950=="
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <ccan-bounces+gclcc-ccan=m.gmane.org@lists.ozlabs.org>
 Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
  (using TLSv1.2 with cipher ADH-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 3xJ81G1Bg9zDrJY
- for <ccan@lists.ozlabs.org>; Thu, 27 Jul 2017 20:51:46 +1000 (AEST)
-In-Reply-To: <20170723122907.10686-1-david@gibson.dropbear.id.au>
+ by lists.ozlabs.org (Postfix) with ESMTPS id 3xLx2K0q29zDrGC
+ for <ccan@lists.ozlabs.org>; Tue,  1 Aug 2017 09:47:21 +1000 (AEST)
+In-Reply-To: <20170723122907.10686-3-david@gibson.dropbear.id.au>
 List-Unsubscribe: <https://lists.ozlabs.org/options/ccan>,
  <mailto:ccan-request@lists.ozlabs.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/ccan/>
@@ -21,95 +23,116 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/ccan>,
  <mailto:ccan-request@lists.ozlabs.org?subject=subscribe>
 Errors-To: ccan-bounces+gclcc-ccan=m.gmane.org@lists.ozlabs.org
 Sender: "ccan" <ccan-bounces+gclcc-ccan=m.gmane.org@lists.ozlabs.org>
-To: ccan@lists.ozlabs.org
+To: David Gibson <david@gibson.dropbear.id.au>, ccan@lists.ozlabs.org
 List-Id: ccan@lists.ozlabs.org
 
-
---===============0525755774424081950==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="LKTjZJSUETSlgu2t"
-Content-Disposition: inline
-
-
---LKTjZJSUETSlgu2t
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Sun, Jul 23, 2017 at 10:29:03PM +1000, David Gibson wrote:
-> ccan/tcon has two basic ways to be used.  With TCON() which adds a
-> type canary to a user's existing structure, or with TCON_WRAP(), which
-> wraps a user's structure creating a new structure with the canaries.
->=20
-> TCON() is older and has several modules already using it.
-> Unfortunately, it uses flexible-array members which aren't allowed in
-> the middle of structures, except as a gcc extension.  That means with
-> a "normal" compiler TCON() invocations can only appear at the end of a
-> structure.  More importantly it also means a structure including them
-> can never be embedded in another structure except at the end.
->=20
-> In short, using TCON() is either non-portable, or badly violates
-> principle of least surprise.  So, this series removes use of it from
-> all existing ccan modules.
-
-Rusty,  any thoughts on this?
-
-Unless there's an objection, I'm inclined to commit it.
-
-> David Gibson (4):
->   tlist: Use TCON_WRAP instead of TCON
->   jset: Use TCON_WRAP instead of TCON
->   jmap: Use TCON_WRAP instead of TCON
->   objset: Use TCON_WRAP instead of TCON
->=20
->  ccan/jmap/jmap.h      | 59 +++++++++++++++++++++++++++++----------------=
-------
->  ccan/jmap/test/run.c  |  8 +++----
->  ccan/jset/jset.h      | 45 ++++++++++++++++++++++++---------------
->  ccan/jset/test/run.c  |  9 ++++----
->  ccan/objset/objset.h  | 31 +++++++++++++++------------
->  ccan/tlist/_info      |  6 +-----
->  ccan/tlist/test/run.c | 24 ++++++++++-----------
->  ccan/tlist/tlist.h    | 25 +++++++++++-----------
->  8 files changed, 114 insertions(+), 93 deletions(-)
->=20
-
---=20
-David Gibson			| I'll have my music baroque, and my code
-david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
-				| _way_ _around_!
-http://www.ozlabs.org/~dgibson
-
---LKTjZJSUETSlgu2t
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEdfRlhq5hpmzETofcbDjKyiDZs5IFAll5lfQACgkQbDjKyiDZ
-s5Ipmw/9HhzO+tSofiPi9eMuTemnHvbqk3fa1R75lkm1Ry/hkNkbCvrgbNdy/yaq
-2btjy7gYLY4rwvsfOpcHjjVKuspGiLkNPAxxGRfYxCd/MnOrt7N2kp/5zlH1MPZ6
-6ZeC3c3eG5h7uT9yQcCLrxLf90xogiDNBhEqyv4yi42+H9Y2x7+xtxy/XN/T+5+2
-NulJpLd2OHxLyDHnsLtJYRiW3uHq5SO8r5Jc6xUF1UlFMTo0LD12DAYtXsyJPX5x
-cpV5y77f912VOqDRDgyYbzbgirZOSMdRsUOYYeOVO5A6CoZIhViT7gv9pupu+Z04
-R0XOi6y6sE2Ees1rUgB/+DbXZPZYrz+FdHAXqpobaobgygxcLJhvWWl5RyCGwKla
-NMCkqv6EziGj32DiDBQvURD7TV6NEq+SPPOBAoK/DqiXzPh+aRgww0vTNRXd5nNO
-18UpuGJG7zu/PnftPyULwFBdskFWy/LOHSyS/s71SOKjYF/+zwBONZJX5jk1ENIY
-czcjlEaUxXiIxNoS+VAwPJ44wShsPxOyDMvcY3XaBNRCe/2EU1rbhiVMbEqpL9W4
-GZJUrdFfd846oiRKQuOIu3COEMMBVZeJpDh4QorbWr+0Y8VmEqRHwEy/vvYASU2U
-GMRYvN2/eK3r11Oqp/ZEHx3sOXZIIqaPA0IWqY+krgz0FjBVm34=
-=1h67
------END PGP SIGNATURE-----
-
---LKTjZJSUETSlgu2t--
-
---===============0525755774424081950==
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: inline
-
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KY2NhbiBtYWls
-aW5nIGxpc3QKY2NhbkBsaXN0cy5vemxhYnMub3JnCmh0dHBzOi8vbGlzdHMub3psYWJzLm9yZy9s
-aXN0aW5mby9jY2FuCg==
-
---===============0525755774424081950==--
+T0ssIHRoZXNlIGFsbCBsb29rIGdvb2QuCgpQbGVhc2UgYXBwbHkhClJ1c3R5LgoKRGF2aWQgR2li
+c29uIDxkYXZpZEBnaWJzb24uZHJvcGJlYXIuaWQuYXU+IHdyaXRlczoKPiBUQ09OKCkgdXNlcyBm
+bGV4aWJsZS1hcnJheSBtZW1iZXJzIHdoaWNoIGFyZW4ndCBhbGxvd2VkIGluIHRoZSBtaWRkbGUK
+PiBvZiBzdHJ1Y3R1cmVzLCBleGNlcHQgYXMgYSBnY2MgZXh0ZW5zaW9uLiAgVENPTl9XUkFQKCkg
+YXZvaWRzIHRoaXMgYW5kIHNvCj4gaXMgbW9yZSBwb3J0YWJsZS4KPgo+IFRoaXMgZG9lc24ndCBj
+aGFuZ2UgdGhlIGpzZXQgaW50ZXJmYWNlLCBvbmx5IGl0cyBpbnRlcm5hbHMuCj4KPiBTaWduZWQt
+b2ZmLWJ5OiBEYXZpZCBHaWJzb24gPGRhdmlkQGdpYnNvbi5kcm9wYmVhci5pZC5hdT4KPiAtLS0K
+PiAgY2Nhbi9qc2V0L2pzZXQuaCAgICAgfCA0NSArKysrKysrKysrKysrKysrKysrKysrKysrKysr
+LS0tLS0tLS0tLS0tLS0tLS0KPiAgY2Nhbi9qc2V0L3Rlc3QvcnVuLmMgfCAgOSArKysrKy0tLS0K
+PiAgMiBmaWxlcyBjaGFuZ2VkLCAzMyBpbnNlcnRpb25zKCspLCAyMSBkZWxldGlvbnMoLSkKPgo+
+IGRpZmYgLS1naXQgYS9jY2FuL2pzZXQvanNldC5oIGIvY2Nhbi9qc2V0L2pzZXQuaAo+IGluZGV4
+IGJhNzJmMDk3Li45MDQ5ODJkNiAxMDA2NDQKPiAtLS0gYS9jY2FuL2pzZXQvanNldC5oCj4gKysr
+IGIvY2Nhbi9qc2V0L2pzZXQuaAo+IEBAIC0zMCw4ICszMCw3IEBAIHN0cnVjdCBqc2V0IHsKPiAg
+ICoJfTsKPiAgICovCj4gICNkZWZpbmUgSlNFVF9NRU1CRVJTKHR5cGUpCQkJXAo+IC0Jc3RydWN0
+IGpzZXQgcmF3OwkJCVwKPiAtCVRDT04odHlwZSBjYW5hcnkpCj4gKwlUQ09OX1dSQVAoc3RydWN0
+IGpzZXQsIHR5cGUgY2FuYXJ5KSBqc2V0Xwo+ICAKPiAgLyoqCj4gICAqIGpzZXRfbmV3IC0gY3Jl
+YXRlIGEgbmV3LCBlbXB0eSBqc2V0Lgo+IEBAIC00Nyw2ICs0NiwxNCBAQCBzdHJ1Y3QganNldCB7
+Cj4gICAqLwo+ICAjZGVmaW5lIGpzZXRfbmV3KHR5cGUpICgodHlwZSAqKWpzZXRfbmV3XyhzaXpl
+b2YodHlwZSkpKQo+ICAKPiArCj4gKy8qKgo+ICsgKiBqc2V0X3Jhd18gLSB1bndyYXAgdGhlIHR5
+cGVkIHNldCAod2l0aG91dCB0eXBlIGNoZWNraW5nKQo+ICsgKiBAc2V0OiB0aGUgdHlwZWQganNl
+dAo+ICsgKi8KPiArI2RlZmluZSBqc2V0X3Jhd18oc2V0KQkodGNvbl91bndyYXAoJihzZXQpLT5q
+c2V0XykpCj4gKwo+ICsKPiAgLyoqCj4gICAqIGpzZXRfZnJlZSAtIGRlc3Ryb3kgYSBqc2V0Lgo+
+ICAgKiBAc2V0OiB0aGUgc2V0IHJldHVybmVkIGZyb20ganNldF9uZXcuCj4gQEAgLTU0LDcgKzYx
+LDcgQEAgc3RydWN0IGpzZXQgewo+ICAgKiBFeGFtcGxlOgo+ICAgKglqc2V0X2ZyZWUoc2V0KTsK
+PiAgICovCj4gLSNkZWZpbmUganNldF9mcmVlKHNldCkganNldF9mcmVlXygmKHNldCktPnJhdykK
+PiArI2RlZmluZSBqc2V0X2ZyZWUoc2V0KSBqc2V0X2ZyZWVfKGpzZXRfcmF3XyhzZXQpKQo+ICAK
+PiAgLyoqCj4gICAqIGpzZXRfZXJyb3IgLSB0ZXN0IGZvciBhbiBlcnJvciBpbiB0aGUgYSBwcmV2
+aW91cyBqc2V0XyBvcGVyYXRpb24uCj4gQEAgLTc0LDggKzgxLDggQEAgc3RydWN0IGpzZXQgewo+
+ICAgKglpZiAoZXJyc3RyKQo+ICAgKgkJZXJyeCgxLCAiV29haCwgZXJyb3Igb24gbmV3bHkgY3Jl
+YXRlZCBzZXQ/ISAlcyIsIGVycnN0cik7Cj4gICAqLwo+IC0jZGVmaW5lIGpzZXRfZXJyb3Ioc2V0
+KSBcCj4gLQlqc2V0X2Vycm9yXygmKHNldCktPnJhdykKPiArI2RlZmluZSBqc2V0X2Vycm9yKHNl
+dCkganNldF9lcnJvcl8oanNldF9yYXdfKHNldCkpCj4gKwo+ICAKPiAgLyoqCj4gICAqIGpzZXRf
+cmF3IC0gdW53cmFwIHRoZSB0eXBlZCBzZXQgYW5kIGNoZWNrIHRoZSB0eXBlCj4gQEAgLTg2LDcg
+KzkzLDkgQEAgc3RydWN0IGpzZXQgewo+ICAgKiB2YXJpYWJsZSBpcyBvZiBhbiB1bmV4cGVjdGVk
+IHR5cGUuICBJdCBpcyB1c2VkIGludGVybmFsbHkgd2hlcmUgd2UKPiAgICogbmVlZCB0byBhY2Nl
+c3MgdGhlIHJhdyB1bmRlcmx5aW5nIGpzZXQuCj4gICAqLwo+IC0jZGVmaW5lIGpzZXRfcmF3KHNl
+dCwgZXhwcikgKCZ0Y29uX2NoZWNrKChzZXQpLCBjYW5hcnksIChleHByKSktPnJhdykKPiArI2Rl
+ZmluZSBqc2V0X3JhdyhzZXQsIGV4cHIpIFwKPiArCSh0Y29uX3Vud3JhcCh0Y29uX2NoZWNrKCYo
+c2V0KS0+anNldF8sIGNhbmFyeSwgKGV4cHIpKSkpCj4gKwo+ICAKPiAgLyoqCj4gICAqIGpzZXRf
+dGVzdCAtIHRlc3QgYSBiaXQgaW4gdGhlIGJpdHNldC4KPiBAQCAtMTM3LDggKzE0Niw4IEBAIHN0
+cnVjdCBqc2V0IHsKPiAgICoJLy8gV2UgZXhwZWN0IDEwMDAgZW50cmllcy4KPiAgICoJYXNzZXJ0
+KGpzZXRfY291bnQoc2V0KSA9PSAxMDAwKTsKPiAgICovCj4gLSNkZWZpbmUganNldF9jb3VudChz
+ZXQpCQkJCVwKPiAtCWpzZXRfcG9wY291bnRfKCYoc2V0KS0+cmF3LCAwLCAtMVVMKQo+ICsjZGVm
+aW5lIGpzZXRfY291bnQoc2V0KQlcCj4gKwlqc2V0X3BvcGNvdW50Xyhqc2V0X3Jhd18oc2V0KSwg
+MCwgLTFVTCkKPiAgCj4gIC8qKgo+ICAgKiBqc2V0X3BvcGNvdW50IC0gZ2V0IHBvcHVsYXRpb24g
+b2YgKHNvbWUgcGFydCBvZikgYml0c2V0Lgo+IEBAIC0xODYsNyArMTk1LDcgQEAgc3RydWN0IGpz
+ZXQgewo+ICAgKgl9Cj4gICAqLwo+ICAjZGVmaW5lIGpzZXRfbnRoKHNldCwgbiwgaW52YWxpZCkJ
+CQkJCVwKPiAtCXRjb25fY2FzdCgoc2V0KSwgY2FuYXJ5LAkJCQkJXAo+ICsJdGNvbl9jYXN0KCYo
+c2V0KS0+anNldF8sIGNhbmFyeSwJCQkJXAo+ICAJCSAganNldF9udGhfKGpzZXRfcmF3KChzZXQp
+LCAoaW52YWxpZCkpLAkJCVwKPiAgCQkJICAgIChuKSwgKHVuc2lnbmVkIGxvbmcpKGludmFsaWQp
+KSkKPiAgCj4gQEAgLTIwNSw3ICsyMTQsNyBAQCBzdHJ1Y3QganNldCB7Cj4gICAqCXByaW50Zigi
+XG4iKTsKPiAgICovCj4gICNkZWZpbmUganNldF9maXJzdChzZXQpCQkJCQkJXAo+IC0JdGNvbl9j
+YXN0KChzZXQpLCBjYW5hcnksIGpzZXRfZmlyc3RfKCYoc2V0KS0+cmF3KSkKPiArCXRjb25fY2Fz
+dCgmKHNldCktPmpzZXRfLCBjYW5hcnksIGpzZXRfZmlyc3RfKGpzZXRfcmF3XyhzZXQpKSkKPiAg
+Cj4gIC8qKgo+ICAgKiBqc2V0X25leHQgLSByZXR1cm4gdGhlIG5leHQgYml0IHdoaWNoIGlzIHNl
+dCAobXVzdCBub3QgY29udGFpbiAwKS4KPiBAQCAtMjE2LDcgKzIyNSw4IEBAIHN0cnVjdCBqc2V0
+IHsKPiAgICoganNldF9maXJzdC4KPiAgICovCj4gICNkZWZpbmUganNldF9uZXh0KHNldCwgcHJl
+dikJCQkJCQlcCj4gLQl0Y29uX2Nhc3QoKHNldCksIGNhbmFyeSwganNldF9uZXh0XygmKHNldCkt
+PnJhdywgKHVuc2lnbmVkIGxvbmcpKHByZXYpKSkKPiArCXRjb25fY2FzdCgmKHNldCktPmpzZXRf
+LCBjYW5hcnksCQkJCVwKPiArCQkgIGpzZXRfbmV4dF8oanNldF9yYXdfKHNldCksICh1bnNpZ25l
+ZCBsb25nKShwcmV2KSkpCj4gIAo+ICAvKioKPiAgICoganNldF9sYXN0IC0gcmV0dXJuIHRoZSBs
+YXN0IGJpdCB3aGljaCBpcyBzZXQgKG11c3Qgbm90IGNvbnRhaW4gMCkuCj4gQEAgLTIzMCw3ICsy
+NDAsNyBAQCBzdHJ1Y3QganNldCB7Cj4gICAqCXByaW50ZigiXG4iKTsKPiAgICovCj4gICNkZWZp
+bmUganNldF9sYXN0KHNldCkJCQkJCQlcCj4gLQl0Y29uX2Nhc3QoKHNldCksIGNhbmFyeSwganNl
+dF9sYXN0XygmKHNldCktPnJhdykpCj4gKwl0Y29uX2Nhc3QoJihzZXQpLT5qc2V0XywgY2FuYXJ5
+LCBqc2V0X2xhc3RfKGpzZXRfcmF3XyhzZXQpKSkKPiAgCj4gIC8qKgo+ICAgKiBqc2V0X3ByZXYg
+LSByZXR1cm4gdGhlIHByZXZpb3VzIGJpdCB3aGljaCBpcyBzZXQgKG11c3Qgbm90IGNvbnRhaW4g
+MCkuCj4gQEAgLTI0MSw3ICsyNTEsOCBAQCBzdHJ1Y3QganNldCB7Cj4gICAqIGpzZXRfbGFzdC4K
+PiAgICovCj4gICNkZWZpbmUganNldF9wcmV2KHNldCwgcHJldikJCQkJCQlcCj4gLQl0Y29uX2Nh
+c3QoKHNldCksIGNhbmFyeSwganNldF9wcmV2XygmKHNldCktPnJhdywgKHVuc2lnbmVkIGxvbmcp
+KHByZXYpKSkKPiArCXRjb25fY2FzdCgmKHNldCktPmpzZXRfLCBjYW5hcnksCQkJCVwKPiArCQkg
+IGpzZXRfcHJldl8oanNldF9yYXdfKHNldCksICh1bnNpZ25lZCBsb25nKShwcmV2KSkpCj4gIAo+
+ICAvKioKPiAgICoganNldF9maXJzdF9jbGVhciAtIHJldHVybiB0aGUgZmlyc3QgYml0IHdoaWNo
+IGlzIHVuc2V0Cj4gQEAgLTI1MSwxNyArMjYyLDE3IEBAIHN0cnVjdCBqc2V0IHsKPiAgICogc2V0
+IGlzIGZ1bGwuCj4gICAqLwo+ICAjZGVmaW5lIGpzZXRfZmlyc3RfY2xlYXIoc2V0KQkJCQkJCVwK
+PiAtCXRjb25fY2FzdCgoc2V0KSwgY2FuYXJ5LCBqc2V0X25leHRfY2xlYXJfKCYoc2V0KS0+cmF3
+LCAwKSkKPiArCXRjb25fY2FzdCgmKHNldCktPmpzZXRfLCBjYW5hcnksIGpzZXRfbmV4dF9jbGVh
+cl8oanNldF9yYXdfKHNldCksIDApKQo+ICAKPiAgI2RlZmluZSBqc2V0X25leHRfY2xlYXIoc2V0
+LCBwcmV2KQkJCQkJXAo+IC0JdGNvbl9jYXN0KChzZXQpLCBjYW5hcnksIGpzZXRfbmV4dF9jbGVh
+cl8oJihzZXQpLT5yYXcsCQlcCj4gKwl0Y29uX2Nhc3QoJihzZXQpLT5qc2V0XywgY2FuYXJ5LCBq
+c2V0X25leHRfY2xlYXJfKGpzZXRfcmF3XyhzZXQpLCBcCj4gIAkJCQkJCSAgKHVuc2lnbmVkIGxv
+bmcpKHByZXYpKSkKPiAgCj4gICNkZWZpbmUganNldF9sYXN0X2NsZWFyKHNldCkJCQkJCVwKPiAt
+CXRjb25fY2FzdCgoc2V0KSwgY2FuYXJ5LCBqc2V0X2xhc3RfY2xlYXJfKCYoc2V0KS0+cmF3KSkK
+PiArCXRjb25fY2FzdCgmKHNldCktPmpzZXRfLCBjYW5hcnksIGpzZXRfbGFzdF9jbGVhcl8oanNl
+dF9yYXdfKHNldCkpKQo+ICAKPiAgI2RlZmluZSBqc2V0X3ByZXZfY2xlYXIoc2V0LCBwcmV2KQkJ
+CQkJXAo+IC0JdGNvbl9jYXN0KChzZXQpLCBjYW5hcnksIGpzZXRfcHJldl9jbGVhcl8oJihzZXQp
+LT5yYXcsCQlcCj4gKwl0Y29uX2Nhc3QoJihzZXQpLT5qc2V0XywgY2FuYXJ5LCBqc2V0X3ByZXZf
+Y2xlYXJfKGpzZXRfcmF3XyhzZXQpLCBcCj4gIAkJCQkJCSAgKHVuc2lnbmVkIGxvbmcpKHByZXYp
+KSkKPiAgCj4gIC8qIFJhdyBmdW5jdGlvbnMgKi8KPiBkaWZmIC0tZ2l0IGEvY2Nhbi9qc2V0L3Rl
+c3QvcnVuLmMgYi9jY2FuL2pzZXQvdGVzdC9ydW4uYwo+IGluZGV4IGEwZmI4YThjLi40MjU1NDZm
+ZCAxMDA2NDQKPiAtLS0gYS9jY2FuL2pzZXQvdGVzdC9ydW4uYwo+ICsrKyBiL2NjYW4vanNldC90
+ZXN0L3J1bi5jCj4gQEAgLTM0LDcgKzM0LDggQEAgaW50IG1haW4oaW50IGFyZ2MsIGNoYXIgKmFy
+Z3ZbXSkKPiAgCQlqc2V0X3NldChzZXQsIDEgKyAoaSA8PCA0KSk7Cj4gIAo+ICAJLyogVGhpcyBv
+bmx5IHRha2UgMS43TUIgb24gbXkgMzItYml0IHN5c3RlbS4gKi8KPiAtCWRpYWcoIiV1IGJ5dGVz
+IG1lbW9yeSB1c2VkXG4iLCAodW5zaWduZWQpSnVkeTFNZW1Vc2VkKHNldC0+cmF3Lmp1ZHkpKTsK
+PiArCWRpYWcoIiV1IGJ5dGVzIG1lbW9yeSB1c2VkXG4iLAo+ICsJICAgICAodW5zaWduZWQpSnVk
+eTFNZW1Vc2VkKGpzZXRfcmF3XyhzZXQpLT5qdWR5KSk7Cj4gIAo+ICAJb2sxKGpzZXRfcG9wY291
+bnQoc2V0LCAwLCAtMSkgPT0gMTAwMDAwMCk7Cj4gIAlvazEoanNldF9udGgoc2V0LCAwLCAtMSkg
+PT0gMSk7Cj4gQEAgLTUzLDEzICs1NCwxMyBAQCBpbnQgbWFpbihpbnQgYXJnYywgY2hhciAqYXJn
+dltdKQo+ICAJb2sxKGpzZXRfZXJyb3Ioc2V0KSA9PSBOVUxMKTsKPiAgCj4gIAkvKiBUZXN0IGVy
+cm9yIGhhbmRsaW5nICovCj4gLQlKVV9FUlJOTygmc2V0LT5yYXcuZXJyKSA9IDEwMDsKPiAtCUpV
+X0VSUklEKCZzZXQtPnJhdy5lcnIpID0gOTkxOwo+ICsJSlVfRVJSTk8oJmpzZXRfcmF3XyhzZXQp
+LT5lcnIpID0gMTAwOwo+ICsJSlVfRVJSSUQoJmpzZXRfcmF3XyhzZXQpLT5lcnIpID0gOTkxOwo+
+ICAJZXJyID0ganNldF9lcnJvcihzZXQpOwo+ICAJb2sxKGVycik7Cj4gIAlvazEoc3Ryc3RyKGVy
+ciwgIjEwMCIpKTsKPiAgCW9rMShzdHJzdHIoZXJyLCAiOTkxIikpOwo+IC0Jb2sxKGVyciA9PSBz
+ZXQtPnJhdy5lcnJzdHIpOwo+ICsJb2sxKGVyciA9PSBqc2V0X3Jhd18oc2V0KS0+ZXJyc3RyKTsK
+PiAgCWpzZXRfZnJlZShzZXQpOwo+ICAKPiAgCXJldHVybiBleGl0X3N0YXR1cygpOwo+IC0tIAo+
+IDIuMTMuMwpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpj
+Y2FuIG1haWxpbmcgbGlzdApjY2FuQGxpc3RzLm96bGFicy5vcmcKaHR0cHM6Ly9saXN0cy5vemxh
+YnMub3JnL2xpc3RpbmZvL2NjYW4K
