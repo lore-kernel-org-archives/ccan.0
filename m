@@ -1,19 +1,19 @@
-From: Rusty Russell <rusty@rustcorp.com.au>
+From: David Gibson <david@gibson.dropbear.id.au>
 Subject: Re: [PATCH 2/4] jset: Use TCON_WRAP instead of TCON
-Date: Mon, 31 Jul 2017 15:55:14 +0930
-Message-ID: <87y3r5p1h1.fsf@rustcorp.com.au>
+Date: Tue, 1 Aug 2017 15:17:26 +1000
+Message-ID: <20170801051726.GN2652@umbus.fritz.box>
 References: <20170723122907.10686-1-david@gibson.dropbear.id.au>
  <20170723122907.10686-3-david@gibson.dropbear.id.au>
+ <87y3r5p1h1.fsf@rustcorp.com.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: multipart/mixed; boundary="===============0695975403071782018=="
 Return-path: <ccan-bounces+gclcc-ccan=m.gmane.org@lists.ozlabs.org>
 Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
  (using TLSv1.2 with cipher ADH-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 3xLx2K0q29zDrGC
- for <ccan@lists.ozlabs.org>; Tue,  1 Aug 2017 09:47:21 +1000 (AEST)
-In-Reply-To: <20170723122907.10686-3-david@gibson.dropbear.id.au>
+ by lists.ozlabs.org (Postfix) with ESMTPS id 3xM4MH5P2LzDrD2
+ for <ccan@lists.ozlabs.org>; Tue,  1 Aug 2017 15:17:31 +1000 (AEST)
+In-Reply-To: <87y3r5p1h1.fsf@rustcorp.com.au>
 List-Unsubscribe: <https://lists.ozlabs.org/options/ccan>,
  <mailto:ccan-request@lists.ozlabs.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/ccan/>
@@ -23,116 +23,257 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/ccan>,
  <mailto:ccan-request@lists.ozlabs.org?subject=subscribe>
 Errors-To: ccan-bounces+gclcc-ccan=m.gmane.org@lists.ozlabs.org
 Sender: "ccan" <ccan-bounces+gclcc-ccan=m.gmane.org@lists.ozlabs.org>
-To: David Gibson <david@gibson.dropbear.id.au>, ccan@lists.ozlabs.org
+To: Rusty Russell <rusty@rustcorp.com.au>
+Cc: ccan@lists.ozlabs.org
 List-Id: ccan@lists.ozlabs.org
 
-T0ssIHRoZXNlIGFsbCBsb29rIGdvb2QuCgpQbGVhc2UgYXBwbHkhClJ1c3R5LgoKRGF2aWQgR2li
-c29uIDxkYXZpZEBnaWJzb24uZHJvcGJlYXIuaWQuYXU+IHdyaXRlczoKPiBUQ09OKCkgdXNlcyBm
-bGV4aWJsZS1hcnJheSBtZW1iZXJzIHdoaWNoIGFyZW4ndCBhbGxvd2VkIGluIHRoZSBtaWRkbGUK
-PiBvZiBzdHJ1Y3R1cmVzLCBleGNlcHQgYXMgYSBnY2MgZXh0ZW5zaW9uLiAgVENPTl9XUkFQKCkg
-YXZvaWRzIHRoaXMgYW5kIHNvCj4gaXMgbW9yZSBwb3J0YWJsZS4KPgo+IFRoaXMgZG9lc24ndCBj
-aGFuZ2UgdGhlIGpzZXQgaW50ZXJmYWNlLCBvbmx5IGl0cyBpbnRlcm5hbHMuCj4KPiBTaWduZWQt
-b2ZmLWJ5OiBEYXZpZCBHaWJzb24gPGRhdmlkQGdpYnNvbi5kcm9wYmVhci5pZC5hdT4KPiAtLS0K
-PiAgY2Nhbi9qc2V0L2pzZXQuaCAgICAgfCA0NSArKysrKysrKysrKysrKysrKysrKysrKysrKysr
-LS0tLS0tLS0tLS0tLS0tLS0KPiAgY2Nhbi9qc2V0L3Rlc3QvcnVuLmMgfCAgOSArKysrKy0tLS0K
-PiAgMiBmaWxlcyBjaGFuZ2VkLCAzMyBpbnNlcnRpb25zKCspLCAyMSBkZWxldGlvbnMoLSkKPgo+
-IGRpZmYgLS1naXQgYS9jY2FuL2pzZXQvanNldC5oIGIvY2Nhbi9qc2V0L2pzZXQuaAo+IGluZGV4
-IGJhNzJmMDk3Li45MDQ5ODJkNiAxMDA2NDQKPiAtLS0gYS9jY2FuL2pzZXQvanNldC5oCj4gKysr
-IGIvY2Nhbi9qc2V0L2pzZXQuaAo+IEBAIC0zMCw4ICszMCw3IEBAIHN0cnVjdCBqc2V0IHsKPiAg
-ICoJfTsKPiAgICovCj4gICNkZWZpbmUgSlNFVF9NRU1CRVJTKHR5cGUpCQkJXAo+IC0Jc3RydWN0
-IGpzZXQgcmF3OwkJCVwKPiAtCVRDT04odHlwZSBjYW5hcnkpCj4gKwlUQ09OX1dSQVAoc3RydWN0
-IGpzZXQsIHR5cGUgY2FuYXJ5KSBqc2V0Xwo+ICAKPiAgLyoqCj4gICAqIGpzZXRfbmV3IC0gY3Jl
-YXRlIGEgbmV3LCBlbXB0eSBqc2V0Lgo+IEBAIC00Nyw2ICs0NiwxNCBAQCBzdHJ1Y3QganNldCB7
-Cj4gICAqLwo+ICAjZGVmaW5lIGpzZXRfbmV3KHR5cGUpICgodHlwZSAqKWpzZXRfbmV3XyhzaXpl
-b2YodHlwZSkpKQo+ICAKPiArCj4gKy8qKgo+ICsgKiBqc2V0X3Jhd18gLSB1bndyYXAgdGhlIHR5
-cGVkIHNldCAod2l0aG91dCB0eXBlIGNoZWNraW5nKQo+ICsgKiBAc2V0OiB0aGUgdHlwZWQganNl
-dAo+ICsgKi8KPiArI2RlZmluZSBqc2V0X3Jhd18oc2V0KQkodGNvbl91bndyYXAoJihzZXQpLT5q
-c2V0XykpCj4gKwo+ICsKPiAgLyoqCj4gICAqIGpzZXRfZnJlZSAtIGRlc3Ryb3kgYSBqc2V0Lgo+
-ICAgKiBAc2V0OiB0aGUgc2V0IHJldHVybmVkIGZyb20ganNldF9uZXcuCj4gQEAgLTU0LDcgKzYx
-LDcgQEAgc3RydWN0IGpzZXQgewo+ICAgKiBFeGFtcGxlOgo+ICAgKglqc2V0X2ZyZWUoc2V0KTsK
-PiAgICovCj4gLSNkZWZpbmUganNldF9mcmVlKHNldCkganNldF9mcmVlXygmKHNldCktPnJhdykK
-PiArI2RlZmluZSBqc2V0X2ZyZWUoc2V0KSBqc2V0X2ZyZWVfKGpzZXRfcmF3XyhzZXQpKQo+ICAK
-PiAgLyoqCj4gICAqIGpzZXRfZXJyb3IgLSB0ZXN0IGZvciBhbiBlcnJvciBpbiB0aGUgYSBwcmV2
-aW91cyBqc2V0XyBvcGVyYXRpb24uCj4gQEAgLTc0LDggKzgxLDggQEAgc3RydWN0IGpzZXQgewo+
-ICAgKglpZiAoZXJyc3RyKQo+ICAgKgkJZXJyeCgxLCAiV29haCwgZXJyb3Igb24gbmV3bHkgY3Jl
-YXRlZCBzZXQ/ISAlcyIsIGVycnN0cik7Cj4gICAqLwo+IC0jZGVmaW5lIGpzZXRfZXJyb3Ioc2V0
-KSBcCj4gLQlqc2V0X2Vycm9yXygmKHNldCktPnJhdykKPiArI2RlZmluZSBqc2V0X2Vycm9yKHNl
-dCkganNldF9lcnJvcl8oanNldF9yYXdfKHNldCkpCj4gKwo+ICAKPiAgLyoqCj4gICAqIGpzZXRf
-cmF3IC0gdW53cmFwIHRoZSB0eXBlZCBzZXQgYW5kIGNoZWNrIHRoZSB0eXBlCj4gQEAgLTg2LDcg
-KzkzLDkgQEAgc3RydWN0IGpzZXQgewo+ICAgKiB2YXJpYWJsZSBpcyBvZiBhbiB1bmV4cGVjdGVk
-IHR5cGUuICBJdCBpcyB1c2VkIGludGVybmFsbHkgd2hlcmUgd2UKPiAgICogbmVlZCB0byBhY2Nl
-c3MgdGhlIHJhdyB1bmRlcmx5aW5nIGpzZXQuCj4gICAqLwo+IC0jZGVmaW5lIGpzZXRfcmF3KHNl
-dCwgZXhwcikgKCZ0Y29uX2NoZWNrKChzZXQpLCBjYW5hcnksIChleHByKSktPnJhdykKPiArI2Rl
-ZmluZSBqc2V0X3JhdyhzZXQsIGV4cHIpIFwKPiArCSh0Y29uX3Vud3JhcCh0Y29uX2NoZWNrKCYo
-c2V0KS0+anNldF8sIGNhbmFyeSwgKGV4cHIpKSkpCj4gKwo+ICAKPiAgLyoqCj4gICAqIGpzZXRf
-dGVzdCAtIHRlc3QgYSBiaXQgaW4gdGhlIGJpdHNldC4KPiBAQCAtMTM3LDggKzE0Niw4IEBAIHN0
-cnVjdCBqc2V0IHsKPiAgICoJLy8gV2UgZXhwZWN0IDEwMDAgZW50cmllcy4KPiAgICoJYXNzZXJ0
-KGpzZXRfY291bnQoc2V0KSA9PSAxMDAwKTsKPiAgICovCj4gLSNkZWZpbmUganNldF9jb3VudChz
-ZXQpCQkJCVwKPiAtCWpzZXRfcG9wY291bnRfKCYoc2V0KS0+cmF3LCAwLCAtMVVMKQo+ICsjZGVm
-aW5lIGpzZXRfY291bnQoc2V0KQlcCj4gKwlqc2V0X3BvcGNvdW50Xyhqc2V0X3Jhd18oc2V0KSwg
-MCwgLTFVTCkKPiAgCj4gIC8qKgo+ICAgKiBqc2V0X3BvcGNvdW50IC0gZ2V0IHBvcHVsYXRpb24g
-b2YgKHNvbWUgcGFydCBvZikgYml0c2V0Lgo+IEBAIC0xODYsNyArMTk1LDcgQEAgc3RydWN0IGpz
-ZXQgewo+ICAgKgl9Cj4gICAqLwo+ICAjZGVmaW5lIGpzZXRfbnRoKHNldCwgbiwgaW52YWxpZCkJ
-CQkJCVwKPiAtCXRjb25fY2FzdCgoc2V0KSwgY2FuYXJ5LAkJCQkJXAo+ICsJdGNvbl9jYXN0KCYo
-c2V0KS0+anNldF8sIGNhbmFyeSwJCQkJXAo+ICAJCSAganNldF9udGhfKGpzZXRfcmF3KChzZXQp
-LCAoaW52YWxpZCkpLAkJCVwKPiAgCQkJICAgIChuKSwgKHVuc2lnbmVkIGxvbmcpKGludmFsaWQp
-KSkKPiAgCj4gQEAgLTIwNSw3ICsyMTQsNyBAQCBzdHJ1Y3QganNldCB7Cj4gICAqCXByaW50Zigi
-XG4iKTsKPiAgICovCj4gICNkZWZpbmUganNldF9maXJzdChzZXQpCQkJCQkJXAo+IC0JdGNvbl9j
-YXN0KChzZXQpLCBjYW5hcnksIGpzZXRfZmlyc3RfKCYoc2V0KS0+cmF3KSkKPiArCXRjb25fY2Fz
-dCgmKHNldCktPmpzZXRfLCBjYW5hcnksIGpzZXRfZmlyc3RfKGpzZXRfcmF3XyhzZXQpKSkKPiAg
-Cj4gIC8qKgo+ICAgKiBqc2V0X25leHQgLSByZXR1cm4gdGhlIG5leHQgYml0IHdoaWNoIGlzIHNl
-dCAobXVzdCBub3QgY29udGFpbiAwKS4KPiBAQCAtMjE2LDcgKzIyNSw4IEBAIHN0cnVjdCBqc2V0
-IHsKPiAgICoganNldF9maXJzdC4KPiAgICovCj4gICNkZWZpbmUganNldF9uZXh0KHNldCwgcHJl
-dikJCQkJCQlcCj4gLQl0Y29uX2Nhc3QoKHNldCksIGNhbmFyeSwganNldF9uZXh0XygmKHNldCkt
-PnJhdywgKHVuc2lnbmVkIGxvbmcpKHByZXYpKSkKPiArCXRjb25fY2FzdCgmKHNldCktPmpzZXRf
-LCBjYW5hcnksCQkJCVwKPiArCQkgIGpzZXRfbmV4dF8oanNldF9yYXdfKHNldCksICh1bnNpZ25l
-ZCBsb25nKShwcmV2KSkpCj4gIAo+ICAvKioKPiAgICoganNldF9sYXN0IC0gcmV0dXJuIHRoZSBs
-YXN0IGJpdCB3aGljaCBpcyBzZXQgKG11c3Qgbm90IGNvbnRhaW4gMCkuCj4gQEAgLTIzMCw3ICsy
-NDAsNyBAQCBzdHJ1Y3QganNldCB7Cj4gICAqCXByaW50ZigiXG4iKTsKPiAgICovCj4gICNkZWZp
-bmUganNldF9sYXN0KHNldCkJCQkJCQlcCj4gLQl0Y29uX2Nhc3QoKHNldCksIGNhbmFyeSwganNl
-dF9sYXN0XygmKHNldCktPnJhdykpCj4gKwl0Y29uX2Nhc3QoJihzZXQpLT5qc2V0XywgY2FuYXJ5
-LCBqc2V0X2xhc3RfKGpzZXRfcmF3XyhzZXQpKSkKPiAgCj4gIC8qKgo+ICAgKiBqc2V0X3ByZXYg
-LSByZXR1cm4gdGhlIHByZXZpb3VzIGJpdCB3aGljaCBpcyBzZXQgKG11c3Qgbm90IGNvbnRhaW4g
-MCkuCj4gQEAgLTI0MSw3ICsyNTEsOCBAQCBzdHJ1Y3QganNldCB7Cj4gICAqIGpzZXRfbGFzdC4K
-PiAgICovCj4gICNkZWZpbmUganNldF9wcmV2KHNldCwgcHJldikJCQkJCQlcCj4gLQl0Y29uX2Nh
-c3QoKHNldCksIGNhbmFyeSwganNldF9wcmV2XygmKHNldCktPnJhdywgKHVuc2lnbmVkIGxvbmcp
-KHByZXYpKSkKPiArCXRjb25fY2FzdCgmKHNldCktPmpzZXRfLCBjYW5hcnksCQkJCVwKPiArCQkg
-IGpzZXRfcHJldl8oanNldF9yYXdfKHNldCksICh1bnNpZ25lZCBsb25nKShwcmV2KSkpCj4gIAo+
-ICAvKioKPiAgICoganNldF9maXJzdF9jbGVhciAtIHJldHVybiB0aGUgZmlyc3QgYml0IHdoaWNo
-IGlzIHVuc2V0Cj4gQEAgLTI1MSwxNyArMjYyLDE3IEBAIHN0cnVjdCBqc2V0IHsKPiAgICogc2V0
-IGlzIGZ1bGwuCj4gICAqLwo+ICAjZGVmaW5lIGpzZXRfZmlyc3RfY2xlYXIoc2V0KQkJCQkJCVwK
-PiAtCXRjb25fY2FzdCgoc2V0KSwgY2FuYXJ5LCBqc2V0X25leHRfY2xlYXJfKCYoc2V0KS0+cmF3
-LCAwKSkKPiArCXRjb25fY2FzdCgmKHNldCktPmpzZXRfLCBjYW5hcnksIGpzZXRfbmV4dF9jbGVh
-cl8oanNldF9yYXdfKHNldCksIDApKQo+ICAKPiAgI2RlZmluZSBqc2V0X25leHRfY2xlYXIoc2V0
-LCBwcmV2KQkJCQkJXAo+IC0JdGNvbl9jYXN0KChzZXQpLCBjYW5hcnksIGpzZXRfbmV4dF9jbGVh
-cl8oJihzZXQpLT5yYXcsCQlcCj4gKwl0Y29uX2Nhc3QoJihzZXQpLT5qc2V0XywgY2FuYXJ5LCBq
-c2V0X25leHRfY2xlYXJfKGpzZXRfcmF3XyhzZXQpLCBcCj4gIAkJCQkJCSAgKHVuc2lnbmVkIGxv
-bmcpKHByZXYpKSkKPiAgCj4gICNkZWZpbmUganNldF9sYXN0X2NsZWFyKHNldCkJCQkJCVwKPiAt
-CXRjb25fY2FzdCgoc2V0KSwgY2FuYXJ5LCBqc2V0X2xhc3RfY2xlYXJfKCYoc2V0KS0+cmF3KSkK
-PiArCXRjb25fY2FzdCgmKHNldCktPmpzZXRfLCBjYW5hcnksIGpzZXRfbGFzdF9jbGVhcl8oanNl
-dF9yYXdfKHNldCkpKQo+ICAKPiAgI2RlZmluZSBqc2V0X3ByZXZfY2xlYXIoc2V0LCBwcmV2KQkJ
-CQkJXAo+IC0JdGNvbl9jYXN0KChzZXQpLCBjYW5hcnksIGpzZXRfcHJldl9jbGVhcl8oJihzZXQp
-LT5yYXcsCQlcCj4gKwl0Y29uX2Nhc3QoJihzZXQpLT5qc2V0XywgY2FuYXJ5LCBqc2V0X3ByZXZf
-Y2xlYXJfKGpzZXRfcmF3XyhzZXQpLCBcCj4gIAkJCQkJCSAgKHVuc2lnbmVkIGxvbmcpKHByZXYp
-KSkKPiAgCj4gIC8qIFJhdyBmdW5jdGlvbnMgKi8KPiBkaWZmIC0tZ2l0IGEvY2Nhbi9qc2V0L3Rl
-c3QvcnVuLmMgYi9jY2FuL2pzZXQvdGVzdC9ydW4uYwo+IGluZGV4IGEwZmI4YThjLi40MjU1NDZm
-ZCAxMDA2NDQKPiAtLS0gYS9jY2FuL2pzZXQvdGVzdC9ydW4uYwo+ICsrKyBiL2NjYW4vanNldC90
-ZXN0L3J1bi5jCj4gQEAgLTM0LDcgKzM0LDggQEAgaW50IG1haW4oaW50IGFyZ2MsIGNoYXIgKmFy
-Z3ZbXSkKPiAgCQlqc2V0X3NldChzZXQsIDEgKyAoaSA8PCA0KSk7Cj4gIAo+ICAJLyogVGhpcyBv
-bmx5IHRha2UgMS43TUIgb24gbXkgMzItYml0IHN5c3RlbS4gKi8KPiAtCWRpYWcoIiV1IGJ5dGVz
-IG1lbW9yeSB1c2VkXG4iLCAodW5zaWduZWQpSnVkeTFNZW1Vc2VkKHNldC0+cmF3Lmp1ZHkpKTsK
-PiArCWRpYWcoIiV1IGJ5dGVzIG1lbW9yeSB1c2VkXG4iLAo+ICsJICAgICAodW5zaWduZWQpSnVk
-eTFNZW1Vc2VkKGpzZXRfcmF3XyhzZXQpLT5qdWR5KSk7Cj4gIAo+ICAJb2sxKGpzZXRfcG9wY291
-bnQoc2V0LCAwLCAtMSkgPT0gMTAwMDAwMCk7Cj4gIAlvazEoanNldF9udGgoc2V0LCAwLCAtMSkg
-PT0gMSk7Cj4gQEAgLTUzLDEzICs1NCwxMyBAQCBpbnQgbWFpbihpbnQgYXJnYywgY2hhciAqYXJn
-dltdKQo+ICAJb2sxKGpzZXRfZXJyb3Ioc2V0KSA9PSBOVUxMKTsKPiAgCj4gIAkvKiBUZXN0IGVy
-cm9yIGhhbmRsaW5nICovCj4gLQlKVV9FUlJOTygmc2V0LT5yYXcuZXJyKSA9IDEwMDsKPiAtCUpV
-X0VSUklEKCZzZXQtPnJhdy5lcnIpID0gOTkxOwo+ICsJSlVfRVJSTk8oJmpzZXRfcmF3XyhzZXQp
-LT5lcnIpID0gMTAwOwo+ICsJSlVfRVJSSUQoJmpzZXRfcmF3XyhzZXQpLT5lcnIpID0gOTkxOwo+
-ICAJZXJyID0ganNldF9lcnJvcihzZXQpOwo+ICAJb2sxKGVycik7Cj4gIAlvazEoc3Ryc3RyKGVy
-ciwgIjEwMCIpKTsKPiAgCW9rMShzdHJzdHIoZXJyLCAiOTkxIikpOwo+IC0Jb2sxKGVyciA9PSBz
-ZXQtPnJhdy5lcnJzdHIpOwo+ICsJb2sxKGVyciA9PSBqc2V0X3Jhd18oc2V0KS0+ZXJyc3RyKTsK
-PiAgCWpzZXRfZnJlZShzZXQpOwo+ICAKPiAgCXJldHVybiBleGl0X3N0YXR1cygpOwo+IC0tIAo+
-IDIuMTMuMwpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpj
-Y2FuIG1haWxpbmcgbGlzdApjY2FuQGxpc3RzLm96bGFicy5vcmcKaHR0cHM6Ly9saXN0cy5vemxh
-YnMub3JnL2xpc3RpbmZvL2NjYW4K
+
+--===============0695975403071782018==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="S66JdqtemGhvbcZP"
+Content-Disposition: inline
+
+
+--S66JdqtemGhvbcZP
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Mon, Jul 31, 2017 at 03:55:14PM +0930, Paul 'Rusty' Russell wrote:
+> OK, these all look good.
+>=20
+> Please apply!
+
+Done.
+
+> Rusty.
+>=20
+> David Gibson <david@gibson.dropbear.id.au> writes:
+> > TCON() uses flexible-array members which aren't allowed in the middle
+> > of structures, except as a gcc extension.  TCON_WRAP() avoids this and =
+so
+> > is more portable.
+> >
+> > This doesn't change the jset interface, only its internals.
+> >
+> > Signed-off-by: David Gibson <david@gibson.dropbear.id.au>
+> > ---
+> >  ccan/jset/jset.h     | 45 ++++++++++++++++++++++++++++-----------------
+> >  ccan/jset/test/run.c |  9 +++++----
+> >  2 files changed, 33 insertions(+), 21 deletions(-)
+> >
+> > diff --git a/ccan/jset/jset.h b/ccan/jset/jset.h
+> > index ba72f097..904982d6 100644
+> > --- a/ccan/jset/jset.h
+> > +++ b/ccan/jset/jset.h
+> > @@ -30,8 +30,7 @@ struct jset {
+> >   *	};
+> >   */
+> >  #define JSET_MEMBERS(type)			\
+> > -	struct jset raw;			\
+> > -	TCON(type canary)
+> > +	TCON_WRAP(struct jset, type canary) jset_
+> > =20
+> >  /**
+> >   * jset_new - create a new, empty jset.
+> > @@ -47,6 +46,14 @@ struct jset {
+> >   */
+> >  #define jset_new(type) ((type *)jset_new_(sizeof(type)))
+> > =20
+> > +
+> > +/**
+> > + * jset_raw_ - unwrap the typed set (without type checking)
+> > + * @set: the typed jset
+> > + */
+> > +#define jset_raw_(set)	(tcon_unwrap(&(set)->jset_))
+> > +
+> > +
+> >  /**
+> >   * jset_free - destroy a jset.
+> >   * @set: the set returned from jset_new.
+> > @@ -54,7 +61,7 @@ struct jset {
+> >   * Example:
+> >   *	jset_free(set);
+> >   */
+> > -#define jset_free(set) jset_free_(&(set)->raw)
+> > +#define jset_free(set) jset_free_(jset_raw_(set))
+> > =20
+> >  /**
+> >   * jset_error - test for an error in the a previous jset_ operation.
+> > @@ -74,8 +81,8 @@ struct jset {
+> >   *	if (errstr)
+> >   *		errx(1, "Woah, error on newly created set?! %s", errstr);
+> >   */
+> > -#define jset_error(set) \
+> > -	jset_error_(&(set)->raw)
+> > +#define jset_error(set) jset_error_(jset_raw_(set))
+> > +
+> > =20
+> >  /**
+> >   * jset_raw - unwrap the typed set and check the type
+> > @@ -86,7 +93,9 @@ struct jset {
+> >   * variable is of an unexpected type.  It is used internally where we
+> >   * need to access the raw underlying jset.
+> >   */
+> > -#define jset_raw(set, expr) (&tcon_check((set), canary, (expr))->raw)
+> > +#define jset_raw(set, expr) \
+> > +	(tcon_unwrap(tcon_check(&(set)->jset_, canary, (expr))))
+> > +
+> > =20
+> >  /**
+> >   * jset_test - test a bit in the bitset.
+> > @@ -137,8 +146,8 @@ struct jset {
+> >   *	// We expect 1000 entries.
+> >   *	assert(jset_count(set) =3D=3D 1000);
+> >   */
+> > -#define jset_count(set)				\
+> > -	jset_popcount_(&(set)->raw, 0, -1UL)
+> > +#define jset_count(set)	\
+> > +	jset_popcount_(jset_raw_(set), 0, -1UL)
+> > =20
+> >  /**
+> >   * jset_popcount - get population of (some part of) bitset.
+> > @@ -186,7 +195,7 @@ struct jset {
+> >   *	}
+> >   */
+> >  #define jset_nth(set, n, invalid)					\
+> > -	tcon_cast((set), canary,					\
+> > +	tcon_cast(&(set)->jset_, canary,				\
+> >  		  jset_nth_(jset_raw((set), (invalid)),			\
+> >  			    (n), (unsigned long)(invalid)))
+> > =20
+> > @@ -205,7 +214,7 @@ struct jset {
+> >   *	printf("\n");
+> >   */
+> >  #define jset_first(set)						\
+> > -	tcon_cast((set), canary, jset_first_(&(set)->raw))
+> > +	tcon_cast(&(set)->jset_, canary, jset_first_(jset_raw_(set)))
+> > =20
+> >  /**
+> >   * jset_next - return the next bit which is set (must not contain 0).
+> > @@ -216,7 +225,8 @@ struct jset {
+> >   * jset_first.
+> >   */
+> >  #define jset_next(set, prev)						\
+> > -	tcon_cast((set), canary, jset_next_(&(set)->raw, (unsigned long)(prev=
+)))
+> > +	tcon_cast(&(set)->jset_, canary,				\
+> > +		  jset_next_(jset_raw_(set), (unsigned long)(prev)))
+> > =20
+> >  /**
+> >   * jset_last - return the last bit which is set (must not contain 0).
+> > @@ -230,7 +240,7 @@ struct jset {
+> >   *	printf("\n");
+> >   */
+> >  #define jset_last(set)						\
+> > -	tcon_cast((set), canary, jset_last_(&(set)->raw))
+> > +	tcon_cast(&(set)->jset_, canary, jset_last_(jset_raw_(set)))
+> > =20
+> >  /**
+> >   * jset_prev - return the previous bit which is set (must not contain =
+0).
+> > @@ -241,7 +251,8 @@ struct jset {
+> >   * jset_last.
+> >   */
+> >  #define jset_prev(set, prev)						\
+> > -	tcon_cast((set), canary, jset_prev_(&(set)->raw, (unsigned long)(prev=
+)))
+> > +	tcon_cast(&(set)->jset_, canary,				\
+> > +		  jset_prev_(jset_raw_(set), (unsigned long)(prev)))
+> > =20
+> >  /**
+> >   * jset_first_clear - return the first bit which is unset
+> > @@ -251,17 +262,17 @@ struct jset {
+> >   * set is full.
+> >   */
+> >  #define jset_first_clear(set)						\
+> > -	tcon_cast((set), canary, jset_next_clear_(&(set)->raw, 0))
+> > +	tcon_cast(&(set)->jset_, canary, jset_next_clear_(jset_raw_(set), 0))
+> > =20
+> >  #define jset_next_clear(set, prev)					\
+> > -	tcon_cast((set), canary, jset_next_clear_(&(set)->raw,		\
+> > +	tcon_cast(&(set)->jset_, canary, jset_next_clear_(jset_raw_(set), \
+> >  						  (unsigned long)(prev)))
+> > =20
+> >  #define jset_last_clear(set)					\
+> > -	tcon_cast((set), canary, jset_last_clear_(&(set)->raw))
+> > +	tcon_cast(&(set)->jset_, canary, jset_last_clear_(jset_raw_(set)))
+> > =20
+> >  #define jset_prev_clear(set, prev)					\
+> > -	tcon_cast((set), canary, jset_prev_clear_(&(set)->raw,		\
+> > +	tcon_cast(&(set)->jset_, canary, jset_prev_clear_(jset_raw_(set), \
+> >  						  (unsigned long)(prev)))
+> > =20
+> >  /* Raw functions */
+> > diff --git a/ccan/jset/test/run.c b/ccan/jset/test/run.c
+> > index a0fb8a8c..425546fd 100644
+> > --- a/ccan/jset/test/run.c
+> > +++ b/ccan/jset/test/run.c
+> > @@ -34,7 +34,8 @@ int main(int argc, char *argv[])
+> >  		jset_set(set, 1 + (i << 4));
+> > =20
+> >  	/* This only take 1.7MB on my 32-bit system. */
+> > -	diag("%u bytes memory used\n", (unsigned)Judy1MemUsed(set->raw.judy));
+> > +	diag("%u bytes memory used\n",
+> > +	     (unsigned)Judy1MemUsed(jset_raw_(set)->judy));
+> > =20
+> >  	ok1(jset_popcount(set, 0, -1) =3D=3D 1000000);
+> >  	ok1(jset_nth(set, 0, -1) =3D=3D 1);
+> > @@ -53,13 +54,13 @@ int main(int argc, char *argv[])
+> >  	ok1(jset_error(set) =3D=3D NULL);
+> > =20
+> >  	/* Test error handling */
+> > -	JU_ERRNO(&set->raw.err) =3D 100;
+> > -	JU_ERRID(&set->raw.err) =3D 991;
+> > +	JU_ERRNO(&jset_raw_(set)->err) =3D 100;
+> > +	JU_ERRID(&jset_raw_(set)->err) =3D 991;
+> >  	err =3D jset_error(set);
+> >  	ok1(err);
+> >  	ok1(strstr(err, "100"));
+> >  	ok1(strstr(err, "991"));
+> > -	ok1(err =3D=3D set->raw.errstr);
+> > +	ok1(err =3D=3D jset_raw_(set)->errstr);
+> >  	jset_free(set);
+> > =20
+> >  	return exit_status();
+>=20
+
+--=20
+David Gibson			| I'll have my music baroque, and my code
+david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
+				| _way_ _around_!
+http://www.ozlabs.org/~dgibson
+
+--S66JdqtemGhvbcZP
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEdfRlhq5hpmzETofcbDjKyiDZs5IFAlmADuMACgkQbDjKyiDZ
+s5I1DBAAswtnC8lXPlFjx9R3ruiDG41AfcGljrFGyFV5GJddDMJhyeECYE8OQEmN
+KH/+oFlaR8bx2TBJTOsuArFHhcCfLrOYozXiJOpAGChS7nrgO2+70BeFJoq/kZ74
++yQTI0Q9FxR775ngQTPYrYCxfMIv1LlFf4wRn0sdZukSSpui4DHOAgZ3XfWfFS/c
+YUuHKvAl4VpJDH9lsSxg5zeUXwBMm0I0stjFpesLN/b0K+1RfATIsb09v408qkSb
+0DDxzJNd9mr1Ckp13I1EULJnmI8k+2l+jh8QaBdjNG9+H2KFCGs+NNgx/0SW8Plw
+ZW13TmCWpQvLayC75GaLc5YHlBLK7jcpDvb7AuShLpu2EqKN9UQZyelPNe5ZZL2i
+YB/aApUfpBl+MLV3qOh0c/3Om5fvcXVfZm/rrOYDqO8PYVyokKIsqdPAkUTfy1lt
+Bbn15FrJDm8Md5s++/BoHH8aikSrY2iR0PeK9YuLeawFU4oAR3f5gFdm78jgDmnJ
+XzGI7PMb/294A85JE6gFUXMiFq0N1OENBbJARxII5As3G8ooGjmbyBaBQFDMMsX4
+S8aAuFSv+Z3IjwTvbmo1MikQLzR95bO2Z+di1DPQsOWZZuKEJo1jH+oMehdg+5gr
+h5zVWhHc56M1t0wgBDL/MCYPvspGWCTE+rys5s9FNusgaWAyYIE=
+=VLYt
+-----END PGP SIGNATURE-----
+
+--S66JdqtemGhvbcZP--
+
+--===============0695975403071782018==
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: inline
+
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KY2NhbiBtYWls
+aW5nIGxpc3QKY2NhbkBsaXN0cy5vemxhYnMub3JnCmh0dHBzOi8vbGlzdHMub3psYWJzLm9yZy9s
+aXN0aW5mby9jY2FuCg==
+
+--===============0695975403071782018==--
