@@ -1,18 +1,22 @@
-From: David Gibson <david@gibson.dropbear.id.au>
+From: Kevin Locke <kevin@kevinlocke.name>
 Subject: Re: dgraph, tlist,
  tcon: MSVC error due to array of flexible structs
-Date: Tue, 1 Aug 2017 15:22:05 +1000
-Message-ID: <20170801052205.GO2652@umbus.fritz.box>
+Date: Tue, 1 Aug 2017 23:38:22 -0600
+Message-ID: <20170802053822.jnwbadhcaztgborr@kevinolos>
 References: <20160923043116.ytrxrm7dsgusdrif@kevinolos>
+ <20170801052205.GO2652@umbus.fritz.box>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============1298710873665286055=="
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <ccan-bounces+gclcc-ccan=m.gmane.org@lists.ozlabs.org>
-Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
- (using TLSv1.2 with cipher ADH-AES256-GCM-SHA384 (256/256 bits))
+Received: from vulcan.kevinlocke.name (vulcan.kevinlocke.name
+ [IPv6:2001:19f0:5:727:1e84:17da:7c52:5ab4])
+ (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 3xM4Sn11ghzDrnS
- for <ccan@lists.ozlabs.org>; Tue,  1 Aug 2017 15:22:17 +1000 (AEST)
-In-Reply-To: <20160923043116.ytrxrm7dsgusdrif@kevinolos>
+ by lists.ozlabs.org (Postfix) with ESMTPS id 3xMhzQ4L1LzDsWP
+ for <ccan@lists.ozlabs.org>; Wed,  2 Aug 2017 15:47:30 +1000 (AEST)
+Content-Disposition: inline
+In-Reply-To: <20170801052205.GO2652@umbus.fritz.box>
 List-Unsubscribe: <https://lists.ozlabs.org/options/ccan>,
  <mailto:ccan-request@lists.ozlabs.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/ccan/>
@@ -22,96 +26,30 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/ccan>,
  <mailto:ccan-request@lists.ozlabs.org?subject=subscribe>
 Errors-To: ccan-bounces+gclcc-ccan=m.gmane.org@lists.ozlabs.org
 Sender: "ccan" <ccan-bounces+gclcc-ccan=m.gmane.org@lists.ozlabs.org>
-To: ccan@lists.ozlabs.org
+To: David Gibson <david@gibson.dropbear.id.au>
+Cc: ccan@lists.ozlabs.org
 List-Id: ccan@lists.ozlabs.org
 
-
---===============1298710873665286055==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="qYrsQHciA3Wqs7Iv"
-Content-Disposition: inline
-
-
---qYrsQHciA3Wqs7Iv
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Thu, Sep 22, 2016 at 10:31:16PM -0600, Kevin Locke wrote:
-1;4803;0c> Hi all,
->=20
-> Building dgraph using Microsoft Visual C++ produces the following
-> error:
->=20
-> dgraph.h(25): error C2233: 'edge': arrays of objects containing
-> zero-size arrays are illegal
->=20
-> The issue is that MSVC supports flexible array members, but does not
-> support arrays of structs with flexible array members.  My
-> understanding is that such support is not required by C99 or C11, but
-> I don't know whether such support is common beyond Clang/GCC.
->=20
-> Is there any interest in supporting such compilers?  If so, I can see
-> a few potential fixes:
->=20
-> 1. Change TCON to use flexible array members only when the compiler
-> supports arrays of structs with flexible array members.  This is an
-> easy fix, but wastes space for every TCON/TLIST usage on such
-> compilers.
->=20
-> 2. Have TCON (and TLIST) provide an alternative macro which uses
-> flexible array members only when supported in arrays, and use that in
-> dgraph.  It would increase the API and duplicate a bit of code, but
-> would only waste space when TCON/TLIST are placed in arrays.
->=20
-> 2. Replace the 2-element edge array in struct dgraph_node with
-> separate fields edge_from and edge_to.  This complicates the logic a
-> bit, since it is no longer symmetric with dgraph_edge.  It would also
-> be an incompatible API change.
->=20
-> 3. Change TLIST to use TCON_WRAP?  I don't understand TLIST/TCON well
-> enough to know if this is really an option.  Hopefully an expert can
-> weigh in here.
-
-I've now done this for tlist and several other modules, we should have
-a much better chance of compiling on windows.
-
---=20
-David Gibson			| I'll have my music baroque, and my code
-david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
-				| _way_ _around_!
-http://www.ozlabs.org/~dgibson
-
---qYrsQHciA3Wqs7Iv
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEdfRlhq5hpmzETofcbDjKyiDZs5IFAlmAD/0ACgkQbDjKyiDZ
-s5LFPA/+OmB5nzFvPYMsyAXOXYaj8QqxhtO8CPsH6J2xA5kKO/0PpFf1gt5AmsbS
-Z31dqA5+K+FapxKDZu1F/eWSMmQAeccuYKmmAtkg0zUww+4fxbF1RhARyJ7aZtNV
-et1f2siptLMmfeP7wRanrH5Zed65XZXwsD3BA0d6OTpvPBr/fJ0jKy3T/i7LmH+k
-QuUaS+YvZe4mpuawEDDF9TJtsQ+4b+v/MT0GisCtDM/lcSUy8ra7SDo4OPSVvNid
-pJh2LSLAgYqr1XK6aW8v6pQqkZfHbwPuQ8/WWOM0o3AbPH5exkcRWFB2sgT2wxrw
-hrsWJtuiVXnshEAJPVTis+h61flFJdF1QuVSbXzKZTODeHvsXrvkcali08E05M7+
-caTUh9vsNgwEYonFt4EkWmRBnZInPOkqdkLa5daZALy5/Ig/vgc96uUbAj1opBsx
-9NTkNuvLY6elfPRPaeSMneCWyJjJNmfGz6vA6U255gldoXuQj4XXIqC+tZpghLGc
-xDScgWVW7prmiaPnFco43qrltXq1Ta5DBYzNfO3UWgd73hVVFNewbWXnc2YxWkhQ
-YWIrhtYhHkZGFkexsFda0m8Z0O+jWFnJr+z9VYdQ8AeVmxwdjQK2AFOroI86jFPB
-NYCjecVpKSenGynRbwn5rkvSlbbn8FD/uYVlS9ETvTYjllaI74M=
-=J7ha
------END PGP SIGNATURE-----
-
---qYrsQHciA3Wqs7Iv--
-
---===============1298710873665286055==
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: inline
-
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KY2NhbiBtYWls
-aW5nIGxpc3QKY2NhbkBsaXN0cy5vemxhYnMub3JnCmh0dHBzOi8vbGlzdHMub3psYWJzLm9yZy9s
-aXN0aW5mby9jY2FuCg==
-
---===============1298710873665286055==--
+T24gVHVlLCAyMDE3LTA4LTAxIGF0IDE1OjIyICsxMDAwLCBEYXZpZCBHaWJzb24gd3JvdGU6Cj4g
+T24gVGh1LCBTZXAgMjIsIDIwMTYgYXQgMTA6MzE6MTZQTSAtMDYwMCwgS2V2aW4gTG9ja2Ugd3Jv
+dGU6Cj4+IFsuLi5dCj4+IAo+PiBUaGUgaXNzdWUgaXMgdGhhdCBNU1ZDIHN1cHBvcnRzIGZsZXhp
+YmxlIGFycmF5IG1lbWJlcnMsIGJ1dCBkb2VzIG5vdAo+PiBzdXBwb3J0IGFycmF5cyBvZiBzdHJ1
+Y3RzIHdpdGggZmxleGlibGUgYXJyYXkgbWVtYmVycy4gIE15Cj4+IHVuZGVyc3RhbmRpbmcgaXMg
+dGhhdCBzdWNoIHN1cHBvcnQgaXMgbm90IHJlcXVpcmVkIGJ5IEM5OSBvciBDMTEsIGJ1dAo+PiBJ
+IGRvbid0IGtub3cgd2hldGhlciBzdWNoIHN1cHBvcnQgaXMgY29tbW9uIGJleW9uZCBDbGFuZy9H
+Q0MuCj4+IAo+PiBJcyB0aGVyZSBhbnkgaW50ZXJlc3QgaW4gc3VwcG9ydGluZyBzdWNoIGNvbXBp
+bGVycz8gIElmIHNvLCBJIGNhbiBzZWUKPj4gYSBmZXcgcG90ZW50aWFsIGZpeGVzOgo+PiAKPj4g
+Wy4uLl0KPj4gCj4+IDMuIENoYW5nZSBUTElTVCB0byB1c2UgVENPTl9XUkFQPyAgSSBkb24ndCB1
+bmRlcnN0YW5kIFRMSVNUL1RDT04gd2VsbAo+PiBlbm91Z2ggdG8ga25vdyBpZiB0aGlzIGlzIHJl
+YWxseSBhbiBvcHRpb24uICBIb3BlZnVsbHkgYW4gZXhwZXJ0IGNhbgo+PiB3ZWlnaCBpbiBoZXJl
+Lgo+IAo+IEkndmUgbm93IGRvbmUgdGhpcyBmb3IgdGxpc3QgYW5kIHNldmVyYWwgb3RoZXIgbW9k
+dWxlcywgd2Ugc2hvdWxkIGhhdmUKPiBhIG11Y2ggYmV0dGVyIGNoYW5jZSBvZiBjb21waWxpbmcg
+b24gd2luZG93cy4KCkdyZWF0IHN0dWZmISAgVGhhbmtzIGZvciBhbGwgb2YgeW91ciB3b3JrIHRv
+IG1ha2UgdGhlIGNoYW5nZXMhCgpBcyBzb29uIGFzIEkgZ2V0IGEgY2hhbmNlIEknbGwgdGFrZSBh
+bm90aGVyIGxvb2sgYXQgYnVpbGRpbmcgd2l0aCBNU1ZDCmFuZCBzZWUgd2hhdCBodXJkbGVzIGV4
+aXN0IGFuZCBob3cgZmVhc2libGUgaXQgbWlnaHQgYmUgdG8gZ2V0IHRoZQpjY2FuIHRvb2xzIGNv
+bXBpbGluZy4KCi0tIApDaGVlcnMsICAgICAgfCAga2V2aW5Aa2V2aW5sb2NrZS5uYW1lICAgIHwg
+WE1QUDoga2V2aW5Aa2V2aW5sb2NrZS5uYW1lCktldmluICAgICAgICB8ICBodHRwczovL2tldmlu
+bG9ja2UubmFtZSAgfCBJUkM6ICAga2V2aW5vaWQgb24gZnJlZW5vZGUKX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KY2NhbiBtYWlsaW5nIGxpc3QKY2NhbkBs
+aXN0cy5vemxhYnMub3JnCmh0dHBzOi8vbGlzdHMub3psYWJzLm9yZy9saXN0aW5mby9jY2FuCg==
