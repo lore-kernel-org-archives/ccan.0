@@ -1,22 +1,21 @@
 From: Damien Grassart <damien@grassart.com>
-Subject: Re: [PATCH 2/2] darray: Evaluate the index parameter only
- once in darray_remove()
-Date: Sun, 27 Aug 2017 22:11:14 +0200
-Message-ID: <CADZuF1n3WzKPYSfcwJT7mYHLmwskHKFv78JU6K_qhsRE+sR1tQ@mail.gmail.com>
-References: <20170826162652.16072-1-damien@grassart.com>
- <20170827025853.GO2772@umbus.fritz.box>
+Subject: Re: [PATCH 1/2] darray: Fix bug in the darray_remove() macro
+Date: Sun, 27 Aug 2017 23:02:11 +0200
+Message-ID: <CADZuF1mhrMb+t+RX1BWgAszYNZphn5u-9UjJehS-th5TuQeQtA@mail.gmail.com>
+References: <20170826162620.15989-1-damien@grassart.com>
+ <20170827025642.GN2772@umbus.fritz.box>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============5354089590043869722=="
+Content-Type: multipart/mixed; boundary="===============6962814746279848085=="
 Return-path: <ccan-bounces+gclcc-ccan=m.gmane.org@lists.ozlabs.org>
 Received: from mail-it0-x241.google.com (mail-it0-x241.google.com
  [IPv6:2607:f8b0:4001:c0b::241])
  (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 3xgQyY3qPczDqgq
- for <ccan@lists.ozlabs.org>; Mon, 28 Aug 2017 06:11:16 +1000 (AEST)
-Received: by mail-it0-x241.google.com with SMTP id c196so3055109itc.3
- for <ccan@lists.ozlabs.org>; Sun, 27 Aug 2017 13:11:16 -0700 (PDT)
-In-Reply-To: <20170827025853.GO2772@umbus.fritz.box>
+ by lists.ozlabs.org (Postfix) with ESMTPS id 3xgS5L5G5mzDqTt
+ for <ccan@lists.ozlabs.org>; Mon, 28 Aug 2017 07:02:14 +1000 (AEST)
+Received: by mail-it0-x241.google.com with SMTP id w204so3112724ita.1
+ for <ccan@lists.ozlabs.org>; Sun, 27 Aug 2017 14:02:14 -0700 (PDT)
+In-Reply-To: <20170827025642.GN2772@umbus.fritz.box>
 List-Unsubscribe: <https://lists.ozlabs.org/options/ccan>,
  <mailto:ccan-request@lists.ozlabs.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/ccan/>
@@ -30,51 +29,47 @@ To: David Gibson <david@gibson.dropbear.id.au>
 Cc: ccan@lists.ozlabs.org
 List-Id: ccan@lists.ozlabs.org
 
---===============5354089590043869722==
-Content-Type: multipart/alternative; boundary="94eb2c04963aba52bf0557c1c775"
+--===============6962814746279848085==
+Content-Type: multipart/alternative; boundary="94eb2c0a7728f884770557c27d32"
 
---94eb2c04963aba52bf0557c1c775
+--94eb2c0a7728f884770557c27d32
 Content-Type: text/plain; charset="UTF-8"
 
-Oops sorry I'll resend with the Signed-off-by.
-For the underscores, I was trying to keep the same style as the rest of the
-code, but I can resend a patch with all the "__identifiers" switched to
- "identifiers__"?
+Good point about shadowing index(3), I'll send a patch renaming all the
+uses of 'index'.
 
-On Sun, Aug 27, 2017 at 4:58 AM, David Gibson <david@gibson.dropbear.id.au>
+On Sun, Aug 27, 2017 at 4:56 AM, David Gibson <david@gibson.dropbear.id.au>
 wrote:
 
-> On Sat, Aug 26, 2017 at 06:26:52PM +0200, Damien Grassart wrote:
-> > To be consistent with the rest of the code, the index paramater should
-> > not be evaluated multiple times. Calling this with rand() % arr.size
-> > would otherwise generally segfault.
+> On Sat, Aug 26, 2017 at 06:26:20PM +0200, Damien Grassart wrote:
+> > The memmove() call should be using the index argument to determine the
+> > number of bytes to copy.
+> >
+> > Signed-off-by: Damien Grassart <damien@grassart.com>
+>
+> No question that was a bug.  Fix applied.
+>
+> Note for a possible future cleanup: calling identifiers 'index' is
+> usually a bad idea, because it shadows index(3) in the C library,
+> which means you can get really confusing errors (or lack of errors) if
+> you remove the declaration but not the users.
+>
 > > ---
-> >  ccan/darray/darray.h | 5 +++--
-> >  1 file changed, 3 insertions(+), 2 deletions(-)
->
-> Looks like a definite improvement, but I need a Signed-off-by line in
-> order to apply it.
->
-> Also.. identifiers starting with _ are technically reserved for system
-> use.  You'd probably get away with it, but it's best to avoid them.  I
-> usually put _ after the name instead for this sort of thing.
->
+> >  ccan/darray/darray.h | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
 > >
 > > diff --git a/ccan/darray/darray.h b/ccan/darray/darray.h
-> > index 8d47645b..6dd34f08 100644
+> > index 75112419..8d47645b 100644
 > > --- a/ccan/darray/darray.h
 > > +++ b/ccan/darray/darray.h
-> > @@ -224,8 +224,9 @@ typedef darray(unsigned long)  darray_ulong;
-> >  #define darray_pop_check(arr) ((arr).size ? darray_pop(arr) : NULL)
+> > @@ -225,7 +225,7 @@ typedef darray(unsigned long)  darray_ulong;
 > >  /* Warning, slow: Requires copying all elements after removed item. */
 > >  #define darray_remove(arr, index) do { \
-> > -     if (index < arr.size-1)    \
+> >       if (index < arr.size-1)    \
 > > -             memmove(&(arr).item[index], &(arr).item[index+1],
+> ((arr).size-1-i)*sizeof(*(arr).item)); \
+> > +             memmove(&(arr).item[index], &(arr).item[index+1],
 > ((arr).size-1-index)*sizeof(*(arr).item)); \
-> > +     size_t __index = index; \
-> > +     if (__index < arr.size-1)    \
-> > +             memmove(&(arr).item[__index], &(arr).item[__index+1],
-> ((arr).size-1-__index)*sizeof(*(arr).item)); \
 > >       (arr).size--;  \
 > >       } while(0)
 > >
@@ -87,59 +82,54 @@ wrote:
 > http://www.ozlabs.org/~dgibson
 >
 
---94eb2c04963aba52bf0557c1c775
+--94eb2c0a7728f884770557c27d32
 Content-Type: text/html; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-<div dir=3D"ltr">Oops sorry I&#39;ll resend with the Signed-off-by.<div>For=
- the underscores, I was trying to keep the same style as the rest of the co=
-de, but I can resend a patch with all the &quot;__identifiers&quot; switche=
-d to =C2=A0&quot;identifiers__&quot;?</div></div><div class=3D"gmail_extra"=
-><br><div class=3D"gmail_quote">On Sun, Aug 27, 2017 at 4:58 AM, David Gibs=
-on <span dir=3D"ltr">&lt;<a href=3D"mailto:david@gibson.dropbear.id.au" tar=
-get=3D"_blank">david@gibson.dropbear.id.au</a>&gt;</span> wrote:<br><blockq=
-uote class=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-left:1px #ccc =
-solid;padding-left:1ex"><span class=3D"">On Sat, Aug 26, 2017 at 06:26:52PM=
- +0200, Damien Grassart wrote:<br>
-&gt; To be consistent with the rest of the code, the index paramater should=
+<div dir=3D"ltr">Good point about shadowing index(3), I&#39;ll send a patch=
+ renaming all the uses of &#39;index&#39;.</div><div class=3D"gmail_extra">=
+<br><div class=3D"gmail_quote">On Sun, Aug 27, 2017 at 4:56 AM, David Gibso=
+n <span dir=3D"ltr">&lt;<a href=3D"mailto:david@gibson.dropbear.id.au" targ=
+et=3D"_blank">david@gibson.dropbear.id.au</a>&gt;</span> wrote:<br><blockqu=
+ote class=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-left:1px #ccc s=
+olid;padding-left:1ex"><span class=3D"">On Sat, Aug 26, 2017 at 06:26:20PM =
++0200, Damien Grassart wrote:<br>
+&gt; The memmove() call should be using the index argument to determine the=
 <br>
-&gt; not be evaluated multiple times. Calling this with rand() % arr.size<b=
-r>
-&gt; would otherwise generally segfault.<br>
-&gt; ---<br>
-&gt;=C2=A0 ccan/darray/darray.h | 5 +++--<br>
-&gt;=C2=A0 1 file changed, 3 insertions(+), 2 deletions(-)<br>
+&gt; number of bytes to copy.<br>
+&gt;<br>
+&gt; Signed-off-by: Damien Grassart &lt;<a href=3D"mailto:damien@grassart.c=
+om">damien@grassart.com</a>&gt;<br>
 <br>
-</span>Looks like a definite improvement, but I need a Signed-off-by line i=
-n<br>
-order to apply it.<br>
+</span>No question that was a bug.=C2=A0 Fix applied.<br>
 <br>
-Also.. identifiers starting with _ are technically reserved for system<br>
-use.=C2=A0 You&#39;d probably get away with it, but it&#39;s best to avoid =
-them.=C2=A0 I<br>
-usually put _ after the name instead for this sort of thing.<br>
+Note for a possible future cleanup: calling identifiers &#39;index&#39; is<=
+br>
+usually a bad idea, because it shadows index(3) in the C library,<br>
+which means you can get really confusing errors (or lack of errors) if<br>
+you remove the declaration but not the users.<br>
 <div class=3D"HOEnZb"><div class=3D"h5"><br>
+&gt; ---<br>
+&gt;=C2=A0 ccan/darray/darray.h | 2 +-<br>
+&gt;=C2=A0 1 file changed, 1 insertion(+), 1 deletion(-)<br>
 &gt;<br>
 &gt; diff --git a/ccan/darray/darray.h b/ccan/darray/darray.h<br>
-&gt; index 8d47645b..6dd34f08 100644<br>
+&gt; index 75112419..8d47645b 100644<br>
 &gt; --- a/ccan/darray/darray.h<br>
 &gt; +++ b/ccan/darray/darray.h<br>
-&gt; @@ -224,8 +224,9 @@ typedef darray(unsigned long)=C2=A0 darray_ulong;<=
+&gt; @@ -225,7 +225,7 @@ typedef darray(unsigned long)=C2=A0 darray_ulong;<=
 br>
-&gt;=C2=A0 #define darray_pop_check(arr) ((arr).size ? darray_pop(arr) : NU=
-LL)<br>
 &gt;=C2=A0 /* Warning, slow: Requires copying all elements after removed it=
 em. */<br>
 &gt;=C2=A0 #define darray_remove(arr, index) do { \<br>
-&gt; -=C2=A0 =C2=A0 =C2=A0if (index &lt; arr.size-1)=C2=A0 =C2=A0 \<br>
+&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0if (index &lt; arr.size-1)=C2=A0 =C2=A0 \<br=
+>
 &gt; -=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0memmove(&amp;(arr).it=
+em[index], &amp;(arr).item[index+1], ((arr).size-1-i)*sizeof(*(arr)<wbr>.it=
+em)); \<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0memmove(&amp;(arr).it=
 em[index], &amp;(arr).item[index+1], ((arr).size-1-index)*sizeof(*(<wbr>arr=
 ).item)); \<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0size_t __index =3D index; \<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0if (__index &lt; arr.size-1)=C2=A0 =C2=A0 \<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0memmove(&amp;(arr).it=
-em[__index], &amp;(arr).item[__index+1], ((arr).size-1-__index)*sizeof(<wbr=
->*(arr).item)); \<br>
 &gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0(arr).size--;=C2=A0 \<br>
 &gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0} while(0)<br>
 &gt;<br>
@@ -157,9 +147,9 @@ NOT _the_ _other_<br>
 ank">http://www.ozlabs.org/~dgibson</a><br>
 </font></span></blockquote></div><br></div>
 
---94eb2c04963aba52bf0557c1c775--
+--94eb2c0a7728f884770557c27d32--
 
---===============5354089590043869722==
+--===============6962814746279848085==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: base64
@@ -169,4 +159,4 @@ X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KY2NhbiBtYWls
 aW5nIGxpc3QKY2NhbkBsaXN0cy5vemxhYnMub3JnCmh0dHBzOi8vbGlzdHMub3psYWJzLm9yZy9s
 aXN0aW5mby9jY2FuCg==
 
---===============5354089590043869722==--
+--===============6962814746279848085==--
