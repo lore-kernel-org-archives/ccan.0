@@ -1,18 +1,18 @@
 From: David Gibson <david@gibson.dropbear.id.au>
-Subject: Re: [PATCH] darray: Add darray_insert() to insert a value at
- a specified index
-Date: Sun, 27 Aug 2017 12:59:18 +1000
-Message-ID: <20170827025918.GP2772@umbus.fritz.box>
-References: <20170826180108.20693-1-damien@grassart.com>
+Subject: Re: [PATCH 2/2] darray: Evaluate the index parameter only
+ once in darray_remove()
+Date: Sun, 27 Aug 2017 12:58:53 +1000
+Message-ID: <20170827025853.GO2772@umbus.fritz.box>
+References: <20170826162652.16072-1-damien@grassart.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============6208344317974655413=="
+Content-Type: multipart/mixed; boundary="===============4843319083193703645=="
 Return-path: <ccan-bounces+gclcc-ccan=m.gmane.org@lists.ozlabs.org>
-Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
+Received: from ozlabs.org (bilbo.ozlabs.org [103.22.144.67])
  (using TLSv1.2 with cipher ADH-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 3xg03v6N1TzDqg5
+ by lists.ozlabs.org (Postfix) with ESMTPS id 3xg03v5d2ZzDqfh
  for <ccan@lists.ozlabs.org>; Sun, 27 Aug 2017 12:59:23 +1000 (AEST)
-In-Reply-To: <20170826180108.20693-1-damien@grassart.com>
+In-Reply-To: <20170826162652.16072-1-damien@grassart.com>
 List-Unsubscribe: <https://lists.ozlabs.org/options/ccan>,
  <mailto:ccan-request@lists.ozlabs.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/ccan/>
@@ -27,55 +27,50 @@ Cc: ccan@lists.ozlabs.org
 List-Id: ccan@lists.ozlabs.org
 
 
---===============6208344317974655413==
+--===============4843319083193703645==
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="Bd2KlmcTHfsQFEJ+"
+	protocol="application/pgp-signature"; boundary="jx/LfW4V5TfZLeq7"
 Content-Disposition: inline
 
 
---Bd2KlmcTHfsQFEJ+
+--jx/LfW4V5TfZLeq7
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Sat, Aug 26, 2017 at 08:01:08PM +0200, Damien Grassart wrote:
-> This module currently supports removing but not inserting at a
-> specified index, so this adds that. Inserting a value moves all
-> existing data beyond index over one element.
-
-Looks good but I need an S-o-b.  Adding a testcase would also be good.
-
+On Sat, Aug 26, 2017 at 06:26:52PM +0200, Damien Grassart wrote:
+> To be consistent with the rest of the code, the index paramater should
+> not be evaluated multiple times. Calling this with rand() % arr.size
+> would otherwise generally segfault.
 > ---
->  ccan/darray/darray.h | 7 +++++++
->  1 file changed, 7 insertions(+)
+>  ccan/darray/darray.h | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
+
+Looks like a definite improvement, but I need a Signed-off-by line in
+order to apply it.
+
+Also.. identifiers starting with _ are technically reserved for system
+use.  You'd probably get away with it, but it's best to avoid them.  I
+usually put _ after the name instead for this sort of thing.
+
 >=20
 > diff --git a/ccan/darray/darray.h b/ccan/darray/darray.h
-> index 75112419..fca20b8a 100644
+> index 8d47645b..6dd34f08 100644
 > --- a/ccan/darray/darray.h
 > +++ b/ccan/darray/darray.h
-> @@ -56,6 +56,7 @@
->   *
->   *     void   darray_append(darray(T) arr, T item);
->   *     void   darray_prepend(darray(T) arr, T item);
-> + *     void   darray_insert(darray(T) arr, size_t index, T item);
->   *     void   darray_push(darray(T) arr, T item); // same as darray_appe=
-nd
->   *
->   * Insertion (multiple items):
-> @@ -169,6 +170,12 @@ typedef darray(unsigned long)  darray_ulong;
->  		memmove((arr).item+1, (arr).item, ((arr).size-1)*sizeof(*(arr).item));=
- \
->  		(arr).item[0] =3D (__VA_ARGS__); \
+> @@ -224,8 +224,9 @@ typedef darray(unsigned long)  darray_ulong;
+>  #define darray_pop_check(arr) ((arr).size ? darray_pop(arr) : NULL)
+>  /* Warning, slow: Requires copying all elements after removed item. */
+>  #define darray_remove(arr, index) do { \
+> -	if (index < arr.size-1)    \
+> -		memmove(&(arr).item[index], &(arr).item[index+1], ((arr).size-1-index)=
+*sizeof(*(arr).item)); \
+> +	size_t __index =3D index; \
+> +	if (__index < arr.size-1)    \
+> +		memmove(&(arr).item[__index], &(arr).item[__index+1], ((arr).size-1-__=
+index)*sizeof(*(arr).item)); \
+>  	(arr).size--;  \
 >  	} while(0)
-> +#define darray_insert(arr, index, ...) do { \
-> +		size_t __index =3D index; \
-> +		darray_resize(arr, (arr).size+1); \
-> +		memmove((arr).item+__index+1, (arr).item+__index, ((arr).size-__index-=
-1)*sizeof(*(arr).item)); \
-> +		(arr).item[__index] =3D (__VA_ARGS__); \
-> +	} while(0)
->  #define darray_push(arr, ...) darray_append(arr, __VA_ARGS__)
-> =20
 > =20
 
 --=20
@@ -84,29 +79,29 @@ david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
 				| _way_ _around_!
 http://www.ozlabs.org/~dgibson
 
---Bd2KlmcTHfsQFEJ+
+--jx/LfW4V5TfZLeq7
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAEBCAAdFiEEdfRlhq5hpmzETofcbDjKyiDZs5IFAlmiNYYACgkQbDjKyiDZ
-s5IJPhAAyrzywibdRKjhKAYFU44LCHP+HbJ/7wP0JCmw9EOtUuh94IATMPGJStLu
-jUeVEL6l+rlmBYvcJaGxRIDVv3DcPvRiCuitRplC9c0nYdokIMH6+Z63Jwmk0532
-iG2r8S4KcTghytAld6lc7f8TZm4kOXUS4o9e01gg1Q1Jb6m2WFAoag7LGL9aoMFr
-toz5uqneqVC2cQOX+UJnwXg2gE7V1P0iKu17vA1hg8tTwS8T2gsGG29eONH7lSnX
-+6mWTeOtTnL/HUmL9W6i7IwPSvqudzCToh+RHlaxYAwp+3q+a5tgblCutMq2aw49
-6bGtkr5AFt6OLs0IvD4A5Pngtq+ushcfr+5lTSIZeYLvZUF/WGpeXUGhrFKhF6k4
-Bd4PN2YCGz+1xgxPUCL5/8ZJaBepVHvcQeineIKE/m4DN3+LUL+KhB1K9H6Sl88l
-qyKjmEg+JY9LfsRiliqsLdav9fjnC8q7m6A5M+uujMcLqkjj1gDu0l9BcBPssLRo
-rIf6XVyzXqwV6P4VJ4het2O5pRhdX5ArXDgMgQdxSZH2M4X1z0OqaZQ7e/g1G9vG
-rE23tLONg3cCiqE2NLpu1Ym2EE34dcw3rzuZTJIq0Jayzpp6kkH76XTekKFuZ2Du
-8xCljAXFHlRk1tBFrO6h1XzHN4RuvqXDpSAOSRjxRh6l8STtSOM=
-=P8B2
+iQIzBAEBCAAdFiEEdfRlhq5hpmzETofcbDjKyiDZs5IFAlmiNW0ACgkQbDjKyiDZ
+s5LXmQ//e5ZZb9cbjOOL5qgjHoyH9sOu+oNe8raRYGJomhF2pcHMmCoC7A4foyYQ
+5FM07zHF7czxAPxeaEA42URGCMtj/4sMdVJfGrij4i+4CfawLVsYTI/9cwfm27XN
+YKXAqnztuk06VsTIrhO8wO31lyIj1oD+LiRb/QsDgJMu2N46V132Gw3Ig3UdnCwf
+M27cfNH96Ec9FN/cfOAAbNl/7lxJy6S6IcIjayt4m6zk+jr4oEOzLWe6umfg9mwH
+EuqosKpnF7JC8wv303phx2KsN4gNIKI2+hzJh1XEek6subiOP/AYrIeS/xjZ7mq2
+2Wcj2qEkzhYIR9saR2rF+8PAp4KU+KAH8KAXlsVcswuOyTzn05y6KNuPcSsmBxHd
+o2Q5PhqawDfKM7Mva9zhAIwVuHC9ezLYVABLvsa1IoPO7xnOWUDdKAtWTkijpiIF
+HgLdpGjRNMHBS1krvZYdSinDEUR+apCynX5RXkCixv4gLSZmb51WletM+qJ1dPye
+naWXKViZdQiiL3YcOPV1Vv5aaZfzezIQxZKMAFEO45nDRAHBR9Cm0o4c2E9ma/N1
+fo7u1z0DYiFsXWY91YdC5zh5ZnZeNjrYYnPUuztsZIOh3UUZI4Rz2w98MVPV5Q8S
+r926V+iLHd6KLDgHjWw+Ghs5oY05LPGpH6XBg1T+0UEfm9jE2Jw=
+=pdfG
 -----END PGP SIGNATURE-----
 
---Bd2KlmcTHfsQFEJ+--
+--jx/LfW4V5TfZLeq7--
 
---===============6208344317974655413==
+--===============4843319083193703645==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: base64
@@ -116,4 +111,4 @@ X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KY2NhbiBtYWls
 aW5nIGxpc3QKY2NhbkBsaXN0cy5vemxhYnMub3JnCmh0dHBzOi8vbGlzdHMub3psYWJzLm9yZy9s
 aXN0aW5mby9jY2FuCg==
 
---===============6208344317974655413==--
+--===============4843319083193703645==--
