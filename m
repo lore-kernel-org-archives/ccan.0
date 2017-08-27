@@ -1,25 +1,18 @@
-From: Damien Grassart <damien@grassart.com>
-Subject: [PATCH] darray: Add darray_insert() to insert a value at a
- specified index
-Date: Sat, 26 Aug 2017 20:01:08 +0200
-Message-ID: <20170826180108.20693-1-damien@grassart.com>
+From: David Gibson <david@gibson.dropbear.id.au>
+Subject: Re: [PATCH] darray: Add darray_insert() to insert a value at
+ a specified index
+Date: Sun, 27 Aug 2017 12:59:18 +1000
+Message-ID: <20170827025918.GP2772@umbus.fritz.box>
+References: <20170826180108.20693-1-damien@grassart.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: multipart/mixed; boundary="===============6208344317974655413=="
 Return-path: <ccan-bounces+gclcc-ccan=m.gmane.org@lists.ozlabs.org>
-Received: from mail-wr0-x22f.google.com (mail-wr0-x22f.google.com
- [IPv6:2a00:1450:400c:c0c::22f])
- (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
+ (using TLSv1.2 with cipher ADH-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 3xfm732n83zDrKC
- for <ccan@lists.ozlabs.org>; Sun, 27 Aug 2017 04:01:19 +1000 (AEST)
-Received: by mail-wr0-x22f.google.com with SMTP id p14so7564529wrg.3
- for <ccan@lists.ozlabs.org>; Sat, 26 Aug 2017 11:01:19 -0700 (PDT)
-Received: from localhost.localdomain ([2a01:e35:2f06:fb90:922b:34ff:fedb:604])
- by smtp.gmail.com with ESMTPSA id
- u1sm8745899wrd.16.2017.08.26.11.01.14 for <ccan@lists.ozlabs.org>
- (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
- Sat, 26 Aug 2017 11:01:14 -0700 (PDT)
+ by lists.ozlabs.org (Postfix) with ESMTPS id 3xg03v6N1TzDqg5
+ for <ccan@lists.ozlabs.org>; Sun, 27 Aug 2017 12:59:23 +1000 (AEST)
+In-Reply-To: <20170826180108.20693-1-damien@grassart.com>
 List-Unsubscribe: <https://lists.ozlabs.org/options/ccan>,
  <mailto:ccan-request@lists.ozlabs.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/ccan/>
@@ -29,30 +22,98 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/ccan>,
  <mailto:ccan-request@lists.ozlabs.org?subject=subscribe>
 Errors-To: ccan-bounces+gclcc-ccan=m.gmane.org@lists.ozlabs.org
 Sender: "ccan" <ccan-bounces+gclcc-ccan=m.gmane.org@lists.ozlabs.org>
-To: ccan@lists.ozlabs.org
+To: Damien Grassart <damien@grassart.com>
+Cc: ccan@lists.ozlabs.org
 List-Id: ccan@lists.ozlabs.org
 
-VGhpcyBtb2R1bGUgY3VycmVudGx5IHN1cHBvcnRzIHJlbW92aW5nIGJ1dCBub3QgaW5zZXJ0aW5n
-IGF0IGEKc3BlY2lmaWVkIGluZGV4LCBzbyB0aGlzIGFkZHMgdGhhdC4gSW5zZXJ0aW5nIGEgdmFs
-dWUgbW92ZXMgYWxsCmV4aXN0aW5nIGRhdGEgYmV5b25kIGluZGV4IG92ZXIgb25lIGVsZW1lbnQu
-Ci0tLQogY2Nhbi9kYXJyYXkvZGFycmF5LmggfCA3ICsrKysrKysKIDEgZmlsZSBjaGFuZ2VkLCA3
-IGluc2VydGlvbnMoKykKCmRpZmYgLS1naXQgYS9jY2FuL2RhcnJheS9kYXJyYXkuaCBiL2NjYW4v
-ZGFycmF5L2RhcnJheS5oCmluZGV4IDc1MTEyNDE5Li5mY2EyMGI4YSAxMDA2NDQKLS0tIGEvY2Nh
-bi9kYXJyYXkvZGFycmF5LmgKKysrIGIvY2Nhbi9kYXJyYXkvZGFycmF5LmgKQEAgLTU2LDYgKzU2
-LDcgQEAKICAqCiAgKiAgICAgdm9pZCAgIGRhcnJheV9hcHBlbmQoZGFycmF5KFQpIGFyciwgVCBp
-dGVtKTsKICAqICAgICB2b2lkICAgZGFycmF5X3ByZXBlbmQoZGFycmF5KFQpIGFyciwgVCBpdGVt
-KTsKKyAqICAgICB2b2lkICAgZGFycmF5X2luc2VydChkYXJyYXkoVCkgYXJyLCBzaXplX3QgaW5k
-ZXgsIFQgaXRlbSk7CiAgKiAgICAgdm9pZCAgIGRhcnJheV9wdXNoKGRhcnJheShUKSBhcnIsIFQg
-aXRlbSk7IC8vIHNhbWUgYXMgZGFycmF5X2FwcGVuZAogICoKICAqIEluc2VydGlvbiAobXVsdGlw
-bGUgaXRlbXMpOgpAQCAtMTY5LDYgKzE3MCwxMiBAQCB0eXBlZGVmIGRhcnJheSh1bnNpZ25lZCBs
-b25nKSAgZGFycmF5X3Vsb25nOwogCQltZW1tb3ZlKChhcnIpLml0ZW0rMSwgKGFycikuaXRlbSwg
-KChhcnIpLnNpemUtMSkqc2l6ZW9mKCooYXJyKS5pdGVtKSk7IFwKIAkJKGFycikuaXRlbVswXSA9
-IChfX1ZBX0FSR1NfXyk7IFwKIAl9IHdoaWxlKDApCisjZGVmaW5lIGRhcnJheV9pbnNlcnQoYXJy
-LCBpbmRleCwgLi4uKSBkbyB7IFwKKwkJc2l6ZV90IF9faW5kZXggPSBpbmRleDsgXAorCQlkYXJy
-YXlfcmVzaXplKGFyciwgKGFycikuc2l6ZSsxKTsgXAorCQltZW1tb3ZlKChhcnIpLml0ZW0rX19p
-bmRleCsxLCAoYXJyKS5pdGVtK19faW5kZXgsICgoYXJyKS5zaXplLV9faW5kZXgtMSkqc2l6ZW9m
-KCooYXJyKS5pdGVtKSk7IFwKKwkJKGFycikuaXRlbVtfX2luZGV4XSA9IChfX1ZBX0FSR1NfXyk7
-IFwKKwl9IHdoaWxlKDApCiAjZGVmaW5lIGRhcnJheV9wdXNoKGFyciwgLi4uKSBkYXJyYXlfYXBw
-ZW5kKGFyciwgX19WQV9BUkdTX18pCiAKIAotLSAKMi4xNC4xCgpfX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fXwpjY2FuIG1haWxpbmcgbGlzdApjY2FuQGxpc3Rz
-Lm96bGFicy5vcmcKaHR0cHM6Ly9saXN0cy5vemxhYnMub3JnL2xpc3RpbmZvL2NjYW4K
+
+--===============6208344317974655413==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="Bd2KlmcTHfsQFEJ+"
+Content-Disposition: inline
+
+
+--Bd2KlmcTHfsQFEJ+
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Sat, Aug 26, 2017 at 08:01:08PM +0200, Damien Grassart wrote:
+> This module currently supports removing but not inserting at a
+> specified index, so this adds that. Inserting a value moves all
+> existing data beyond index over one element.
+
+Looks good but I need an S-o-b.  Adding a testcase would also be good.
+
+> ---
+>  ccan/darray/darray.h | 7 +++++++
+>  1 file changed, 7 insertions(+)
+>=20
+> diff --git a/ccan/darray/darray.h b/ccan/darray/darray.h
+> index 75112419..fca20b8a 100644
+> --- a/ccan/darray/darray.h
+> +++ b/ccan/darray/darray.h
+> @@ -56,6 +56,7 @@
+>   *
+>   *     void   darray_append(darray(T) arr, T item);
+>   *     void   darray_prepend(darray(T) arr, T item);
+> + *     void   darray_insert(darray(T) arr, size_t index, T item);
+>   *     void   darray_push(darray(T) arr, T item); // same as darray_appe=
+nd
+>   *
+>   * Insertion (multiple items):
+> @@ -169,6 +170,12 @@ typedef darray(unsigned long)  darray_ulong;
+>  		memmove((arr).item+1, (arr).item, ((arr).size-1)*sizeof(*(arr).item));=
+ \
+>  		(arr).item[0] =3D (__VA_ARGS__); \
+>  	} while(0)
+> +#define darray_insert(arr, index, ...) do { \
+> +		size_t __index =3D index; \
+> +		darray_resize(arr, (arr).size+1); \
+> +		memmove((arr).item+__index+1, (arr).item+__index, ((arr).size-__index-=
+1)*sizeof(*(arr).item)); \
+> +		(arr).item[__index] =3D (__VA_ARGS__); \
+> +	} while(0)
+>  #define darray_push(arr, ...) darray_append(arr, __VA_ARGS__)
+> =20
+> =20
+
+--=20
+David Gibson			| I'll have my music baroque, and my code
+david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
+				| _way_ _around_!
+http://www.ozlabs.org/~dgibson
+
+--Bd2KlmcTHfsQFEJ+
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEdfRlhq5hpmzETofcbDjKyiDZs5IFAlmiNYYACgkQbDjKyiDZ
+s5IJPhAAyrzywibdRKjhKAYFU44LCHP+HbJ/7wP0JCmw9EOtUuh94IATMPGJStLu
+jUeVEL6l+rlmBYvcJaGxRIDVv3DcPvRiCuitRplC9c0nYdokIMH6+Z63Jwmk0532
+iG2r8S4KcTghytAld6lc7f8TZm4kOXUS4o9e01gg1Q1Jb6m2WFAoag7LGL9aoMFr
+toz5uqneqVC2cQOX+UJnwXg2gE7V1P0iKu17vA1hg8tTwS8T2gsGG29eONH7lSnX
++6mWTeOtTnL/HUmL9W6i7IwPSvqudzCToh+RHlaxYAwp+3q+a5tgblCutMq2aw49
+6bGtkr5AFt6OLs0IvD4A5Pngtq+ushcfr+5lTSIZeYLvZUF/WGpeXUGhrFKhF6k4
+Bd4PN2YCGz+1xgxPUCL5/8ZJaBepVHvcQeineIKE/m4DN3+LUL+KhB1K9H6Sl88l
+qyKjmEg+JY9LfsRiliqsLdav9fjnC8q7m6A5M+uujMcLqkjj1gDu0l9BcBPssLRo
+rIf6XVyzXqwV6P4VJ4het2O5pRhdX5ArXDgMgQdxSZH2M4X1z0OqaZQ7e/g1G9vG
+rE23tLONg3cCiqE2NLpu1Ym2EE34dcw3rzuZTJIq0Jayzpp6kkH76XTekKFuZ2Du
+8xCljAXFHlRk1tBFrO6h1XzHN4RuvqXDpSAOSRjxRh6l8STtSOM=
+=P8B2
+-----END PGP SIGNATURE-----
+
+--Bd2KlmcTHfsQFEJ+--
+
+--===============6208344317974655413==
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: inline
+
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KY2NhbiBtYWls
+aW5nIGxpc3QKY2NhbkBsaXN0cy5vemxhYnMub3JnCmh0dHBzOi8vbGlzdHMub3psYWJzLm9yZy9s
+aXN0aW5mby9jY2FuCg==
+
+--===============6208344317974655413==--
