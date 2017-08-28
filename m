@@ -1,19 +1,19 @@
 From: David Gibson <david@gibson.dropbear.id.au>
-Subject: Re: [PATCH] darray: Add darray_insert() to insert a value at
- a specified index
-Date: Mon, 28 Aug 2017 12:42:00 +1000
-Message-ID: <20170828024200.GA2578@umbus.fritz.box>
-References: <20170827025918.GP2772@umbus.fritz.box>
- <20170827194057.10533-1-damien@grassart.com>
+Subject: Re: [PATCH 2/2] darray: Fix bug in the darray_remove() macro
+Date: Mon, 28 Aug 2017 12:48:41 +1000
+Message-ID: <20170828024841.GC2578@umbus.fritz.box>
+References: <20170827025642.GN2772@umbus.fritz.box>
+ <20170827212624.14673-1-damien@grassart.com>
+ <20170827212624.14673-2-damien@grassart.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============7420094683001619340=="
+Content-Type: multipart/mixed; boundary="===============7711354696845264212=="
 Return-path: <ccan-bounces+gclcc-ccan=m.gmane.org@lists.ozlabs.org>
-Received: from ozlabs.org (bilbo.ozlabs.org [103.22.144.67])
+Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
  (using TLSv1.2 with cipher ADH-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 3xgdJx4jvLzDqM1
+ by lists.ozlabs.org (Postfix) with ESMTPS id 3xgdJx53t4zDqMX
  for <ccan@lists.ozlabs.org>; Mon, 28 Aug 2017 13:57:53 +1000 (AEST)
-In-Reply-To: <20170827194057.10533-1-damien@grassart.com>
+In-Reply-To: <20170827212624.14673-2-damien@grassart.com>
 List-Unsubscribe: <https://lists.ozlabs.org/options/ccan>,
  <mailto:ccan-request@lists.ozlabs.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/ccan/>
@@ -23,104 +23,106 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/ccan>,
  <mailto:ccan-request@lists.ozlabs.org?subject=subscribe>
 Errors-To: ccan-bounces+gclcc-ccan=m.gmane.org@lists.ozlabs.org
 Sender: "ccan" <ccan-bounces+gclcc-ccan=m.gmane.org@lists.ozlabs.org>
-To: Damien Grassart <damien@grassart.com>, '@umbus.fritz.box
+To: Damien Grassart <damien@grassart.com>
 Cc: ccan@lists.ozlabs.org
 List-Id: ccan@lists.ozlabs.org
 
 
---===============7420094683001619340==
+--===============7711354696845264212==
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="lrZ03NoBR/3+SXJZ"
+	protocol="application/pgp-signature"; boundary="yLVHuoLXiP9kZBkt"
 Content-Disposition: inline
 
 
---lrZ03NoBR/3+SXJZ
-Content-Type: text/plain; charset=us-ascii
+--yLVHuoLXiP9kZBkt
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Sun, Aug 27, 2017 at 09:40:57PM +0200, Damien Grassart wrote:
-> This module currently supports removing but not inserting at a
-> specified index, so this adds that along with some tests. Inserting a
-> value moves all existing data beyond index over one element.
+On Sun, Aug 27, 2017 at 11:26:24PM +0200, Damien Grassart wrote:
+> The memmove() call should be using the index argument to determine the
+> number of bytes to copy. To be consistent with the rest of the code,
+> we should also not evaluate the index parameter multiple
+> times. Calling this with rand() % arr.size would otherwise generally
+> segfault.
+>=20
+> Finally, we want to avoid using "index" as an identifier so as to not
+> shadow index(3) in the C library.
 >=20
 > Signed-off-by: Damien Grassart <damien@grassart.com>
 
-Applied, thanks.
+This breaks compile for me, though I can't quickly see why.
+
+$ make
+cc -g3 -ggdb -Wall -Wstrict-prototypes -Wold-style-definition -Wundef -Wmis=
+sing-prototypes -Wmissing-declarations -Wpointer-arith -Wwrite-strings -DCC=
+AN_STR_DEBUG=3D1 -I.  -MMD -MP -MFccan/strgrp/strgrp.o.d -MTccan/strgrp/str=
+grp.o -c ccan/strgrp/strgrp.c -o ccan/strgrp/strgrp.o
+In file included from ccan/strgrp/strgrp.c:26:0:
+=2E/ccan/darray/darray.h:235:2: error: expected identifier or =E2=80=98(=E2=
+=80=99 before =E2=80=98if=E2=80=99
+  if (index_ < arr.size-1)    \
+  ^~
+=2E/ccan/darray/darray.h:237:7: error: expected =E2=80=98=3D=E2=80=99, =E2=
+=80=98,=E2=80=99, =E2=80=98;=E2=80=99, =E2=80=98asm=E2=80=99 or =E2=80=98__=
+attribute__=E2=80=99 before =E2=80=98.=E2=80=99 token
+  (arr).size--;  \
+       ^
+=2E/ccan/darray/darray.h:238:2: error: expected identifier or =E2=80=98(=E2=
+=80=99 before =E2=80=98}=E2=80=99 token
+  } while(0)
+  ^
+=2E/ccan/darray/darray.h:238:4: error: expected identifier or =E2=80=98(=E2=
+=80=99 before =E2=80=98while=E2=80=99
+  } while(0)
+    ^~~~~
+
+I also noticed that both this and the earlier patches use:
+	size_t index_ =3D i;
+in the macro, without parentheses around the 'i' macro paramater.
+That's not the cause of the error above, but it's not good practice as
+a rule.
+
+So, I've backed out these darray patches for now.  Can you debug the
+compile problem above and resend the whole lot as a single series.
 
 > ---
->  ccan/darray/darray.h   |  7 +++++++
->  ccan/darray/test/run.c | 22 ++++++++++++++++++++--
->  2 files changed, 27 insertions(+), 2 deletions(-)
+>  ccan/darray/darray.h | 11 ++++++-----
+>  1 file changed, 6 insertions(+), 5 deletions(-)
 >=20
 > diff --git a/ccan/darray/darray.h b/ccan/darray/darray.h
-> index 75112419..fca20b8a 100644
+> index 82726c05..6787f14c 100644
 > --- a/ccan/darray/darray.h
 > +++ b/ccan/darray/darray.h
-> @@ -56,6 +56,7 @@
->   *
->   *     void   darray_append(darray(T) arr, T item);
->   *     void   darray_prepend(darray(T) arr, T item);
-> + *     void   darray_insert(darray(T) arr, size_t index, T item);
->   *     void   darray_push(darray(T) arr, T item); // same as darray_appe=
-nd
->   *
->   * Insertion (multiple items):
-> @@ -169,6 +170,12 @@ typedef darray(unsigned long)  darray_ulong;
+> @@ -170,8 +170,8 @@ typedef darray(unsigned long)  darray_ulong;
 >  		memmove((arr).item+1, (arr).item, ((arr).size-1)*sizeof(*(arr).item));=
  \
 >  		(arr).item[0] =3D (__VA_ARGS__); \
 >  	} while(0)
-> +#define darray_insert(arr, index, ...) do { \
-> +		size_t __index =3D index; \
-> +		darray_resize(arr, (arr).size+1); \
-> +		memmove((arr).item+__index+1, (arr).item+__index, ((arr).size-__index-=
-1)*sizeof(*(arr).item)); \
-> +		(arr).item[__index] =3D (__VA_ARGS__); \
-> +	} while(0)
->  #define darray_push(arr, ...) darray_append(arr, __VA_ARGS__)
+> -#define darray_insert(arr, index, ...) do { \
+> -		size_t index_ =3D index; \
+> +#define darray_insert(arr, i, ...) do { \
+> +		size_t index_ =3D i; \
+>  		darray_resize(arr, (arr).size+1); \
+>  		memmove((arr).item+index_+1, (arr).item+index_, ((arr).size-index_-1)*=
+sizeof(*(arr).item)); \
+>  		(arr).item[index_] =3D (__VA_ARGS__); \
+> @@ -230,9 +230,10 @@ typedef darray(unsigned long)  darray_ulong;
+>  #define darray_pop(arr) ((arr).item[--(arr).size])
+>  #define darray_pop_check(arr) ((arr).size ? darray_pop(arr) : NULL)
+>  /* Warning, slow: Requires copying all elements after removed item. */
+> -#define darray_remove(arr, index) do { \
+> -	if (index < arr.size-1)    \
+> -		memmove(&(arr).item[index], &(arr).item[index+1], ((arr).size-1-i)*siz=
+eof(*(arr).item)); \
+> +#define darray_remove(arr, i) do { \
+> +	size_t index_ =3D i;
+> +	if (index_ < arr.size-1)    \
+> +		memmove(&(arr).item[index_], &(arr).item[index_+1], ((arr).size-1-inde=
+x_)*sizeof(*(arr).item)); \
+>  	(arr).size--;  \
+>  	} while(0)
 > =20
-> =20
-> diff --git a/ccan/darray/test/run.c b/ccan/darray/test/run.c
-> index 3d96fa56..5888af60 100644
-> --- a/ccan/darray/test/run.c
-> +++ b/ccan/darray/test/run.c
-> @@ -38,7 +38,7 @@ int main(void) {
->  	trace("Generating amalgams (internal)");
->  	generateAmalgams();
->  =09
-> -	plan_tests(41);
-> +	plan_tests(47);
->  =09
->  	testLits();
->  =09
-> @@ -70,7 +70,25 @@ int main(void) {
->  		ok1(darray_size(arr) =3D=3D 0);
->  	}
->  	reset(arr);
-> -=09
-> +
-> +	testing(darray_insert);
-> +	{
-> +		size_t middle_i;
-> +
-> +		for (i=3D0; i < ARRAY_SIZE(lotsOfNumbers); i++)
-> +			darray_insert(arr, i, lotsOfNumbers[i]);
-> +		ok1(darray_size(arr) =3D=3D ARRAY_SIZE(lotsOfNumbers));
-> +		ok1(darray_alloc(arr) >=3D darray_size(arr));
-> +		ok1(!memcmp(arr.item, lotsOfNumbers, sizeof(lotsOfNumbers)));
-> +
-> +		middle_i =3D ARRAY_SIZE(lotsOfNumbers) / 2;
-> +		darray_insert(arr, middle_i, 42);
-> +		ok1(darray_size(arr) =3D=3D ARRAY_SIZE(lotsOfNumbers) + 1);
-> +		ok1(arr.item[middle_i] =3D=3D 42);
-> +		ok1(arr.item[middle_i + 1] =3D=3D lotsOfNumbers[middle_i]);
-> +	}
-> +	reset(arr);
-> +
->  	testing(darray_from_c, darray_foreach, darray_foreach_reverse);
->  	{
->  		long   *i;
 
 --=20
 David Gibson			| I'll have my music baroque, and my code
@@ -128,29 +130,29 @@ david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
 				| _way_ _around_!
 http://www.ozlabs.org/~dgibson
 
---lrZ03NoBR/3+SXJZ
+--yLVHuoLXiP9kZBkt
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAEBCAAdFiEEdfRlhq5hpmzETofcbDjKyiDZs5IFAlmjgvUACgkQbDjKyiDZ
-s5JLsw/8C2iICLk9KFwnfyELmZxkEr5nI0vgyJw5C9VN+cKC8FOkI4+JAZmyDUNo
-ZwGd/WoX3VrJyvX2ZxpDCUNFH5jmfgFA1nX4nc+9e3J4CyNp0sawoXJQoNA7BjdQ
-2iWPphUfug5f1TLvEgxQDG7519/xxAk/Orgr8wZadztBnsqN79Q5bJzhNWxdoDFx
-JTL66PiZzTItWaVw4grikQVSyA3eUsBbPyW7yOGwD2bpQ91KrmrGm2xujC2MY+2u
-htm7W/0yrCCknLvtU3Kug8qJF5QF0efduTxjgMmPRpr/8X6OsxLbo1bMvSL8TqaD
-DP2aVxIRA9o7gzb6CwiVpta27XhtQtLmlds6kzJlTrWZUVba1LWxPpqitmGcvgta
-lIXhLXoEGQHnJSbIKcxL1kzHiRQSHIHUZqVwvjUawc0Q8kOddcKsumFUdxt2Jnor
-jX6XQGLHKNOWDFGIW1S4Pw1eRSXZULNpGS9cqb/E4oXHDajz4AfB3tdq8C5THXti
-VrZwEnd2JOPryEOuFTjX5L8WZXehVSmLnW/oxBbgcrgTB5a33+C6FkweUTsKo0cz
-w9cr+aKQzVp4qBP9r4VKiJc3HRp7OlVzCTKDlAnJ2GV24OzAevTLAhRoe7W5zOOc
-ykaFZOXgY6ivk92it9Szam6AS6pOKTjrg/csKvmny+PTJky7WXo=
-=dHaT
+iQIzBAEBCAAdFiEEdfRlhq5hpmzETofcbDjKyiDZs5IFAlmjhIkACgkQbDjKyiDZ
+s5LGYBAAgTgm4vgnTVeQu3jQ9SST0zTbE26mCf7g9Arh6NfIrhIiyVxOg1EmXmwY
+d982ElF8wYpg82B6HQDbLwRW8SjCxKjFA5FuR5J5CtutfpTbB3UYyn0o6SlzFip3
+CD/2yr+eG70rsJNm3dbvUehZlvEyXdP+obcuHOCONx0Dk7uDz0iOR582QBPvQrkS
+9BXCzqqW8rQKne8o2tkDJxZ3XxrqwC0KJPqlxIrPHgpu1XL1ADBZHfGIQtRV+1uo
+P0YzVtFhqviTCcy58/boBRQycorVYlWiyg55adydDT2r2o6qYzZmNZtSfLAM+Y92
+qJagfVPHUscKtMxL2tEq1BULaGch3AIP/grBp7lhm8moFLe8BRFxuAxf+H92ysHl
+B7z9N6C8+HqgLRMlJ8ki9PElcsPODYEomzqg7FqyrBUFB9qMXGbDdON3cLMzVFn3
+z/rvG1Jx77XH08e9j5j5nkagUxZU6d+3spTuzvlLdrMbCZIX3vkBXP3bTf+lKoX4
+4an2FKM9e/G15LWkUqFEEZ/K0yQXiNZ0J10bHlPqScVr1MxIGuTzFNQEyMy1jhG6
+803nzgUcIouwtDvfGK4xdP77sh5VpA9OO6+nJhAPjjiTmkCq83BpOh8fzqESSlq3
+b04bSrK/3idfD/59wMXGm9K24XGyW48ZKGf5FQuZQSl1nWwynV4=
+=vHpB
 -----END PGP SIGNATURE-----
 
---lrZ03NoBR/3+SXJZ--
+--yLVHuoLXiP9kZBkt--
 
---===============7420094683001619340==
+--===============7711354696845264212==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: base64
@@ -160,4 +162,4 @@ X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KY2NhbiBtYWls
 aW5nIGxpc3QKY2NhbkBsaXN0cy5vemxhYnMub3JnCmh0dHBzOi8vbGlzdHMub3psYWJzLm9yZy9s
 aXN0aW5mby9jY2FuCg==
 
---===============7420094683001619340==--
+--===============7711354696845264212==--
