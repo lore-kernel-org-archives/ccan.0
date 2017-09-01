@@ -1,17 +1,20 @@
-From: David Gibson <david@gibson.dropbear.id.au>
-Subject: Re: Test failure
-Date: Fri, 1 Sep 2017 15:09:57 +1000
-Message-ID: <20170901050957.GN3386@umbus.fritz.box>
-References: <20170901033420.qxcy4qyimzwv7tbd@matica.foolinux.mooo.com>
+From: Rhys Ulerich <rhys.ulerich@gmail.com>
+Subject: Re: Annoying warning, a.k.a. how to add to CFLAGS
+Date: Fri, 1 Sep 2017 07:46:08 -0400
+Message-ID: <CAKDqugSq+BOaBs4BXUGX-6Ha-FG=PVgyFcFQ8ONO=95sphdqrg@mail.gmail.com>
+References: <20170901032350.zoafocu3c5ifknq6@matica.foolinux.mooo.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============5999433217129814795=="
+Content-Type: multipart/mixed; boundary="===============6796155056134203208=="
 Return-path: <ccan-bounces+gclcc-ccan=m.gmane.org@lists.ozlabs.org>
-Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
- (using TLSv1.2 with cipher ADH-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk0-x234.google.com (mail-qk0-x234.google.com
+ [IPv6:2607:f8b0:400d:c09::234])
+ (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 3xk6tS1GnPzDqj2
- for <ccan@lists.ozlabs.org>; Fri,  1 Sep 2017 15:17:04 +1000 (AEST)
-In-Reply-To: <20170901033420.qxcy4qyimzwv7tbd@matica.foolinux.mooo.com>
+ by lists.ozlabs.org (Postfix) with ESMTPS id 3xkHWT4w4jzDqZf
+ for <ccan@lists.ozlabs.org>; Fri,  1 Sep 2017 21:46:13 +1000 (AEST)
+Received: by mail-qk0-x234.google.com with SMTP id p67so9195025qkd.2
+ for <ccan@lists.ozlabs.org>; Fri, 01 Sep 2017 04:46:13 -0700 (PDT)
+In-Reply-To: <20170901032350.zoafocu3c5ifknq6@matica.foolinux.mooo.com>
 List-Unsubscribe: <https://lists.ozlabs.org/options/ccan>,
  <mailto:ccan-request@lists.ozlabs.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/ccan/>
@@ -24,66 +27,48 @@ Sender: "ccan" <ccan-bounces+gclcc-ccan=m.gmane.org@lists.ozlabs.org>
 To: ccan@lists.ozlabs.org
 List-Id: ccan@lists.ozlabs.org
 
+--===============6796155056134203208==
+Content-Type: multipart/alternative; boundary="001a1141c63ea4a47d05581f4ef0"
 
---===============5999433217129814795==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="3snK74p7ddXn3Qrx"
-Content-Disposition: inline
-
-
---3snK74p7ddXn3Qrx
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+--001a1141c63ea4a47d05581f4ef0
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Aug 31, 2017 at 08:34:21PM -0700, Ian Zimmerman wrote:
-> Trying to run make check on current master, I get:
->=20
-> [many successful tests snipped]
->=20
-> tools/ccanlint/ccanlint -s --deps-fail-ignore   ccan/io/ && touch ccan/io=
-/.ok
-> io: Module examples with expected output give that output (examples_run):=
- FAIL
-> /tmp/ccanlint-24192.1804289383/example-_info-io.c:2:output '' didn't matc=
-h 'tr a-z a-z'
->=20
-> io: Total score: 82/87 FAIL!
-> make: *** [Makefile:78: ccan/io/.ok] Error 1
->=20
-> What's up?
+ccan/strgrp/strgrp.c: In function =E2=80=98grp_for=E2=80=99:
+ccan/strgrp/strgrp.c:296:0: warning: ignoring #pragma omp parallel
+[-Wunknown-pragmas]
+     #pragma omp parallel for schedule(dynamic)
 
-What platform?
 
---=20
-David Gibson			| I'll have my music baroque, and my code
-david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
-				| _way_ _around_!
-http://www.ozlabs.org/~dgibson
+An ifdef might be added to the code:
+https://stackoverflow.com/questions/1300180/ignore-openmp-on-machine-that-d=
+oesnt-have-it
 
---3snK74p7ddXn3Qrx
-Content-Type: application/pgp-signature; name="signature.asc"
+- Rhys
 
------BEGIN PGP SIGNATURE-----
+--001a1141c63ea4a47d05581f4ef0
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-iQIzBAEBCAAdFiEEdfRlhq5hpmzETofcbDjKyiDZs5IFAlmo66IACgkQbDjKyiDZ
-s5JMiQ//ZIQVyF5XimC7xMzZT6xJ+soMkaTUUwutXka9ytpPCRz0eGHfqkt6oSTE
-4ULSXyYi20H6GVGehC7EINf6xtu2BnLo6lZxHhHBy5qrbfismdZKsiHeEtW7eDiy
-63XqKSWhNdh72W2TNRUGlaMxKyexScmKYbl9TYWXUHSPTqzmiakNvqgnGrpQType
-SWlgsQmufqbUSmeux/kJXCMpP1B05V7bDMLX0b3WlLrnPpvbvYQ4oeOWQSj2HjTY
-va4jBokqY3fS4eNqptbbfHPSNwjgInoeeWNoaZqxTtTKzMCf7HK9OEWGxHq5D3Xz
-2958o1yUtv/ZRfXB/wa8YeY776sFndr9hhR+QUnC4JjF7gDHJ7vBph6gwOKLjXBh
-2d+UAOeu8WlXP+MuJUvfy6uJdWewK8bK2b68iJA8AObkeOtotFzRb4W+hoOxObe7
-w9gtL5XDBtwPTj/03O/lLV/QT134d98XdjZpmkA1nJdm304tnJSUQNYKJMQHAw7r
-Uemk8NI7QuWKMCNZhi0NUrMBrbTsWM0NHANPX1iCL9Djpl74IE6GFpVdp7DWiuKZ
-gw6OHWbnGZXz5J0iGNJHQlangpYhk7A7EL2rGCQUI1hITHyX5gVMOo3NUR8e8d2p
-A/UHe0KwEAZTowYI5AW2DbrmtvVZEl5AGlAnAc27v4gQ94RSL2k=
-=5VaM
------END PGP SIGNATURE-----
+<div dir=3D"auto"><div class=3D"gmail_extra" dir=3D"auto"><div class=3D"gma=
+il_quote"><blockquote class=3D"quote" style=3D"margin:0 0 0 .8ex;border-lef=
+t:1px #ccc solid;padding-left:1ex">ccan/strgrp/strgrp.c: In function =E2=80=
+=98grp_for=E2=80=99:<br>
+ccan/strgrp/strgrp.c:296:0: warning: ignoring #pragma omp parallel [-Wunkno=
+wn-pragmas]<br>
+=C2=A0 =C2=A0 =C2=A0#pragma omp parallel for schedule(dynamic)<br></blockqu=
+ote></div></div><div dir=3D"auto"><br></div><div dir=3D"auto">An ifdef migh=
+t be added to the code:=C2=A0<a href=3D"https://stackoverflow.com/questions=
+/1300180/ignore-openmp-on-machine-that-doesnt-have-it">https://stackoverflo=
+w.com/questions/1300180/ignore-openmp-on-machine-that-doesnt-have-it</a></d=
+iv><div dir=3D"auto"><br></div><div dir=3D"auto">- Rhys=C2=A0</div><div dir=
+=3D"auto"><br></div><div class=3D"gmail_extra" dir=3D"auto"><div class=3D"g=
+mail_quote"><blockquote class=3D"quote" style=3D"margin:0 0 0 .8ex;border-l=
+eft:1px #ccc solid;padding-left:1ex"></blockquote></div></div></div>
 
---3snK74p7ddXn3Qrx--
+--001a1141c63ea4a47d05581f4ef0--
 
---===============5999433217129814795==
+--===============6796155056134203208==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: base64
@@ -93,4 +78,4 @@ X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KY2NhbiBtYWls
 aW5nIGxpc3QKY2NhbkBsaXN0cy5vemxhYnMub3JnCmh0dHBzOi8vbGlzdHMub3psYWJzLm9yZy9s
 aXN0aW5mby9jY2FuCg==
 
---===============5999433217129814795==--
+--===============6796155056134203208==--
