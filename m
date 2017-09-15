@@ -1,25 +1,17 @@
-From: Ian Zimmerman <itz@very.loosely.org>
-Subject: bitmap/tal again
-Date: Fri, 15 Sep 2017 01:03:55 -0700
-Message-ID: <20170915080355.zc3ohlzeho5lkcsp@matica.foolinux.mooo.com>
-Reply-To: ccan@lists.ozlabs.org
+From: David Gibson <david@gibson.dropbear.id.au>
+Subject: Re: bitmap/tal again
+Date: Fri, 15 Sep 2017 18:32:25 +1000
+Message-ID: <20170915083225.GL5250@umbus.fritz.box>
+References: <20170915080355.zc3ohlzeho5lkcsp@matica.foolinux.mooo.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: multipart/mixed; boundary="===============1369144243618428112=="
 Return-path: <ccan-bounces+gclcc-ccan=m.gmane.org@lists.ozlabs.org>
-Received: from ahiker.mooo.com (very.loosely.org [173.255.215.69])
- (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
+ (using TLSv1.2 with cipher ADH-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 3xtnwm3rTszDrRw
- for <ccan@lists.ozlabs.org>; Fri, 15 Sep 2017 18:04:07 +1000 (AEST)
-Received: from [10.8.78.6] (port=50288 helo=matica.foolinux.mooo.com)
- by ahiker.mooo.com with esmtp (Exim 4.89)
- (envelope-from <itz@ahiker.mooo.com>) id 1dslbY-0003d1-4Q
- for ccan@lists.ozlabs.org; Fri, 15 Sep 2017 01:04:04 -0700
-Received: from itz by matica.foolinux.mooo.com with local (Exim 4.89)
- (envelope-from <itz@ahiker.mooo.com>) id 1dslbP-000329-BO
- for ccan@lists.ozlabs.org; Fri, 15 Sep 2017 01:03:55 -0700
-Content-Disposition: inline
+ by lists.ozlabs.org (Postfix) with ESMTPS id 3xtpbq3KqxzDrWR
+ for <ccan@lists.ozlabs.org>; Fri, 15 Sep 2017 18:34:31 +1000 (AEST)
+In-Reply-To: <20170915080355.zc3ohlzeho5lkcsp@matica.foolinux.mooo.com>
 List-Unsubscribe: <https://lists.ozlabs.org/options/ccan>,
  <mailto:ccan-request@lists.ozlabs.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/ccan/>
@@ -32,24 +24,83 @@ Sender: "ccan" <ccan-bounces+gclcc-ccan=m.gmane.org@lists.ozlabs.org>
 To: ccan@lists.ozlabs.org
 List-Id: ccan@lists.ozlabs.org
 
-SGksIHNvIEknZCBsaWtlIHRvIGFkZCB0aGUgYml0bWFwL3RhbCBzdWJtb2R1bGUgYXMgZGlzY3Vz
-c2VkIGhlcmU6CgpodHRwczovL2dpdGh1Yi5jb20vcnVzdHlydXNzZWxsL2NjYW4vcHVsbC82MAoK
-YnV0IEknbSBub3QgZmFtaWxpYXIgZW5vdWdoIHdpdGggY2NhbiBkZXBlbmRlbmN5IGRlY2xhcmF0
-aW9ucyB5ZXQgOigKCjEuIFNob3VsZCB0aGUgZGVwZW5kZW5jeSBvbiB0YWwgYmUgZGVjbGFyZWQg
-aW4gYml0bWFwL19pbmZvIG9yIGluCmJpdG1hcC90YWwvX2luZm8/ICBUaGUgbGF0dGVyIHNlZW1z
-IG1vcmUgbmF0dXJhbCwgYnV0IGZvciBzb21lIHJlYXNvbgp0aGUgZmluYWwgcHVsbCByZXF1ZXN0
-IG9uIGdpdGh1YiBzaG93cyB0aGUgZm9ybWVyLiAgSSBkb24ndCBrbm93IGlmCnRoYXQncyBzb21l
-dGhpbmcgSSBkaWQgYW5kIFJ1c3R5IGRpZG4ndCBjb3JyZWN0LCBvciBzb21ldGhpbmcgdGhhdCBS
-dXN0eQpkaWQuICAoSSBhbHNvIGRvbid0IHF1aXRlIHVuZGVyc3RhbmQgZ2l0aHViLCBBUkdIISkK
-CjIuIERvZXMgYml0bWFwL3RhbCBuZWVkIHRvIGRlY2xhcmUgZGVwZW5kZW5jeSBvbiBiaXRtYXAs
-IG9yIGlzIHRoYXQKYXV0b21hdGljPyAgT3IgbWF5YmUgdGhlIG90aGVyIHdheT8gIEkgdHJpZWQg
-dG8gbG9vayBhdCBvdGhlciBzdWJtb2R1bGVzCmluIHRoZSB0cmVlLCBidXQgdGhlcmUgYXJlIG9u
-bHkgYSBmZXcgYW5kIG5vbmUgdGhhdCBxdWl0ZSBtYXRjaCB0aGUKcmVsYXRpb25zaGlwIGJldHdl
-ZW4gdGhpcyBwcm9wb3NlZCBwYWlyLgoKV2VsbCwgaWYgSSBrbm93IHRoZXNlIDIgdGhpbmdzIGl0
-IHNob3VsZCBnZXQgbWUgc3RhcnRlZC4KCi0tIApQbGVhc2UgZG9uJ3QgQ2M6IG1lIHByaXZhdGVs
-eSBvbiBtYWlsaW5nIGxpc3RzIGFuZCBVc2VuZXQsCmlmIHlvdSBhbHNvIHBvc3QgdGhlIGZvbGxv
-d3VwIHRvIHRoZSBsaXN0IG9yIG5ld3Nncm91cC4KRG8gb2J2aW91cyB0cmFuc2Zvcm1hdGlvbiBv
-biBkb21haW4gdG8gcmVwbHkgcHJpdmF0ZWx5IF9vbmx5XyBvbiBVc2VuZXQuCl9fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmNjYW4gbWFpbGluZyBsaXN0CmNj
-YW5AbGlzdHMub3psYWJzLm9yZwpodHRwczovL2xpc3RzLm96bGFicy5vcmcvbGlzdGluZm8vY2Nh
-bgo=
+
+--===============1369144243618428112==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="RNGrj7vazCqBHNw7"
+Content-Disposition: inline
+
+
+--RNGrj7vazCqBHNw7
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Fri, Sep 15, 2017 at 01:03:55AM -0700, Ian Zimmerman wrote:
+> Hi, so I'd like to add the bitmap/tal submodule as discussed here:
+>=20
+> https://github.com/rustyrussell/ccan/pull/60
+>=20
+> but I'm not familiar enough with ccan dependency declarations yet :(
+>=20
+> 1. Should the dependency on tal be declared in bitmap/_info or in
+> bitmap/tal/_info?  The latter seems more natural, but for some reason
+> the final pull request on github shows the former.  I don't know if
+> that's something I did and Rusty didn't correct, or something that Rusty
+> did.  (I also don't quite understand github, ARGH!)
+
+In bitmap/tal/_info, definitely.  Putting it in bitmap/_info will
+change the dependencies of the base bitmap module, not your new
+submodule.
+
+> 2. Does bitmap/tal need to declare dependency on bitmap, or is that
+> automatic?  Or maybe the other way?  I tried to look at other submodules
+> in the tree, but there are only a few and none that quite match the
+> relationship between this proposed pair.
+
+Looking at ccan/tal/str, looks like the surrounding module should be
+explicitly listed in dependencies.
+
+>=20
+> Well, if I know these 2 things it should get me started.
+>=20
+
+--=20
+David Gibson			| I'll have my music baroque, and my code
+david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
+				| _way_ _around_!
+http://www.ozlabs.org/~dgibson
+
+--RNGrj7vazCqBHNw7
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEdfRlhq5hpmzETofcbDjKyiDZs5IFAlm7kBcACgkQbDjKyiDZ
+s5KYzxAAvVdGmGbOoyCheiQNP1J3K622KCvgYjXLubBlKetybfug4wyPMcqyhL6v
+DbZvMrf+gQM2t+Kz6IcsplhCbJUCbsOiCM4keYwzIlys/YFtSgPXGP2zux/z1NZt
+vpaO0cSUWETZsApURlCwiOzi0okUbwcsp0snQP6CQOMzYBwg9QnrstPAqJ+NcRNo
+hmatSNSd9cx0tsoYTDN9pne7c0Xwn/ndGx5Ae6IuR4RbuDuOT+2C6CowWn/XsvAt
+a8ypy1MGPkI8dR8G/sEiaIXsA/+5C4ffq8DUxT9HB/mbq8oACQrz7wZbl68UyHqE
+kjrC2mgE4F6H/faKX7CjBRcq5AJcsZbrXDWBbp46iQRQLtt9kKEsmfyvzWmBA5BD
+cqd74irzN/lJJMTfCSONb8QtUSJRJlyFSLwA5K0zGOBJRq8tsBkw7Zywli6recXL
+WoQjmJewhv9R4CW5nrvyejc73uc+vnJM7AempXIwcs8rZpbcgncl/GHEyfcRYpvy
+OzwlFgjcxSDf1e0DOVp3HRKk6lVCa/h8wnR0XAlBuZ1wXfl8YwGrL7Rydp3aKTiV
+nblQRnXVqd9Ks/gs6Abzg7pIOmiiEaVV1tGl2YDvNnMD8PxQXHexYsbhvBLTOBMZ
+jGrb5213CzBwUaGCq76ZY/yvbIwkOqpoHpKCx82XiexCBV7ASWM=
+=u2FJ
+-----END PGP SIGNATURE-----
+
+--RNGrj7vazCqBHNw7--
+
+--===============1369144243618428112==
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: inline
+
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KY2NhbiBtYWls
+aW5nIGxpc3QKY2NhbkBsaXN0cy5vemxhYnMub3JnCmh0dHBzOi8vbGlzdHMub3psYWJzLm9yZy9s
+aXN0aW5mby9jY2FuCg==
+
+--===============1369144243618428112==--
