@@ -1,41 +1,25 @@
-From: Akshay Adiga <akshay.adiga@linux.vnet.ibm.com>
-Subject: Re: [PATCH] Add Glibc like endianess check
-Date: Wed, 13 Sep 2017 12:03:51 +0530
-Message-ID: <20ab4a9b-747a-f73b-880f-38e55fb2c61c@linux.vnet.ibm.com>
-References: <1505193793-776-1-git-send-email-akshay.adiga@linux.vnet.ibm.com>
- <871snc89in.fsf@rustcorp.com.au>
+From: Ian Zimmerman <itz@very.loosely.org>
+Subject: bitmap/tal again
+Date: Fri, 15 Sep 2017 01:03:55 -0700
+Message-ID: <20170915080355.zc3ohlzeho5lkcsp@matica.foolinux.mooo.com>
+Reply-To: ccan@lists.ozlabs.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: base64
 Return-path: <ccan-bounces+gclcc-ccan=m.gmane.org@lists.ozlabs.org>
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com
- [148.163.156.1])
+Received: from ahiker.mooo.com (very.loosely.org [173.255.215.69])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 3xsX1q2bnLzDqZx
- for <ccan@lists.ozlabs.org>; Wed, 13 Sep 2017 16:34:07 +1000 (AEST)
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
- by mx0a-001b2d01.pphosted.com (8.16.0.21/8.16.0.21) with SMTP id
- v8D6Xw05107444
- for <ccan@lists.ozlabs.org>; Wed, 13 Sep 2017 02:34:05 -0400
-Received: from e23smtp04.au.ibm.com (e23smtp04.au.ibm.com [202.81.31.146])
- by mx0a-001b2d01.pphosted.com with ESMTP id 2cxswxux78-1
- (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NOT)
- for <ccan@lists.ozlabs.org>; Wed, 13 Sep 2017 02:34:04 -0400
-Received: from localhost
- by e23smtp04.au.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
- Violators will be prosecuted
- for <ccan@lists.ozlabs.org> from <akshay.adiga@linux.vnet.ibm.com>;
- Wed, 13 Sep 2017 16:33:58 +1000
-Received: from d23av06.au.ibm.com (d23av06.au.ibm.com [9.190.235.151])
- by d23relay10.au.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id
- v8D6XtZW41615422
- for <ccan@lists.ozlabs.org>; Wed, 13 Sep 2017 16:33:55 +1000
-Received: from d23av06.au.ibm.com (localhost [127.0.0.1])
- by d23av06.au.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
- v8D6XtBk031493
- for <ccan@lists.ozlabs.org>; Wed, 13 Sep 2017 16:33:55 +1000
-In-Reply-To: <871snc89in.fsf@rustcorp.com.au>
+ by lists.ozlabs.org (Postfix) with ESMTPS id 3xtnwm3rTszDrRw
+ for <ccan@lists.ozlabs.org>; Fri, 15 Sep 2017 18:04:07 +1000 (AEST)
+Received: from [10.8.78.6] (port=50288 helo=matica.foolinux.mooo.com)
+ by ahiker.mooo.com with esmtp (Exim 4.89)
+ (envelope-from <itz@ahiker.mooo.com>) id 1dslbY-0003d1-4Q
+ for ccan@lists.ozlabs.org; Fri, 15 Sep 2017 01:04:04 -0700
+Received: from itz by matica.foolinux.mooo.com with local (Exim 4.89)
+ (envelope-from <itz@ahiker.mooo.com>) id 1dslbP-000329-BO
+ for ccan@lists.ozlabs.org; Fri, 15 Sep 2017 01:03:55 -0700
+Content-Disposition: inline
 List-Unsubscribe: <https://lists.ozlabs.org/options/ccan>,
  <mailto:ccan-request@lists.ozlabs.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/ccan/>
@@ -45,19 +29,27 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/ccan>,
  <mailto:ccan-request@lists.ozlabs.org?subject=subscribe>
 Errors-To: ccan-bounces+gclcc-ccan=m.gmane.org@lists.ozlabs.org
 Sender: "ccan" <ccan-bounces+gclcc-ccan=m.gmane.org@lists.ozlabs.org>
-To: Rusty Russell <rusty@rustcorp.com.au>
-Cc: ccan@lists.ozlabs.org, ego@linux.vnet.ibm.com, svaidy@linux.vnet.ibm.com
+To: ccan@lists.ozlabs.org
 List-Id: ccan@lists.ozlabs.org
 
-VGhhbmtzISEhCgpPbiAwOS8xMi8yMDE3IDA0OjMyIFBNLCBSdXN0eSBSdXNzZWxsIHdyb3RlOgo+
-IEFrc2hheSBBZGlnYSA8YWtzaGF5LmFkaWdhQGxpbnV4LnZuZXQuaWJtLmNvbT4gd3JpdGVzOgo+
-ID4gQW4gYXBwbGljYXRpb24gYnVpbHQgdXNpbmcgZ2xpYmMgd291bGQgZXhwZWN0IF9fQllURV9P
-UkRFUiB0byB0ZWxsIGlmCj4gPiBpdCBzaG91bGQgYmUgY29tcGlsZWQgZm9yIEJJR19FTkRJQU4g
-b3IgTElUVExFX0VORElBTiwgd2hlcmVhcyBjY2FuIHVzZXMKPiA+IEhBVkVfTElUVExFX0VORElB
-TiBhbmQgSEFWRV9CSUdfRU5ESUFOIGZvciB0aGUgc2FtZSBwdXJwb3NlLgo+ID4KPiA+IEhlbmNl
-IHNldHRpbmcgX19CWVRFX09SREVSIGJhc2VkIG9uIHdoYXQgQ0NBTiBwcm92aWRlcyB3aWxsIG5v
-IGxvbmdlcgo+ID4gYnJlYWsgdGhlIGFwcGxpY2F0aW9ucyB3aGljaCBjaGVjayBlbmRpYW5uZXNz
-IHRoZSBnbGliYyB3YXkuCj4KPiBUaGFua3MsIGFwcGxpZWQhCj4KPiBDaGVlcnMsCj4gUnVzdHku
-Cj4KCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmNjYW4g
-bWFpbGluZyBsaXN0CmNjYW5AbGlzdHMub3psYWJzLm9yZwpodHRwczovL2xpc3RzLm96bGFicy5v
-cmcvbGlzdGluZm8vY2Nhbgo=
+SGksIHNvIEknZCBsaWtlIHRvIGFkZCB0aGUgYml0bWFwL3RhbCBzdWJtb2R1bGUgYXMgZGlzY3Vz
+c2VkIGhlcmU6CgpodHRwczovL2dpdGh1Yi5jb20vcnVzdHlydXNzZWxsL2NjYW4vcHVsbC82MAoK
+YnV0IEknbSBub3QgZmFtaWxpYXIgZW5vdWdoIHdpdGggY2NhbiBkZXBlbmRlbmN5IGRlY2xhcmF0
+aW9ucyB5ZXQgOigKCjEuIFNob3VsZCB0aGUgZGVwZW5kZW5jeSBvbiB0YWwgYmUgZGVjbGFyZWQg
+aW4gYml0bWFwL19pbmZvIG9yIGluCmJpdG1hcC90YWwvX2luZm8/ICBUaGUgbGF0dGVyIHNlZW1z
+IG1vcmUgbmF0dXJhbCwgYnV0IGZvciBzb21lIHJlYXNvbgp0aGUgZmluYWwgcHVsbCByZXF1ZXN0
+IG9uIGdpdGh1YiBzaG93cyB0aGUgZm9ybWVyLiAgSSBkb24ndCBrbm93IGlmCnRoYXQncyBzb21l
+dGhpbmcgSSBkaWQgYW5kIFJ1c3R5IGRpZG4ndCBjb3JyZWN0LCBvciBzb21ldGhpbmcgdGhhdCBS
+dXN0eQpkaWQuICAoSSBhbHNvIGRvbid0IHF1aXRlIHVuZGVyc3RhbmQgZ2l0aHViLCBBUkdIISkK
+CjIuIERvZXMgYml0bWFwL3RhbCBuZWVkIHRvIGRlY2xhcmUgZGVwZW5kZW5jeSBvbiBiaXRtYXAs
+IG9yIGlzIHRoYXQKYXV0b21hdGljPyAgT3IgbWF5YmUgdGhlIG90aGVyIHdheT8gIEkgdHJpZWQg
+dG8gbG9vayBhdCBvdGhlciBzdWJtb2R1bGVzCmluIHRoZSB0cmVlLCBidXQgdGhlcmUgYXJlIG9u
+bHkgYSBmZXcgYW5kIG5vbmUgdGhhdCBxdWl0ZSBtYXRjaCB0aGUKcmVsYXRpb25zaGlwIGJldHdl
+ZW4gdGhpcyBwcm9wb3NlZCBwYWlyLgoKV2VsbCwgaWYgSSBrbm93IHRoZXNlIDIgdGhpbmdzIGl0
+IHNob3VsZCBnZXQgbWUgc3RhcnRlZC4KCi0tIApQbGVhc2UgZG9uJ3QgQ2M6IG1lIHByaXZhdGVs
+eSBvbiBtYWlsaW5nIGxpc3RzIGFuZCBVc2VuZXQsCmlmIHlvdSBhbHNvIHBvc3QgdGhlIGZvbGxv
+d3VwIHRvIHRoZSBsaXN0IG9yIG5ld3Nncm91cC4KRG8gb2J2aW91cyB0cmFuc2Zvcm1hdGlvbiBv
+biBkb21haW4gdG8gcmVwbHkgcHJpdmF0ZWx5IF9vbmx5XyBvbiBVc2VuZXQuCl9fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmNjYW4gbWFpbGluZyBsaXN0CmNj
+YW5AbGlzdHMub3psYWJzLm9yZwpodHRwczovL2xpc3RzLm96bGFicy5vcmcvbGlzdGluZm8vY2Nh
+bgo=
