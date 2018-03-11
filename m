@@ -1,19 +1,20 @@
-From: Rusty Russell <rusty@rustcorp.com.au>
-Subject: Re: bitmap/tal again
-Date: Sat, 16 Sep 2017 13:08:30 +0930
-Message-ID: <87poarnwi1.fsf@rustcorp.com.au>
-References: <20170915080355.zc3ohlzeho5lkcsp@matica.foolinux.mooo.com>
- <20170915083225.GL5250@umbus.fritz.box>
+From: Yubin Ruan <ablacktshirt@gmail.com>
+Subject: useless expression in typesaft_cb_cast
+Date: Mon, 12 Mar 2018 04:05:27 +0800
+Message-ID: <20180311200527.GF6146@HP>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: base64
 Return-path: <ccan-bounces+gclcc-ccan=m.gmane.org@lists.ozlabs.org>
-Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
- (using TLSv1.2 with cipher ADH-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg0-x22e.google.com (mail-pg0-x22e.google.com
+ [IPv6:2607:f8b0:400e:c05::22e])
+ (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 3xvvdt5ptpzDqXp
- for <ccan@lists.ozlabs.org>; Sun, 17 Sep 2017 13:25:06 +1000 (AEST)
-In-Reply-To: <20170915083225.GL5250@umbus.fritz.box>
+ by lists.ozlabs.org (Postfix) with ESMTPS id 3zzsYZ0GjSzDrLS
+ for <ccan@lists.ozlabs.org>; Mon, 12 Mar 2018 07:05:37 +1100 (AEDT)
+Received: by mail-pg0-x22e.google.com with SMTP id y26so5653722pgv.4
+ for <ccan@lists.ozlabs.org>; Sun, 11 Mar 2018 13:05:37 -0700 (PDT)
+Content-Disposition: inline
 List-Unsubscribe: <https://lists.ozlabs.org/options/ccan>,
  <mailto:ccan-request@lists.ozlabs.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/ccan/>
@@ -23,34 +24,16 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/ccan>,
  <mailto:ccan-request@lists.ozlabs.org?subject=subscribe>
 Errors-To: ccan-bounces+gclcc-ccan=m.gmane.org@lists.ozlabs.org
 Sender: "ccan" <ccan-bounces+gclcc-ccan=m.gmane.org@lists.ozlabs.org>
-To: David Gibson <david@gibson.dropbear.id.au>, ccan@lists.ozlabs.org
+To: ccan@lists.ozlabs.org
 List-Id: ccan@lists.ozlabs.org
 
-RGF2aWQgR2lic29uIDxkYXZpZEBnaWJzb24uZHJvcGJlYXIuaWQuYXU+IHdyaXRlczoKPiBPbiBG
-cmksIFNlcCAxNSwgMjAxNyBhdCAwMTowMzo1NUFNIC0wNzAwLCBJYW4gWmltbWVybWFuIHdyb3Rl
-Ogo+PiBIaSwgc28gSSdkIGxpa2UgdG8gYWRkIHRoZSBiaXRtYXAvdGFsIHN1Ym1vZHVsZSBhcyBk
-aXNjdXNzZWQgaGVyZToKPj4gCj4+IGh0dHBzOi8vZ2l0aHViLmNvbS9ydXN0eXJ1c3NlbGwvY2Nh
-bi9wdWxsLzYwCj4+IAo+PiBidXQgSSdtIG5vdCBmYW1pbGlhciBlbm91Z2ggd2l0aCBjY2FuIGRl
-cGVuZGVuY3kgZGVjbGFyYXRpb25zIHlldCA6KAo+PiAKPj4gMS4gU2hvdWxkIHRoZSBkZXBlbmRl
-bmN5IG9uIHRhbCBiZSBkZWNsYXJlZCBpbiBiaXRtYXAvX2luZm8gb3IgaW4KPj4gYml0bWFwL3Rh
-bC9faW5mbz8gIFRoZSBsYXR0ZXIgc2VlbXMgbW9yZSBuYXR1cmFsLCBidXQgZm9yIHNvbWUgcmVh
-c29uCj4+IHRoZSBmaW5hbCBwdWxsIHJlcXVlc3Qgb24gZ2l0aHViIHNob3dzIHRoZSBmb3JtZXIu
-ICBJIGRvbid0IGtub3cgaWYKPj4gdGhhdCdzIHNvbWV0aGluZyBJIGRpZCBhbmQgUnVzdHkgZGlk
-bid0IGNvcnJlY3QsIG9yIHNvbWV0aGluZyB0aGF0IFJ1c3R5Cj4+IGRpZC4gIChJIGFsc28gZG9u
-J3QgcXVpdGUgdW5kZXJzdGFuZCBnaXRodWIsIEFSR0ghKQo+Cj4gSW4gYml0bWFwL3RhbC9faW5m
-bywgZGVmaW5pdGVseS4gIFB1dHRpbmcgaXQgaW4gYml0bWFwL19pbmZvIHdpbGwKPiBjaGFuZ2Ug
-dGhlIGRlcGVuZGVuY2llcyBvZiB0aGUgYmFzZSBiaXRtYXAgbW9kdWxlLCBub3QgeW91ciBuZXcK
-PiBzdWJtb2R1bGUuCj4KPj4gMi4gRG9lcyBiaXRtYXAvdGFsIG5lZWQgdG8gZGVjbGFyZSBkZXBl
-bmRlbmN5IG9uIGJpdG1hcCwgb3IgaXMgdGhhdAo+PiBhdXRvbWF0aWM/ICBPciBtYXliZSB0aGUg
-b3RoZXIgd2F5PyAgSSB0cmllZCB0byBsb29rIGF0IG90aGVyIHN1Ym1vZHVsZXMKPj4gaW4gdGhl
-IHRyZWUsIGJ1dCB0aGVyZSBhcmUgb25seSBhIGZldyBhbmQgbm9uZSB0aGF0IHF1aXRlIG1hdGNo
-IHRoZQo+PiByZWxhdGlvbnNoaXAgYmV0d2VlbiB0aGlzIHByb3Bvc2VkIHBhaXIuCj4KPiBMb29r
-aW5nIGF0IGNjYW4vdGFsL3N0ciwgbG9va3MgbGlrZSB0aGUgc3Vycm91bmRpbmcgbW9kdWxlIHNo
-b3VsZCBiZQo+IGV4cGxpY2l0bHkgbGlzdGVkIGluIGRlcGVuZGVuY2llcy4KCkluZGVlZC4gIFRo
-ZXJlJ3Mgbm8gaW1wbGllZCBkZXBlbmRlbmN5IGJldHdlZW4gYSBzdWJtb2R1bGUgYW5kIHBhcmVu
-dAptb2R1bGUuICBHZW5lcmFsbHkgdGhlIHN1Ym1vZHVsZSB3aWxsIGRlcGVuZCBvbiB0aGUgcGFy
-ZW50IG1vZHVsZSwgYnV0CndlIGNhbiBhbHNvIGltYWdpbmUgYSBmb28gbW9kdWxlIHdoaWNoIGRl
-cGVuZHMgb24gYSBmb28vbG93bGV2ZWwgbW9kdWxlLgoKQ2hlZXJzLApSdXN0eS4KX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KY2NhbiBtYWlsaW5nIGxpc3QK
-Y2NhbkBsaXN0cy5vemxhYnMub3JnCmh0dHBzOi8vbGlzdHMub3psYWJzLm9yZy9saXN0aW5mby9j
-Y2FuCg==
+SGksCgp0eXBlc2FmdF9jYl9jYXN0KCkgaXMgZGVmaW5lZCBpbiB0eXBlc2FmdF9jYi5oIGFzOgoK
+ICAgICNkZWZpbmUgdHlwZXNhZmVfY2JfY2FzdChkZXN0dHlwZSwgb2t0eXBlLCBleHByKSAgICAg
+ICAgICAgICAgICAgIFwKICAgIAlfX2J1aWx0aW5fY2hvb3NlX2V4cHIoICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgIFwKICAgIAkJX19idWlsdGluX3R5cGVzX2NvbXBhdGli
+bGVfcChfX3R5cGVvZl9fKDA/KGV4cHIpOihleHByKSksIFwKICAgIAkJCQkJICAgICBva3R5cGUp
+LCAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIFwKICAgIAkJKGRlc3R0eXBlKShleHBy
+KSwgKGV4cHIpKQoKd2hhdCBpcyB0aGUgcG9pbnQgb2YgdGhhdCAiMD8oZXhwcik6KGV4cHIpIiA/
+CgpZdWJpbgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpj
+Y2FuIG1haWxpbmcgbGlzdApjY2FuQGxpc3RzLm96bGFicy5vcmcKaHR0cHM6Ly9saXN0cy5vemxh
+YnMub3JnL2xpc3RpbmZvL2NjYW4K
