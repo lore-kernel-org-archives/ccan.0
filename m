@@ -1,19 +1,19 @@
 From: Yubin Ruan <ablacktshirt@gmail.com>
-Subject: why add the result of check_type in container_of
-Date: Mon, 12 Mar 2018 11:19:39 +0800
-Message-ID: <20180312031939.GA29780@HP>
+Subject: [PATCH] fix misspelling in the example of container_of
+Date: Mon, 12 Mar 2018 11:24:14 +0800
+Message-ID: <20180312032414.GA30245@HP>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: base64
 Return-path: <ccan-bounces+gclcc-ccan=m.gmane.org@lists.ozlabs.org>
-Received: from mail-pg0-x22a.google.com (mail-pg0-x22a.google.com
- [IPv6:2607:f8b0:400e:c05::22a])
+Received: from mail-pl0-x241.google.com (mail-pl0-x241.google.com
+ [IPv6:2607:f8b0:400e:c01::241])
  (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 4003Bl5MP4zF07t
- for <ccan@lists.ozlabs.org>; Mon, 12 Mar 2018 14:19:59 +1100 (AEDT)
-Received: by mail-pg0-x22a.google.com with SMTP id r26so5956310pgv.13
- for <ccan@lists.ozlabs.org>; Sun, 11 Mar 2018 20:19:59 -0700 (PDT)
+ by lists.ozlabs.org (Postfix) with ESMTPS id 4003Hw1MGJzDr2Z
+ for <ccan@lists.ozlabs.org>; Mon, 12 Mar 2018 14:24:28 +1100 (AEDT)
+Received: by mail-pl0-x241.google.com with SMTP id m22-v6so8602638pls.5
+ for <ccan@lists.ozlabs.org>; Sun, 11 Mar 2018 20:24:27 -0700 (PDT)
 Content-Disposition: inline
 List-Unsubscribe: <https://lists.ozlabs.org/options/ccan>,
  <mailto:ccan-request@lists.ozlabs.org?subject=unsubscribe>
@@ -27,21 +27,21 @@ Sender: "ccan" <ccan-bounces+gclcc-ccan=m.gmane.org@lists.ozlabs.org>
 To: ccan@lists.ozlabs.org
 List-Id: ccan@lists.ozlabs.org
 
-SGksCgpJIG5vdGljZSB0aGF0IGluIHRoZSBpbXBsZW1lbnRhdGlvbiBvZiBjb250YWluZXJfb2Yo
-KSwgdGhlIHJlc3VsdGluZyBwb2ludGVyCndpbGwgYmUgYWR2YW5jZWQgYnkgMSBpZiB0eXBlcyBt
-aXNtYXRjaDoKCiNkZWZpbmUgY29udGFpbmVyX29mKG1lbWJlcl9wdHIsIGNvbnRhaW5pbmdfdHlw
-ZSwgbWVtYmVyKSAgIFwKCSAoKGNvbnRhaW5pbmdfdHlwZSAqKSAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgXAoJICAoKGNoYXIgKikobWVtYmVyX3B0cikgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICBcCgkgICAtIGNvbnRhaW5lcl9vZmYoY29udGFpbmluZ190eXBlLCBt
-ZW1iZXIpKSAgICAgICAgICAgIFwKCSAgKyBjaGVja190eXBlc19tYXRjaCgqKG1lbWJlcl9wdHIp
-LCAoKGNvbnRhaW5pbmdfdHlwZSAqKTApLT5tZW1iZXIpKQoKd2hlcmUgY2hlY2tfdHlwZXNfbWF0
-Y2goKSBpcyBkZWZpbmVkIGFzIAoKI2RlZmluZSBjaGVja190eXBlc19tYXRjaChleHByMSwgZXhw
-cjIpCQlcCgkoKHR5cGVvZihleHByMSkgKikwICE9ICh0eXBlb2YoZXhwcjIpICopMCkKCndoaWNo
-IHdpbGwgcmV0dXJuIDEgaWYgdHlwZXMgbWlzbWF0Y2guCgpJTU8sIGFkdmFuY2luZyB0aGUgd3Jv
-bmcgcG9pbnRlciAocmVzdWx0aW5nIGZyb20gbWlzbWF0Y2ggdHlwZXMpIGJ5IDEgd2lsbApvbmx5
-IG1ha2UgdGhpbmdzIHdvcnNlLCBhbmQgdXNlcnMgdXN1YWxseSBvbmx5IGdldCBnYXJiYWdlIHJl
-c3VsdHMgYW5kIHdpbGwgbm90CmJlIGF3YXJlIG9mIHRoZSB0eXBlLW1pc21hdGNoIGJ1Zy4gV291
-bGRuJ3QgaXQgYmUgYmV0dGVyIHRvIHRocm93IGFuIGJ1aWxkaW5nCmVycm9yL3dhcm5pbmcgZm9y
-IHRoYXQ/CgpZdWJpbgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fXwpjY2FuIG1haWxpbmcgbGlzdApjY2FuQGxpc3RzLm96bGFicy5vcmcKaHR0cHM6Ly9saXN0
-cy5vemxhYnMub3JnL2xpc3RpbmZvL2NjYW4K
+RnJvbSA0N2M5MmZlOTUxNTQ1ZTc4MGNhMzFjNTk4YmJjYmU1MzQ3MDU5YjI3IE1vbiBTZXAgMTcg
+MDA6MDA6MDAgMjAwMQpGcm9tOiBZdWJpbiBSdWFuIDxhYmxhY2t0c2hpcnRAZ21haWwuY29tPgpE
+YXRlOiBNb24sIDEyIE1hciAyMDE4IDExOjIyOjM1ICswODAwClN1YmplY3Q6IFtQQVRDSF0gZml4
+IG1pc3NwZWxsaW5nIGluIHRoZSBleGFtcGxlIG9mIGNvbnRhaW5lcl9vZgoKU2lnbmVkLW9mZi1i
+eTogWXViaW4gUnVhbiA8YWJsYWNrdHNoaXJ0QGdtYWlsLmNvbT4KLS0tCiBjY2FuL2NoZWNrX3R5
+cGUvY2hlY2tfdHlwZS5oIHwgMiArLQogMSBmaWxlIGNoYW5nZWQsIDEgaW5zZXJ0aW9uKCspLCAx
+IGRlbGV0aW9uKC0pCgpkaWZmIC0tZ2l0IGEvY2Nhbi9jaGVja190eXBlL2NoZWNrX3R5cGUuaCBi
+L2NjYW4vY2hlY2tfdHlwZS9jaGVja190eXBlLmgKaW5kZXggNzc1MDFhOS4uODM3YWVmNyAxMDA2
+NDQKLS0tIGEvY2Nhbi9jaGVja190eXBlL2NoZWNrX3R5cGUuaAorKysgYi9jY2FuL2NoZWNrX3R5
+cGUvY2hlY2tfdHlwZS5oCkBAIC00Myw3ICs0Myw3IEBACiAgKgkjZGVmaW5lIGNvbnRhaW5lcl9v
+ZihtYnJfcHRyLCBlbmNsX3R5cGUsIG1icikJCQlcCiAgKgkJKGNoZWNrX3R5cGVzX21hdGNoKCht
+YnJfcHRyKSwgJigoZW5jbF90eXBlICopMCktPm1iciksCVwKICAqCQkgKChlbmNsX3R5cGUgKikJ
+CQkJCQlcCi0gKgkJICAoKGNoYXIgKikobWJyX3B0cikgLSBvZmZzZXRvZihlbmNsb3NpbmdfdHlw
+ZSwgbWJyKSkpKQorICoJCSAgKChjaGFyICopKG1icl9wdHIpIC0gb2Zmc2V0b2YoZW5jbF90eXBl
+LCBtYnIpKSkpCiAgKi8KICNpZiBIQVZFX1RZUEVPRgogI2RlZmluZSBjaGVja190eXBlKGV4cHIs
+IHR5cGUpCQkJXAotLSAKMi43LjQKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fCmNjYW4gbWFpbGluZyBsaXN0CmNjYW5AbGlzdHMub3psYWJzLm9yZwpodHRw
+czovL2xpc3RzLm96bGFicy5vcmcvbGlzdGluZm8vY2Nhbgo=
