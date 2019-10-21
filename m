@@ -1,18 +1,21 @@
-From: David Gibson <david@gibson.dropbear.id.au>
-Subject: Re: bitmap doesn't work on 32bit x86/ARM
-Date: Thu, 11 Jul 2019 12:08:34 +1000
-Message-ID: <20190711020834.GE13271@umbus.fritz.box>
-References: <CAN89EwbVxFhvYS1G3vG7WGSLBBw6AUQA0HJ0QHWsUhH=otPbzQ@mail.gmail.com>
+From: Kirill Smelkov <kirr@nexedi.com>
+Subject: [PATCH] bitmap: Allow bitmap type to be forward declared
+Date: Mon, 21 Oct 2019 15:09:20 +0000
+Message-ID: <20191021150903.25159-1-kirr@nexedi.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============0499408884534721508=="
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <ccan-bounces+gclcc-ccan=m.gmane.org@lists.ozlabs.org>
-Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
- (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
- key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+Received: from mail112.us4.mandrillapp.com (mail112.us4.mandrillapp.com
+ [205.201.136.112])
+ (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 45kgMC3b27zDqfG
- for <ccan@lists.ozlabs.org>; Thu, 11 Jul 2019 12:42:31 +1000 (AEST)
-In-Reply-To: <CAN89EwbVxFhvYS1G3vG7WGSLBBw6AUQA0HJ0QHWsUhH=otPbzQ@mail.gmail.com>
+ by lists.ozlabs.org (Postfix) with ESMTPS id 46xgRM2PvSzDr13
+ for <ccan@lists.ozlabs.org>; Tue, 22 Oct 2019 02:24:30 +1100 (AEDT)
+Received: from pmta07.mandrill.prod.suw01.rsglab.com (127.0.0.1) by
+ mail112.us4.mandrillapp.com id hln6qu174e0t for <ccan@lists.ozlabs.org>;
+ Mon, 21 Oct 2019 15:09:20 +0000 (envelope-from
+ <bounce-md_31050260.5dadca20.v1-c77af7e78d9548c89290f0103ca0578d@mandrillapp.com>)
 List-Unsubscribe: <https://lists.ozlabs.org/options/ccan>,
  <mailto:ccan-request@lists.ozlabs.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/ccan/>
@@ -22,71 +25,47 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/ccan>,
  <mailto:ccan-request@lists.ozlabs.org?subject=subscribe>
 Errors-To: ccan-bounces+gclcc-ccan=m.gmane.org@lists.ozlabs.org
 Sender: "ccan" <ccan-bounces+gclcc-ccan=m.gmane.org@lists.ozlabs.org>
-To: Peng Zheng <howtofly@gmail.com>
-Cc: ccan@lists.ozlabs.org
+To: ccan@lists.ozlabs.org
 List-Id: ccan@lists.ozlabs.org
 
-
---===============0499408884534721508==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="y2zxS2PfCDLh6JVG"
-Content-Disposition: inline
-
-
---y2zxS2PfCDLh6JVG
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Wed, Jul 10, 2019 at 02:04:11PM +0800, Peng Zheng wrote:
-> There is already an issue for this:
-> https://github.com/rustyrussell/ccan/issues/80
->=20
-> Because of the inactivity of github issues, I re-post it here. If
-> mailing-list is the preferred way of communication, next time I will use =
-it
-> rather that github.
-
-THe mailing list is generally the preferred venue, though now the
-github bug is there I've used it to track this specific issue.
-
---=20
-David Gibson			| I'll have my music baroque, and my code
-david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
-				| _way_ _around_!
-http://www.ozlabs.org/~dgibson
-
---y2zxS2PfCDLh6JVG
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEdfRlhq5hpmzETofcbDjKyiDZs5IFAl0mmh8ACgkQbDjKyiDZ
-s5K9Vw//SZOZREvU8SffLUF+D9PiKK4v7QL2VrelvsgY6izy1+l6LQYhGU3prBC9
-VQdcYfReLlnunh3sVh22rvbP/mWae2G6e9g95w+uiJ4Uhhs3qrE7P4lHgIQ/lqF5
-8qMuAxJ325lhcTmU16nfSxgxoQAhQnNPEbaS0TRKmWFZq1NJg6Pqc+O6VA4t6Rm1
-rz5cDcbtyPckNF4TeNOVY77VC1PwIV4OJJLsVZt4gBvghcBtEuKHuBgMVfiAbC06
-aiX+wIyWSgAyab17PShuGLAgNcyqUTPg+RoQKtews1WCqzid71aVzp7N0rbhDlPO
-6IwFgdTAAl8iGWwq7FOJs2Ve6iB4lELWMxeD1DJm1a2/LslDOdoTvQ1/jpl1PXAO
-DDZhqBmuT+u44hbiVpxogsaPs+7NWqqLlQoSoc+6CGLtEajttanvU9f7rGiCpGMl
-CSTlcBwvU6LdKEqV+JxLJhjfuPppRuM/gw2PZkjIAgNbGqaHy5botdbscbMyllqe
-uAftCO+ixll/ZUHwJsm1R+8QrIsb+CXQ6c+l2yv0urYvcSE5hebIGNc177nuoixw
-klyLur2XNSKDiKGDt4sCyc7UEjL0wlFI6h36F2iLSdtLem8ZSy5pc+EpSkT6aoPm
-+7/LAHjkt86T1nQKWg7AwwcNr6wOra5OMZKCq8UEz6RuM2FsLco=
-=dH9Q
------END PGP SIGNATURE-----
-
---y2zxS2PfCDLh6JVG--
-
---===============0499408884534721508==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-ccan mailing list
-ccan@lists.ozlabs.org
-https://lists.ozlabs.org/listinfo/ccan
-
---===============0499408884534721508==--
+Q3VycmVudGx5IGJpdG1hcCB0eXBlIGlzIGRlZmluZWQgdmlhIHVudGFnZ2VkIHN0cnVjdCB3aGlj
+aCBtYWtlcyBpdAppbXBvc3NpYmxlIHRvIGZvcndhcmQgZGVjbGFyZSBpdC4gRm9yd2FyZC1kZWNs
+YXJpbmcgaXMgdXNlZnVsIHNpbmNlIGFsbApiaXRtYXAgZnVuY3Rpb25zIG9ubHkgdXNlIGJpdG1h
+cCogYW5kIGluIHB1YmxpYyB1c2VyLXZpc2libGUKaGVhZGVycy9kYXRhc3RydWN0dXJlcyBpdCBp
+cyBlbm91Z2ggdG8gaW5kaWNhdGUgdGhhdCBhIGRhdGEgZmllbGQgd2l0aApiaXRtYXAgcG9pbnRl
+ciBpcyB0aGVyZSwgd2hlcmVhcyBiaXRtYXAuaCBjYW4gYmUgaW5jbHVkZWQgb25seSBpbgppbXBs
+ZW1lbnRhdGlvbi4KCkJlc2lkZSB0aGF0IHNvbWUgaGVhZGVycyBhcmUgaW5jbHVkZWQgYnkgYm90
+aCBDIGFuZCBDKysgcGFydHMgb2YgYQpwcm9qZWN0LCBhbmQgd2hlbiBjY2FuL2JpdG1hcC5oIGlz
+IHByb2Nlc3NlZCBieSBDKysgY29tcGlsZXIgaXQgZ2l2ZXM6CgogICAgLi8zcmRwYXJ0eS9jY2Fu
+L2NjYW4vYml0bWFwL2JpdG1hcC5oOiBJbiBmdW5jdGlvbiDigJhiaXRtYXAqIGJpdG1hcF9hbGxv
+Yyhsb25nIHVuc2lnbmVkIGludCnigJk6CiAgICAuLzNyZHBhcnR5L2NjYW4vY2Nhbi9iaXRtYXAv
+Yml0bWFwLmg6MjAxOjE1OiBlcnJvcjogaW52YWxpZCBjb252ZXJzaW9uIGZyb20g4oCYdm9pZCri
+gJkgdG8g4oCYYml0bWFwKuKAmSBbLWZwZXJtaXNzaXZlXQogICAgICByZXR1cm4gbWFsbG9jKGJp
+dG1hcF9zaXplb2YobmJpdHMpKTsKICAgICAgICAgICAgIH5+fn5+fl5+fn5+fn5+fn5+fn5+fn5+
+fn5+fn4KICAgIC4vM3JkcGFydHkvY2Nhbi9jY2FuL2JpdG1hcC9iaXRtYXAuaDogSW4gZnVuY3Rp
+b24g4oCYYml0bWFwKiBiaXRtYXBfcmVhbGxvYzAoYml0bWFwKiwgbG9uZyB1bnNpZ25lZCBpbnQs
+IGxvbmcgdW5zaWduZWQgaW50KeKAmToKICAgIC4vM3JkcGFydHkvY2Nhbi9jY2FuL2JpdG1hcC9i
+aXRtYXAuaDoyMjc6MTg6IGVycm9yOiBpbnZhbGlkIGNvbnZlcnNpb24gZnJvbSDigJh2b2lkKuKA
+mSB0byDigJhiaXRtYXAq4oCZIFstZnBlcm1pc3NpdmVdCiAgICAgIGJpdG1hcCA9IHJlYWxsb2Mo
+Yml0bWFwLCBiaXRtYXBfc2l6ZW9mKG5iaXRzKSk7CiAgICAgICAgICAgICAgIH5+fn5+fn5efn5+
+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn4KICAgIC4vM3JkcGFydHkvY2Nhbi9jY2FuL2JpdG1h
+cC9iaXRtYXAuaDogSW4gZnVuY3Rpb24g4oCYYml0bWFwKiBiaXRtYXBfcmVhbGxvYzEoYml0bWFw
+KiwgbG9uZyB1bnNpZ25lZCBpbnQsIGxvbmcgdW5zaWduZWQgaW50KeKAmToKICAgIC4vM3JkcGFy
+dHkvY2Nhbi9jY2FuL2JpdG1hcC9iaXRtYXAuaDoyMzg6MTg6IGVycm9yOiBpbnZhbGlkIGNvbnZl
+cnNpb24gZnJvbSDigJh2b2lkKuKAmSB0byDigJhiaXRtYXAq4oCZIFstZnBlcm1pc3NpdmVdCiAg
+ICAgIGJpdG1hcCA9IHJlYWxsb2MoYml0bWFwLCBiaXRtYXBfc2l6ZW9mKG5iaXRzKSk7CgotPiBH
+aXZlIHRvIHVzZXJzIGFiaWxpdHkgbm90IHRvIGZvcmNlLWluY2x1ZGUgY2Nhbi9iaXRtYXAuaCBi
+eQpmb3J3YXJkLWRlY2xhcmluZyBiaXRtYXBzIGxpa2UgdGhpczoKCiAgICB0eXBlZGVmIHN0cnVj
+dCBiaXRtYXAgYml0bWFwOwogICAgLi4uCiAgICBzdHJ1Y3QgTXlTdHJ1Y3QgewogICAgICAgIGJp
+dG1hcCAqbXlfYml0bWFwOwogICAgfTsKCkNjOiBEYXZpZCBHaWJzb24gPGRhdmlkQGdpYnNvbi5k
+cm9wYmVhci5pZC5hdT4KU2lnbmVkLW9mZi1ieTogS2lyaWxsIFNtZWxrb3YgPGtpcnJAbmV4ZWRp
+LmNvbT4KLS0tCiBjY2FuL2JpdG1hcC9iaXRtYXAuaCB8IDIgKy0KIDEgZmlsZSBjaGFuZ2VkLCAx
+IGluc2VydGlvbigrKSwgMSBkZWxldGlvbigtKQoKZGlmZiAtLWdpdCBhL2NjYW4vYml0bWFwL2Jp
+dG1hcC5oIGIvY2Nhbi9iaXRtYXAvYml0bWFwLmgKaW5kZXggYmVlYjFlOTUuLjU0MzgyODAxIDEw
+MDY0NAotLS0gYS9jY2FuL2JpdG1hcC9iaXRtYXAuaAorKysgYi9jY2FuL2JpdG1hcC9iaXRtYXAu
+aApAQCAtMjEsNyArMjEsNyBAQCB0eXBlZGVmIHVuc2lnbmVkIGxvbmcgYml0bWFwX3dvcmQ7CiAv
+KgogICogV2Ugd3JhcCBlYWNoIHdvcmQgaW4gYSBzdHJ1Y3R1cmUgZm9yIHR5cGUgY2hlY2tpbmcu
+CiAgKi8KLXR5cGVkZWYgc3RydWN0IHsKK3R5cGVkZWYgc3RydWN0IGJpdG1hcCB7CiAJYml0bWFw
+X3dvcmQgdzsKIH0gYml0bWFwOwogCi0tIAoyLjIwLjEKCl9fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fCmNjYW4gbWFpbGluZyBsaXN0CmNjYW5AbGlzdHMub3ps
+YWJzLm9yZwpodHRwczovL2xpc3RzLm96bGFicy5vcmcvbGlzdGluZm8vY2Nhbgo=
