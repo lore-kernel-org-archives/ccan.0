@@ -1,18 +1,24 @@
-From: David Gibson <david@gibson.dropbear.id.au>
+From: Kirill Smelkov <kirr@nexedi.com>
 Subject: Re: [PATCH] bitmap: Allow bitmap type to be forward declared
-Date: Tue, 22 Oct 2019 16:25:20 +1100
-Message-ID: <20191022052520.GI6439@umbus.fritz.box>
+Date: Tue, 22 Oct 2019 07:53:26 +0000
+Message-ID: <20191022075321.GA1701@link.navytux.spb.ru>
 References: <20191021150903.25159-1-kirr@nexedi.com>
+ <20191022052520.GI6439@umbus.fritz.box>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============0390253835633810095=="
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <ccan-bounces+gclcc-ccan=m.gmane.org@lists.ozlabs.org>
-Received: from ozlabs.org (bilbo.ozlabs.org [203.11.71.1])
- (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
- key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+Received: from mail112.us4.mandrillapp.com (mail112.us4.mandrillapp.com
+ [205.201.136.112])
+ (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 46y4Yn4LpxzDqHw
- for <ccan@lists.ozlabs.org>; Tue, 22 Oct 2019 18:16:29 +1100 (AEDT)
-In-Reply-To: <20191021150903.25159-1-kirr@nexedi.com>
+ by lists.ozlabs.org (Postfix) with ESMTPS id 46y5jz1Q9xzDqFt
+ for <ccan@lists.ozlabs.org>; Tue, 22 Oct 2019 19:08:37 +1100 (AEDT)
+Received: from pmta07.mandrill.prod.suw01.rsglab.com (127.0.0.1) by
+ mail112.us4.mandrillapp.com id hlqsge174e0g for <ccan@lists.ozlabs.org>;
+ Tue, 22 Oct 2019 07:53:27 +0000 (envelope-from
+ <bounce-md_31050260.5daeb576.v1-0dd12646a6a5438d917992714af0bdd2@mandrillapp.com>)
+In-Reply-To: <20191022052520.GI6439@umbus.fritz.box>
 List-Unsubscribe: <https://lists.ozlabs.org/options/ccan>,
  <mailto:ccan-request@lists.ozlabs.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/ccan/>
@@ -22,120 +28,46 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/ccan>,
  <mailto:ccan-request@lists.ozlabs.org?subject=subscribe>
 Errors-To: ccan-bounces+gclcc-ccan=m.gmane.org@lists.ozlabs.org
 Sender: "ccan" <ccan-bounces+gclcc-ccan=m.gmane.org@lists.ozlabs.org>
-To: Kirill Smelkov <kirr@nexedi.com>
+To: David Gibson <david@gibson.dropbear.id.au>
 Cc: ccan@lists.ozlabs.org
 List-Id: ccan@lists.ozlabs.org
 
-
---===============0390253835633810095==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="/GPgYEyhnw15BExa"
-Content-Disposition: inline
-
-
---/GPgYEyhnw15BExa
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Mon, Oct 21, 2019 at 03:09:20PM +0000, Kirill Smelkov wrote:
-> Currently bitmap type is defined via untagged struct which makes it
-> impossible to forward declare it. Forward-declaring is useful since all
-> bitmap functions only use bitmap* and in public user-visible
-> headers/datastructures it is enough to indicate that a data field with
-> bitmap pointer is there, whereas bitmap.h can be included only in
-> implementation.
->=20
-> Beside that some headers are included by both C and C++ parts of a
-> project, and when ccan/bitmap.h is processed by C++ compiler it gives:
->=20
->     ./3rdparty/ccan/ccan/bitmap/bitmap.h: In function =E2=80=98bitmap* bi=
-tmap_alloc(long unsigned int)=E2=80=99:
->     ./3rdparty/ccan/ccan/bitmap/bitmap.h:201:15: error: invalid conversio=
-n from =E2=80=98void*=E2=80=99 to =E2=80=98bitmap*=E2=80=99 [-fpermissive]
->       return malloc(bitmap_sizeof(nbits));
->              ~~~~~~^~~~~~~~~~~~~~~~~~~~~~
->     ./3rdparty/ccan/ccan/bitmap/bitmap.h: In function =E2=80=98bitmap* bi=
-tmap_realloc0(bitmap*, long unsigned int, long unsigned int)=E2=80=99:
->     ./3rdparty/ccan/ccan/bitmap/bitmap.h:227:18: error: invalid conversio=
-n from =E2=80=98void*=E2=80=99 to =E2=80=98bitmap*=E2=80=99 [-fpermissive]
->       bitmap =3D realloc(bitmap, bitmap_sizeof(nbits));
->                ~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
->     ./3rdparty/ccan/ccan/bitmap/bitmap.h: In function =E2=80=98bitmap* bi=
-tmap_realloc1(bitmap*, long unsigned int, long unsigned int)=E2=80=99:
->     ./3rdparty/ccan/ccan/bitmap/bitmap.h:238:18: error: invalid conversio=
-n from =E2=80=98void*=E2=80=99 to =E2=80=98bitmap*=E2=80=99 [-fpermissive]
->       bitmap =3D realloc(bitmap, bitmap_sizeof(nbits));
->=20
-> -> Give to users ability not to force-include ccan/bitmap.h by
-> forward-declaring bitmaps like this:
->=20
->     typedef struct bitmap bitmap;
->     ...
->     struct MyStruct {
->         bitmap *my_bitmap;
->     };
->=20
-> Cc: David Gibson <david@gibson.dropbear.id.au>
-> Signed-off-by: Kirill Smelkov <kirr@nexedi.com>
-
-Applied, thanks.
-
-> ---
->  ccan/bitmap/bitmap.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/ccan/bitmap/bitmap.h b/ccan/bitmap/bitmap.h
-> index beeb1e95..54382801 100644
-> --- a/ccan/bitmap/bitmap.h
-> +++ b/ccan/bitmap/bitmap.h
-> @@ -21,7 +21,7 @@ typedef unsigned long bitmap_word;
->  /*
->   * We wrap each word in a structure for type checking.
->   */
-> -typedef struct {
-> +typedef struct bitmap {
->  	bitmap_word w;
->  } bitmap;
->=20
-
---=20
-David Gibson			| I'll have my music baroque, and my code
-david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
-				| _way_ _around_!
-http://www.ozlabs.org/~dgibson
-
---/GPgYEyhnw15BExa
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEdfRlhq5hpmzETofcbDjKyiDZs5IFAl2ukr0ACgkQbDjKyiDZ
-s5Im4Q/+POdREJMXDEOzuLcXL79rFRPjPoCTd/YVBRdTCS/A9eBUgFVdQTRkQ2og
-bzdkrlkEU+gaux3QNF2JpLbCfanoYeYIkb3+ZanUGCCC5sDFV7m/vMgYWCpgGahZ
-4CXm07NXorr1KsI/qftg1QRiqoQTsyqos3puwxJ13WLNUdRK77DG0qXOT3VzRN9p
-tYPFyBl6ELk+7TTeHPbWo3m49W2SeodmchLPkgbT39881H2z+vkjH4BrIarRi7GN
-fiqPBsY7nvELHkVhbXiTIEVAQvW5eyK9Vnha6KK/A0FAmg8wEVh9exOSsmsk22vA
-20qNNKpN2ft1psqlhiDdyE+Qc4cw0Qsn8R5h+mbIn3dZ8JFNvpD8a3OTezm11sSc
-cH9NeqBNnmKaudi+ox3Wx5h9QOsZxKWbzJ9RhIsu69O9Y54w+gEAL+Nxz2UMdNP0
-PCeMAboEg5SduMhv3xvFbEWsU0jatbYVczn54Oj5VT8quRkTAOCQq0ZsphYMGzU5
-S7ro1/eIyoTJNa1eka5jd9vX1X/I6up/ijC8Poi+SXGzEav8LOnv9EKSDaK2M4E/
-HeozG9rCunTDoB0qdhsWZYW1DdapEb66HCTXJVwL95dIsgIm47FYuHzFKZ1oBMGe
-69YT3GBot3lKroTm/f4VzdrFmbKQRpeST3rsuSc/Ek4ecwjJPHs=
-=yySL
------END PGP SIGNATURE-----
-
---/GPgYEyhnw15BExa--
-
---===============0390253835633810095==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-ccan mailing list
-ccan@lists.ozlabs.org
-https://lists.ozlabs.org/listinfo/ccan
-
---===============0390253835633810095==--
+T24gVHVlLCBPY3QgMjIsIDIwMTkgYXQgMDQ6MjU6MjBQTSArMTEwMCwgRGF2aWQgR2lic29uIHdy
+b3RlOgo+IE9uIE1vbiwgT2N0IDIxLCAyMDE5IGF0IDAzOjA5OjIwUE0gKzAwMDAsIEtpcmlsbCBT
+bWVsa292IHdyb3RlOgo+ID4gQ3VycmVudGx5IGJpdG1hcCB0eXBlIGlzIGRlZmluZWQgdmlhIHVu
+dGFnZ2VkIHN0cnVjdCB3aGljaCBtYWtlcyBpdAo+ID4gaW1wb3NzaWJsZSB0byBmb3J3YXJkIGRl
+Y2xhcmUgaXQuIEZvcndhcmQtZGVjbGFyaW5nIGlzIHVzZWZ1bCBzaW5jZSBhbGwKPiA+IGJpdG1h
+cCBmdW5jdGlvbnMgb25seSB1c2UgYml0bWFwKiBhbmQgaW4gcHVibGljIHVzZXItdmlzaWJsZQo+
+ID4gaGVhZGVycy9kYXRhc3RydWN0dXJlcyBpdCBpcyBlbm91Z2ggdG8gaW5kaWNhdGUgdGhhdCBh
+IGRhdGEgZmllbGQgd2l0aAo+ID4gYml0bWFwIHBvaW50ZXIgaXMgdGhlcmUsIHdoZXJlYXMgYml0
+bWFwLmggY2FuIGJlIGluY2x1ZGVkIG9ubHkgaW4KPiA+IGltcGxlbWVudGF0aW9uLgo+ID4gCj4g
+PiBCZXNpZGUgdGhhdCBzb21lIGhlYWRlcnMgYXJlIGluY2x1ZGVkIGJ5IGJvdGggQyBhbmQgQysr
+IHBhcnRzIG9mIGEKPiA+IHByb2plY3QsIGFuZCB3aGVuIGNjYW4vYml0bWFwLmggaXMgcHJvY2Vz
+c2VkIGJ5IEMrKyBjb21waWxlciBpdCBnaXZlczoKPiA+IAo+ID4gICAgIC4vM3JkcGFydHkvY2Nh
+bi9jY2FuL2JpdG1hcC9iaXRtYXAuaDogSW4gZnVuY3Rpb24g4oCYYml0bWFwKiBiaXRtYXBfYWxs
+b2MobG9uZyB1bnNpZ25lZCBpbnQp4oCZOgo+ID4gICAgIC4vM3JkcGFydHkvY2Nhbi9jY2FuL2Jp
+dG1hcC9iaXRtYXAuaDoyMDE6MTU6IGVycm9yOiBpbnZhbGlkIGNvbnZlcnNpb24gZnJvbSDigJh2
+b2lkKuKAmSB0byDigJhiaXRtYXAq4oCZIFstZnBlcm1pc3NpdmVdCj4gPiAgICAgICByZXR1cm4g
+bWFsbG9jKGJpdG1hcF9zaXplb2YobmJpdHMpKTsKPiA+ICAgICAgICAgICAgICB+fn5+fn5efn5+
+fn5+fn5+fn5+fn5+fn5+fn5+Cj4gPiAgICAgLi8zcmRwYXJ0eS9jY2FuL2NjYW4vYml0bWFwL2Jp
+dG1hcC5oOiBJbiBmdW5jdGlvbiDigJhiaXRtYXAqIGJpdG1hcF9yZWFsbG9jMChiaXRtYXAqLCBs
+b25nIHVuc2lnbmVkIGludCwgbG9uZyB1bnNpZ25lZCBpbnQp4oCZOgo+ID4gICAgIC4vM3JkcGFy
+dHkvY2Nhbi9jY2FuL2JpdG1hcC9iaXRtYXAuaDoyMjc6MTg6IGVycm9yOiBpbnZhbGlkIGNvbnZl
+cnNpb24gZnJvbSDigJh2b2lkKuKAmSB0byDigJhiaXRtYXAq4oCZIFstZnBlcm1pc3NpdmVdCj4g
+PiAgICAgICBiaXRtYXAgPSByZWFsbG9jKGJpdG1hcCwgYml0bWFwX3NpemVvZihuYml0cykpOwo+
+ID4gICAgICAgICAgICAgICAgfn5+fn5+fl5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fgo+
+ID4gICAgIC4vM3JkcGFydHkvY2Nhbi9jY2FuL2JpdG1hcC9iaXRtYXAuaDogSW4gZnVuY3Rpb24g
+4oCYYml0bWFwKiBiaXRtYXBfcmVhbGxvYzEoYml0bWFwKiwgbG9uZyB1bnNpZ25lZCBpbnQsIGxv
+bmcgdW5zaWduZWQgaW50KeKAmToKPiA+ICAgICAuLzNyZHBhcnR5L2NjYW4vY2Nhbi9iaXRtYXAv
+Yml0bWFwLmg6MjM4OjE4OiBlcnJvcjogaW52YWxpZCBjb252ZXJzaW9uIGZyb20g4oCYdm9pZCri
+gJkgdG8g4oCYYml0bWFwKuKAmSBbLWZwZXJtaXNzaXZlXQo+ID4gICAgICAgYml0bWFwID0gcmVh
+bGxvYyhiaXRtYXAsIGJpdG1hcF9zaXplb2YobmJpdHMpKTsKPiA+IAo+ID4gLT4gR2l2ZSB0byB1
+c2VycyBhYmlsaXR5IG5vdCB0byBmb3JjZS1pbmNsdWRlIGNjYW4vYml0bWFwLmggYnkKPiA+IGZv
+cndhcmQtZGVjbGFyaW5nIGJpdG1hcHMgbGlrZSB0aGlzOgo+ID4gCj4gPiAgICAgdHlwZWRlZiBz
+dHJ1Y3QgYml0bWFwIGJpdG1hcDsKPiA+ICAgICAuLi4KPiA+ICAgICBzdHJ1Y3QgTXlTdHJ1Y3Qg
+ewo+ID4gICAgICAgICBiaXRtYXAgKm15X2JpdG1hcDsKPiA+ICAgICB9Owo+ID4gCj4gPiBDYzog
+RGF2aWQgR2lic29uIDxkYXZpZEBnaWJzb24uZHJvcGJlYXIuaWQuYXU+Cj4gPiBTaWduZWQtb2Zm
+LWJ5OiBLaXJpbGwgU21lbGtvdiA8a2lyckBuZXhlZGkuY29tPgo+IAo+IEFwcGxpZWQsIHRoYW5r
+cy4KClRoYW5rcy4KCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fCmNjYW4gbWFpbGluZyBsaXN0CmNjYW5AbGlzdHMub3psYWJzLm9yZwpodHRwczovL2xpc3Rz
+Lm96bGFicy5vcmcvbGlzdGluZm8vY2Nhbgo=
