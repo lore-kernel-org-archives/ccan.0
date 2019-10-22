@@ -1,21 +1,18 @@
-From: Kirill Smelkov <kirr@nexedi.com>
-Subject: [PATCH] bitmap: Allow bitmap type to be forward declared
-Date: Mon, 21 Oct 2019 15:09:20 +0000
-Message-ID: <20191021150903.25159-1-kirr@nexedi.com>
+From: David Gibson <david@gibson.dropbear.id.au>
+Subject: Re: [PATCH] bitmap: Allow bitmap type to be forward declared
+Date: Tue, 22 Oct 2019 16:25:20 +1100
+Message-ID: <20191022052520.GI6439@umbus.fritz.box>
+References: <20191021150903.25159-1-kirr@nexedi.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: multipart/mixed; boundary="===============0390253835633810095=="
 Return-path: <ccan-bounces+gclcc-ccan=m.gmane.org@lists.ozlabs.org>
-Received: from mail112.us4.mandrillapp.com (mail112.us4.mandrillapp.com
- [205.201.136.112])
- (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from ozlabs.org (bilbo.ozlabs.org [203.11.71.1])
+ (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+ key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
  (No client certificate requested)
- by lists.ozlabs.org (Postfix) with ESMTPS id 46xgRM2PvSzDr13
- for <ccan@lists.ozlabs.org>; Tue, 22 Oct 2019 02:24:30 +1100 (AEDT)
-Received: from pmta07.mandrill.prod.suw01.rsglab.com (127.0.0.1) by
- mail112.us4.mandrillapp.com id hln6qu174e0t for <ccan@lists.ozlabs.org>;
- Mon, 21 Oct 2019 15:09:20 +0000 (envelope-from
- <bounce-md_31050260.5dadca20.v1-c77af7e78d9548c89290f0103ca0578d@mandrillapp.com>)
+ by lists.ozlabs.org (Postfix) with ESMTPS id 46y4Yn4LpxzDqHw
+ for <ccan@lists.ozlabs.org>; Tue, 22 Oct 2019 18:16:29 +1100 (AEDT)
+In-Reply-To: <20191021150903.25159-1-kirr@nexedi.com>
 List-Unsubscribe: <https://lists.ozlabs.org/options/ccan>,
  <mailto:ccan-request@lists.ozlabs.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/ccan/>
@@ -25,47 +22,120 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/ccan>,
  <mailto:ccan-request@lists.ozlabs.org?subject=subscribe>
 Errors-To: ccan-bounces+gclcc-ccan=m.gmane.org@lists.ozlabs.org
 Sender: "ccan" <ccan-bounces+gclcc-ccan=m.gmane.org@lists.ozlabs.org>
-To: ccan@lists.ozlabs.org
+To: Kirill Smelkov <kirr@nexedi.com>
+Cc: ccan@lists.ozlabs.org
 List-Id: ccan@lists.ozlabs.org
 
-Q3VycmVudGx5IGJpdG1hcCB0eXBlIGlzIGRlZmluZWQgdmlhIHVudGFnZ2VkIHN0cnVjdCB3aGlj
-aCBtYWtlcyBpdAppbXBvc3NpYmxlIHRvIGZvcndhcmQgZGVjbGFyZSBpdC4gRm9yd2FyZC1kZWNs
-YXJpbmcgaXMgdXNlZnVsIHNpbmNlIGFsbApiaXRtYXAgZnVuY3Rpb25zIG9ubHkgdXNlIGJpdG1h
-cCogYW5kIGluIHB1YmxpYyB1c2VyLXZpc2libGUKaGVhZGVycy9kYXRhc3RydWN0dXJlcyBpdCBp
-cyBlbm91Z2ggdG8gaW5kaWNhdGUgdGhhdCBhIGRhdGEgZmllbGQgd2l0aApiaXRtYXAgcG9pbnRl
-ciBpcyB0aGVyZSwgd2hlcmVhcyBiaXRtYXAuaCBjYW4gYmUgaW5jbHVkZWQgb25seSBpbgppbXBs
-ZW1lbnRhdGlvbi4KCkJlc2lkZSB0aGF0IHNvbWUgaGVhZGVycyBhcmUgaW5jbHVkZWQgYnkgYm90
-aCBDIGFuZCBDKysgcGFydHMgb2YgYQpwcm9qZWN0LCBhbmQgd2hlbiBjY2FuL2JpdG1hcC5oIGlz
-IHByb2Nlc3NlZCBieSBDKysgY29tcGlsZXIgaXQgZ2l2ZXM6CgogICAgLi8zcmRwYXJ0eS9jY2Fu
-L2NjYW4vYml0bWFwL2JpdG1hcC5oOiBJbiBmdW5jdGlvbiDigJhiaXRtYXAqIGJpdG1hcF9hbGxv
-Yyhsb25nIHVuc2lnbmVkIGludCnigJk6CiAgICAuLzNyZHBhcnR5L2NjYW4vY2Nhbi9iaXRtYXAv
-Yml0bWFwLmg6MjAxOjE1OiBlcnJvcjogaW52YWxpZCBjb252ZXJzaW9uIGZyb20g4oCYdm9pZCri
-gJkgdG8g4oCYYml0bWFwKuKAmSBbLWZwZXJtaXNzaXZlXQogICAgICByZXR1cm4gbWFsbG9jKGJp
-dG1hcF9zaXplb2YobmJpdHMpKTsKICAgICAgICAgICAgIH5+fn5+fl5+fn5+fn5+fn5+fn5+fn5+
-fn5+fn4KICAgIC4vM3JkcGFydHkvY2Nhbi9jY2FuL2JpdG1hcC9iaXRtYXAuaDogSW4gZnVuY3Rp
-b24g4oCYYml0bWFwKiBiaXRtYXBfcmVhbGxvYzAoYml0bWFwKiwgbG9uZyB1bnNpZ25lZCBpbnQs
-IGxvbmcgdW5zaWduZWQgaW50KeKAmToKICAgIC4vM3JkcGFydHkvY2Nhbi9jY2FuL2JpdG1hcC9i
-aXRtYXAuaDoyMjc6MTg6IGVycm9yOiBpbnZhbGlkIGNvbnZlcnNpb24gZnJvbSDigJh2b2lkKuKA
-mSB0byDigJhiaXRtYXAq4oCZIFstZnBlcm1pc3NpdmVdCiAgICAgIGJpdG1hcCA9IHJlYWxsb2Mo
-Yml0bWFwLCBiaXRtYXBfc2l6ZW9mKG5iaXRzKSk7CiAgICAgICAgICAgICAgIH5+fn5+fn5efn5+
-fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn4KICAgIC4vM3JkcGFydHkvY2Nhbi9jY2FuL2JpdG1h
-cC9iaXRtYXAuaDogSW4gZnVuY3Rpb24g4oCYYml0bWFwKiBiaXRtYXBfcmVhbGxvYzEoYml0bWFw
-KiwgbG9uZyB1bnNpZ25lZCBpbnQsIGxvbmcgdW5zaWduZWQgaW50KeKAmToKICAgIC4vM3JkcGFy
-dHkvY2Nhbi9jY2FuL2JpdG1hcC9iaXRtYXAuaDoyMzg6MTg6IGVycm9yOiBpbnZhbGlkIGNvbnZl
-cnNpb24gZnJvbSDigJh2b2lkKuKAmSB0byDigJhiaXRtYXAq4oCZIFstZnBlcm1pc3NpdmVdCiAg
-ICAgIGJpdG1hcCA9IHJlYWxsb2MoYml0bWFwLCBiaXRtYXBfc2l6ZW9mKG5iaXRzKSk7CgotPiBH
-aXZlIHRvIHVzZXJzIGFiaWxpdHkgbm90IHRvIGZvcmNlLWluY2x1ZGUgY2Nhbi9iaXRtYXAuaCBi
-eQpmb3J3YXJkLWRlY2xhcmluZyBiaXRtYXBzIGxpa2UgdGhpczoKCiAgICB0eXBlZGVmIHN0cnVj
-dCBiaXRtYXAgYml0bWFwOwogICAgLi4uCiAgICBzdHJ1Y3QgTXlTdHJ1Y3QgewogICAgICAgIGJp
-dG1hcCAqbXlfYml0bWFwOwogICAgfTsKCkNjOiBEYXZpZCBHaWJzb24gPGRhdmlkQGdpYnNvbi5k
-cm9wYmVhci5pZC5hdT4KU2lnbmVkLW9mZi1ieTogS2lyaWxsIFNtZWxrb3YgPGtpcnJAbmV4ZWRp
-LmNvbT4KLS0tCiBjY2FuL2JpdG1hcC9iaXRtYXAuaCB8IDIgKy0KIDEgZmlsZSBjaGFuZ2VkLCAx
-IGluc2VydGlvbigrKSwgMSBkZWxldGlvbigtKQoKZGlmZiAtLWdpdCBhL2NjYW4vYml0bWFwL2Jp
-dG1hcC5oIGIvY2Nhbi9iaXRtYXAvYml0bWFwLmgKaW5kZXggYmVlYjFlOTUuLjU0MzgyODAxIDEw
-MDY0NAotLS0gYS9jY2FuL2JpdG1hcC9iaXRtYXAuaAorKysgYi9jY2FuL2JpdG1hcC9iaXRtYXAu
-aApAQCAtMjEsNyArMjEsNyBAQCB0eXBlZGVmIHVuc2lnbmVkIGxvbmcgYml0bWFwX3dvcmQ7CiAv
-KgogICogV2Ugd3JhcCBlYWNoIHdvcmQgaW4gYSBzdHJ1Y3R1cmUgZm9yIHR5cGUgY2hlY2tpbmcu
-CiAgKi8KLXR5cGVkZWYgc3RydWN0IHsKK3R5cGVkZWYgc3RydWN0IGJpdG1hcCB7CiAJYml0bWFw
-X3dvcmQgdzsKIH0gYml0bWFwOwogCi0tIAoyLjIwLjEKCl9fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fCmNjYW4gbWFpbGluZyBsaXN0CmNjYW5AbGlzdHMub3ps
-YWJzLm9yZwpodHRwczovL2xpc3RzLm96bGFicy5vcmcvbGlzdGluZm8vY2Nhbgo=
+
+--===============0390253835633810095==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="/GPgYEyhnw15BExa"
+Content-Disposition: inline
+
+
+--/GPgYEyhnw15BExa
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Mon, Oct 21, 2019 at 03:09:20PM +0000, Kirill Smelkov wrote:
+> Currently bitmap type is defined via untagged struct which makes it
+> impossible to forward declare it. Forward-declaring is useful since all
+> bitmap functions only use bitmap* and in public user-visible
+> headers/datastructures it is enough to indicate that a data field with
+> bitmap pointer is there, whereas bitmap.h can be included only in
+> implementation.
+>=20
+> Beside that some headers are included by both C and C++ parts of a
+> project, and when ccan/bitmap.h is processed by C++ compiler it gives:
+>=20
+>     ./3rdparty/ccan/ccan/bitmap/bitmap.h: In function =E2=80=98bitmap* bi=
+tmap_alloc(long unsigned int)=E2=80=99:
+>     ./3rdparty/ccan/ccan/bitmap/bitmap.h:201:15: error: invalid conversio=
+n from =E2=80=98void*=E2=80=99 to =E2=80=98bitmap*=E2=80=99 [-fpermissive]
+>       return malloc(bitmap_sizeof(nbits));
+>              ~~~~~~^~~~~~~~~~~~~~~~~~~~~~
+>     ./3rdparty/ccan/ccan/bitmap/bitmap.h: In function =E2=80=98bitmap* bi=
+tmap_realloc0(bitmap*, long unsigned int, long unsigned int)=E2=80=99:
+>     ./3rdparty/ccan/ccan/bitmap/bitmap.h:227:18: error: invalid conversio=
+n from =E2=80=98void*=E2=80=99 to =E2=80=98bitmap*=E2=80=99 [-fpermissive]
+>       bitmap =3D realloc(bitmap, bitmap_sizeof(nbits));
+>                ~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>     ./3rdparty/ccan/ccan/bitmap/bitmap.h: In function =E2=80=98bitmap* bi=
+tmap_realloc1(bitmap*, long unsigned int, long unsigned int)=E2=80=99:
+>     ./3rdparty/ccan/ccan/bitmap/bitmap.h:238:18: error: invalid conversio=
+n from =E2=80=98void*=E2=80=99 to =E2=80=98bitmap*=E2=80=99 [-fpermissive]
+>       bitmap =3D realloc(bitmap, bitmap_sizeof(nbits));
+>=20
+> -> Give to users ability not to force-include ccan/bitmap.h by
+> forward-declaring bitmaps like this:
+>=20
+>     typedef struct bitmap bitmap;
+>     ...
+>     struct MyStruct {
+>         bitmap *my_bitmap;
+>     };
+>=20
+> Cc: David Gibson <david@gibson.dropbear.id.au>
+> Signed-off-by: Kirill Smelkov <kirr@nexedi.com>
+
+Applied, thanks.
+
+> ---
+>  ccan/bitmap/bitmap.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/ccan/bitmap/bitmap.h b/ccan/bitmap/bitmap.h
+> index beeb1e95..54382801 100644
+> --- a/ccan/bitmap/bitmap.h
+> +++ b/ccan/bitmap/bitmap.h
+> @@ -21,7 +21,7 @@ typedef unsigned long bitmap_word;
+>  /*
+>   * We wrap each word in a structure for type checking.
+>   */
+> -typedef struct {
+> +typedef struct bitmap {
+>  	bitmap_word w;
+>  } bitmap;
+>=20
+
+--=20
+David Gibson			| I'll have my music baroque, and my code
+david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
+				| _way_ _around_!
+http://www.ozlabs.org/~dgibson
+
+--/GPgYEyhnw15BExa
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEdfRlhq5hpmzETofcbDjKyiDZs5IFAl2ukr0ACgkQbDjKyiDZ
+s5Im4Q/+POdREJMXDEOzuLcXL79rFRPjPoCTd/YVBRdTCS/A9eBUgFVdQTRkQ2og
+bzdkrlkEU+gaux3QNF2JpLbCfanoYeYIkb3+ZanUGCCC5sDFV7m/vMgYWCpgGahZ
+4CXm07NXorr1KsI/qftg1QRiqoQTsyqos3puwxJ13WLNUdRK77DG0qXOT3VzRN9p
+tYPFyBl6ELk+7TTeHPbWo3m49W2SeodmchLPkgbT39881H2z+vkjH4BrIarRi7GN
+fiqPBsY7nvELHkVhbXiTIEVAQvW5eyK9Vnha6KK/A0FAmg8wEVh9exOSsmsk22vA
+20qNNKpN2ft1psqlhiDdyE+Qc4cw0Qsn8R5h+mbIn3dZ8JFNvpD8a3OTezm11sSc
+cH9NeqBNnmKaudi+ox3Wx5h9QOsZxKWbzJ9RhIsu69O9Y54w+gEAL+Nxz2UMdNP0
+PCeMAboEg5SduMhv3xvFbEWsU0jatbYVczn54Oj5VT8quRkTAOCQq0ZsphYMGzU5
+S7ro1/eIyoTJNa1eka5jd9vX1X/I6up/ijC8Poi+SXGzEav8LOnv9EKSDaK2M4E/
+HeozG9rCunTDoB0qdhsWZYW1DdapEb66HCTXJVwL95dIsgIm47FYuHzFKZ1oBMGe
+69YT3GBot3lKroTm/f4VzdrFmbKQRpeST3rsuSc/Ek4ecwjJPHs=
+=yySL
+-----END PGP SIGNATURE-----
+
+--/GPgYEyhnw15BExa--
+
+--===============0390253835633810095==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+ccan mailing list
+ccan@lists.ozlabs.org
+https://lists.ozlabs.org/listinfo/ccan
+
+--===============0390253835633810095==--
